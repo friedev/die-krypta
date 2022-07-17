@@ -1,0 +1,50 @@
+# TODO
+
+- Content
+	- More enemies
+		- Ranged
+		- Only damaged by a certain numbered attack (but slow)
+		- Diagonal movement (but slow)
+		- Enemy dice (boss?)
+	- Puzzle elements
+		- Face-sensitive sigils/gates
+		- Face-sensitive pressure plates that open doors
+- Mechanics
+	- Multiple levels
+	- Upgrades
+		- Per-side damage increases
+		- Per-side range increases
+		- Health increases
+	- Enemy pathfinding
+	- FOV
+	- Attack enemies in tile both this turn and next turn?
+	- Track top face orientation as die rolls? (changes 2, 3, and 6 behavior)
+	- Allow 1 to roll directly into enemy?
+- Music/ambiance
+- Sound effects
+	- Roll
+	- Attack
+	- Damaged
+- Better dungeon generation
+	- Recursively branch during room generation
+	- Corridors?
+- Game feel
+	- Attack animations
+	- Modulate upon damage
+	- Screen shake upon damage
+	- Particles upon enemy death
+- UX
+	- Hold down direction to move automatically
+	- Show attack areas as icons on bottom of screen
+	- Title screen
+	- Game over screen
+	- Options menu
+		- Music
+		- Sound
+		- Screen shake
+		- Fullscreen
+- Graphics
+	- Autotiled walls
+	- Additional aesthetic wall/floor tiles
+	- Torches or something?
+	- Vignette?
