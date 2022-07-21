@@ -78,7 +78,7 @@ zoom = Vector2( 0.25, 0.25 )
 smoothing_enabled = true
 
 [node name="MoveMap" type="TileMap" parent="."]
-z_index = 1
+z_index = -1
 tile_set = ExtResource( 8 )
 cell_size = Vector2( 12, 12 )
 format = 1

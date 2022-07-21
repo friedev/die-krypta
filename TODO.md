@@ -17,9 +17,6 @@
 		- Health increases
 	- Enemy pathfinding
 	- FOV
-	- Attack enemies in tile both this turn and next turn?
-	- Track top face orientation as die rolls? (changes 2, 3, and 6 behavior)
-	- Allow 1 to roll directly into enemy?
 - Music/ambiance
 - Sound effects
 	- Roll
@@ -31,8 +28,8 @@
 - Game feel
 	- Modulate upon damage
 	- Screen shake upon damage
-	- Particles upon death
 - UX
+	- Softlock detection: show R to restart when no moves are possible
 	- Hold down direction to move automatically
 	- Show attack areas as icons on bottom of screen
 	- Title screen

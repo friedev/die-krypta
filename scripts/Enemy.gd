@@ -9,6 +9,9 @@ const MOVE_SPEED := 15.0
 onready var main: Node2D = get_node(@"/root/Main")
 onready var tile_map: TileMap = main.get_node(@"TileMap")
 onready var player: Player = main.get_node(@"Player")
+onready var sprite: Sprite = $Sprite
+onready var death_particles: Particles2D = $DeathParticles
+onready var death_timer: Timer = $DeathTimer
 
 
 var prev_cellv: Vector2
@@ -64,7 +67,10 @@ func update():
 func die():
 	self.main.enemy_map.erase(self.cellv)
 	self.main.enemies.erase(self)
-	self.queue_free()
+	self.sprite.visible = false
+	self.prev_cellv = self.cellv
+	self.death_particles.emitting = true
+	self.death_timer.start()
 
 
 func hurt(amount: int):
@@ -85,3 +91,7 @@ func _process(delta):
 		),
 		delta * self.MOVE_SPEED
 	)
+
+
+func _on_DeathTimer_timeout():
+	self.queue_free()
