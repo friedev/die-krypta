@@ -13,7 +13,7 @@
 0/texture = ExtResource( 7 )
 0/tex_offset = Vector2( 0, 0 )
 0/modulate = Color( 1, 1, 1, 1 )
-0/region = Rect2( 0, 0, 16, 16 )
+0/region = Rect2( 0, 0, 12, 12 )
 0/tile_mode = 0
 0/occluder_offset = Vector2( 0, 0 )
 0/navigation_offset = Vector2( 0, 0 )
@@ -29,7 +29,7 @@
 0/texture = ExtResource( 5 )
 0/tex_offset = Vector2( 0, 0 )
 0/modulate = Color( 1, 1, 1, 1 )
-0/region = Rect2( 0, 0, 16, 16 )
+0/region = Rect2( 0, 0, 12, 12 )
 0/tile_mode = 0
 0/occluder_offset = Vector2( 0, 0 )
 0/navigation_offset = Vector2( 0, 0 )
@@ -76,19 +76,19 @@ script = ExtResource( 2 )
 [node name="TileMap" type="TileMap" parent="."]
 z_index = -3
 tile_set = ExtResource( 3 )
-cell_size = Vector2( 16, 16 )
+cell_size = Vector2( 12, 12 )
 format = 1
 
 [node name="BlankMap" type="TileMap" parent="."]
 z_index = -2
 tile_set = SubResource( 3 )
-cell_size = Vector2( 16, 16 )
+cell_size = Vector2( 12, 12 )
 format = 1
 
 [node name="HitMap" type="TileMap" parent="."]
 z_index = -1
 tile_set = SubResource( 1 )
-cell_size = Vector2( 16, 16 )
+cell_size = Vector2( 12, 12 )
 format = 1
 
 [node name="Player" parent="." instance=ExtResource( 1 )]
@@ -97,19 +97,19 @@ format = 1
 
 [node name="HealthMap" type="TileMap" parent="CanvasLayer"]
 position = Vector2( 16, 16 )
-scale = Vector2( 4, 4 )
+scale = Vector2( 8, 8 )
 tile_set = SubResource( 2 )
 cell_size = Vector2( 8, 8 )
 format = 1
 
 [node name="WinLabel" type="Label" parent="CanvasLayer"]
 visible = false
-anchor_left = 0.5
-anchor_right = 0.5
-margin_left = -45.0
+anchor_left = 1.0
+anchor_right = 1.0
+margin_left = -196.0
 margin_top = 16.0
-margin_right = 45.0
-margin_bottom = 34.0
+margin_right = -16.0
+margin_bottom = 52.0
 theme = ExtResource( 4 )
 custom_colors/font_color = Color( 1, 0.8, 0, 1 )
 text = "You Win!"
@@ -118,10 +118,10 @@ text = "You Win!"
 visible = false
 anchor_left = 1.0
 anchor_right = 1.0
-margin_left = -204.0
+margin_left = -392.0
 margin_top = 16.0
 margin_right = -16.0
-margin_bottom = 34.0
+margin_bottom = 52.0
 theme = ExtResource( 4 )
 custom_colors/font_color = Color( 1, 0, 0, 1 )
 text = "Press R to Restart"

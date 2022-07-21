@@ -11,7 +11,6 @@ onready var main: Node2D = get_node(@"/root/Main")
 onready var tile_map: TileMap = main.get_node(@"TileMap")
 onready var blank_map: TileMap = main.get_node(@"BlankMap")
 onready var move_map: TileMap = $MoveMap
-onready var hit_map: TileMap = main.get_node(@"HitMap")
 onready var health_map: TileMap = main.get_node(@"CanvasLayer/HealthMap")
 onready var win_label: Label = main.get_node(@"CanvasLayer/WinLabel")
 onready var restart_label: Label = main.get_node(@"CanvasLayer/RestartLabel")
@@ -50,7 +49,10 @@ func set_neighbor_if_open(
 	absolute: bool = true
 ):
 	var abs_cellv := self.cellv + cellv
-	if self.tile_map.get_cellv(abs_cellv) == self.main.TILE_FLOOR:
+	if (
+		self.tile_map.get_cellv(abs_cellv) == self.main.TILE_FLOOR
+		and not self.main.enemy_map.has(abs_cellv)
+	):
 		self.blank_map.set_cellv(abs_cellv, 0)
 		map.set_cellv(abs_cellv if absolute else cellv, id)
 
@@ -69,11 +71,9 @@ func draw_moves():
 func clear_maps():
 	self.blank_map.clear()
 	self.move_map.clear()
-	self.hit_map.clear()
 
 
 func hitv(cellv: Vector2):
-	self.set_neighbor_if_open(self.hit_map, cellv, 0)
 	var enemy = self.main.enemy_map.get(self.cellv + cellv)
 	if enemy != null:
 		enemy.hurt(1)
@@ -132,7 +132,6 @@ func roll(cellv: Vector2) -> bool:
 		self.max_room = new_room
 
 	self.set_sides(cellv)
-	self.draw_moves()
 	self.sprite.frame = self.side - 1
 	self.attack(cellv)
 
@@ -155,7 +154,6 @@ func hurt(amount: int):
 
 func win():
 	self.win_label.visible = true
-	self.restart_label.visible = true
 
 
 func input(event) -> bool:

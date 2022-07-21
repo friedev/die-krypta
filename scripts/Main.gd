@@ -55,6 +55,10 @@ func update():
 		enemy.update()
 		self.enemy_map[enemy.cellv] = enemy
 
+	if self.player.health > 0:
+		self.player.clear_maps()
+		self.player.draw_moves()
+
 
 func place_enemy(cellv: Vector2) -> Enemy:
 	var enemy: Enemy = self.ENEMY_SCENE.instance()
