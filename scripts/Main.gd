@@ -26,6 +26,7 @@ onready var tile_map: TileMap = $TileMap
 var rooms := []
 var enemies := []
 var enemy_map := {}
+var animate_enemies := true
 
 
 func is_cell_open(cellv: Vector2) -> bool:
@@ -52,6 +53,7 @@ func get_room(cellv: Vector2) -> MapRoom:
 func update():
 	for enemy in self.enemies:
 		self.enemy_map.erase(enemy.cellv)
+		enemy.prev_cellv = enemy.cellv
 		enemy.update()
 		self.enemy_map[enemy.cellv] = enemy
 
@@ -63,6 +65,7 @@ func update():
 func place_enemy(cellv: Vector2) -> Enemy:
 	var enemy: Enemy = self.ENEMY_SCENE.instance()
 	enemy.cellv = cellv
+	enemy.prev_cellv = cellv
 	enemy.position = self.tile_map.map_to_world(enemy.cellv)
 	self.enemies.append(enemy)
 	self.enemy_map[enemy.cellv] = enemy
@@ -188,6 +191,8 @@ func setup():
 		var enemy_count := randi() % ROOM_ENEMY_RANGE + ROOM_ENEMY_MIN
 		for _enemy_idx in range(enemy_count):
 			self.spawn_room_enemy(room)
+
+	self.animate_enemies = true
 
 
 func _ready():

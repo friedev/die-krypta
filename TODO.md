@@ -29,10 +29,9 @@
 	- Recursively branch during room generation
 	- Corridors?
 - Game feel
-	- Attack animations
 	- Modulate upon damage
 	- Screen shake upon damage
-	- Particles upon enemy death
+	- Particles upon death
 - UX
 	- Hold down direction to move automatically
 	- Show attack areas as icons on bottom of screen

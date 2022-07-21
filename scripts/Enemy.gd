@@ -11,6 +11,7 @@ onready var tile_map: TileMap = main.get_node(@"TileMap")
 onready var player: Player = main.get_node(@"Player")
 
 
+var prev_cellv: Vector2
 var cellv: Vector2
 var room: MapRoom
 
@@ -77,6 +78,10 @@ func _ready():
 func _process(delta):
 	self.position = lerp(
 		self.position,
-		self.tile_map.map_to_world(self.cellv),
+		self.tile_map.map_to_world(
+			self.cellv
+			if self.main.animate_enemies
+			else self.prev_cellv
+		),
 		delta * self.MOVE_SPEED
 	)

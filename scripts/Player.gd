@@ -17,6 +17,11 @@ onready var restart_label: Label = main.get_node(@"CanvasLayer/RestartLabel")
 onready var sprite: AnimatedSprite = $Sprite
 onready var camera: Camera2D = $Camera2D
 
+onready var attack_animations = [
+	[$AttackLeftUp,   $AttackUp,   $AttackRightUp  ],
+	[$AttackLeft,     null,        $AttackRight    ],
+	[$AttackLeftDown, $AttackDown, $AttackRightDown],
+]
 
 var cellv: Vector2
 var side := 1
@@ -73,43 +78,77 @@ func clear_maps():
 	self.move_map.clear()
 
 
-func hitv(cellv: Vector2):
+func stop_animations():
+	for animations in attack_animations:
+		for animation in animations:
+			if animation != null:
+				animation.stop()
+				animation.visible = false
+
+
+func hitv(cellv: Vector2) -> bool:
+	var animation: AnimatedSprite = self.attack_animations[cellv.y + 1][cellv.x + 1]
+	animation.visible = true
+	animation.frame = 0
+	animation.play()
+
 	var enemy = self.main.enemy_map.get(self.cellv + cellv)
 	if enemy != null:
 		enemy.hurt(1)
+		return true
+	else:
+		return false
 
 
-func hit(x: int, y: int):
-	self.hitv(Vector2(x, y))
+func hit(x: int, y: int) -> bool:
+	return self.hitv(Vector2(x, y))
 
 
-func attack(cellv: Vector2):
+func attack(cellv: Vector2) -> bool:
+	var attacked := false
+	var cells := []
+
 	match side:
 		1:
-			self.hitv(cellv)
+			cells = [cellv]
 		2:
-			self.hit(-1, -1)
-			self.hit(1, 1)
+			cells = [
+				Vector2(-1, -1),
+				Vector2(1, 1),
+			]
 		3:
-			self.hit(-1, 1)
-			self.hit(1, -1)
+			cells = [
+				Vector2(-1, 1),
+				Vector2(1, -1),
+			]
 		4:
-			self.hit(0, -1)
-			self.hit(0, 1)
-			self.hit(-1, 0)
-			self.hit(1, 0)
+			cells = [
+				Vector2(0, -1),
+				Vector2(0, 1),
+				Vector2(-1, 0),
+				Vector2(1, 0),
+			]
 		5:
-			self.hit(-1, -1)
-			self.hit(-1, 1)
-			self.hit(1, -1)
-			self.hit(1, 1)
+			cells = [
+				Vector2(-1, -1),
+				Vector2(-1, 1),
+				Vector2(1, -1),
+				Vector2(1, 1),
+			]
 		6:
-			self.hit(-1, -1)
-			self.hit(-1, 0)
-			self.hit(-1, 1)
-			self.hit(1, -1)
-			self.hit(1, 0)
-			self.hit(1, 1)
+			cells = [
+				Vector2(-1, -1),
+				Vector2(-1, 0),
+				Vector2(-1, 1),
+				Vector2(1, -1),
+				Vector2(1, 0),
+				Vector2(1, 1),
+			]
+
+	for cellv in cells:
+		attacked = self.hitv(cellv) or attacked
+
+	return attacked
 
 
 func roll(cellv: Vector2) -> bool:
@@ -124,6 +163,7 @@ func roll(cellv: Vector2) -> bool:
 	if not self.main.is_cell_open(new_cellv):
 		return false
 
+	self.stop_animations()
 	self.clear_maps()
 
 	self.cellv = new_cellv
@@ -133,14 +173,20 @@ func roll(cellv: Vector2) -> bool:
 
 	self.set_sides(cellv)
 	self.sprite.frame = self.side - 1
-	self.attack(cellv)
+
+	if self.attack(cellv):
+		self.main.animate_enemies = false
+	else:
+		self.main.animate_enemies = true
+		self.stop_animations()
 
 	return true
 
 
 func die():
-	self.sprite.visible = false
+	self.visible = false
 	self.restart_label.visible = true
+	self.stop_animations()
 	self.clear_maps()
 	self.set_process_input(false)
 
@@ -166,6 +212,7 @@ func input(event) -> bool:
 	if event.is_action_pressed("move_down"):
 		return self.roll(Vector2.DOWN)
 	if event.is_action_pressed("wait"):
+		self.main.animate_enemies = true
 		return true
 	return false
 
@@ -180,11 +227,12 @@ func setup():
 	self.side = 1
 	self.side_left = 4
 	self.side_up = 5
-	self.sprite.visible = true
+	self.visible = true
 	self.restart_label.visible = false
 	self.win_label.visible = false
 	self.max_room = self.main.rooms[0]
 	self.set_process_input(true)
+	self.stop_animations()
 	self.clear_maps()
 	self.draw_moves()
 	self.draw_health()
@@ -201,3 +249,8 @@ func _process(delta):
 		self.tile_map.map_to_world(self.cellv),
 		delta * self.MOVE_SPEED
 	)
+
+
+func _on_animation_finished():
+	self.stop_animations()
+	self.main.animate_enemies = true
