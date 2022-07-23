@@ -63,7 +63,7 @@ func set_neighbor_if_open(
 
 
 func draw_move(cellv: Vector2, id: int):
-	self.set_neighbor_if_open(self.move_map, cellv, id, false)
+	self.set_neighbor_if_open(self.move_map, cellv, id - 1, false)
 
 
 func draw_moves():

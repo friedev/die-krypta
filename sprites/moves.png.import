@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/health_tiles.png-4daf8d0210a2c3a3c3f4b6f966388afb.stex"
+path="res://.import/moves.png-bb857be74c0a4e4ac4603508c9c6ca1a.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://sprites/health_tiles.png"
-dest_files=[ "res://.import/health_tiles.png-4daf8d0210a2c3a3c3f4b6f966388afb.stex" ]
+source_file="res://sprites/moves.png"
+dest_files=[ "res://.import/moves.png-bb857be74c0a4e4ac4603508c9c6ca1a.stex" ]
 
 [params]
 

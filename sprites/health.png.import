@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/dice1.png-5d5fe07b064792b949c7a4a631d9d312.stex"
+path="res://.import/health.png-fe502f4981772d05429453c15570bb25.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://sprites/dice1.png"
-dest_files=[ "res://.import/dice1.png-5d5fe07b064792b949c7a4a631d9d312.stex" ]
+source_file="res://sprites/health.png"
+dest_files=[ "res://.import/health.png-fe502f4981772d05429453c15570bb25.stex" ]
 
 [params]
 

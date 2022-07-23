@@ -5,8 +5,8 @@ class_name Main
 
 const TILE_EMPTY := -1
 const TILE_FLOOR := 0
-const TILE_WALL := 7
-const TILE_WIN := 8
+const TILE_WALL := 1
+const TILE_WIN := 2
 
 const ROOM_COUNT := 10
 const ROOM_WIDTH_MIN := 2
