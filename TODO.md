@@ -26,8 +26,8 @@
 	- Recursively branch during room generation
 	- Corridors?
 - Game feel
-	- Modulate upon damage
-	- Screen shake upon damage
+	- Modulate upon player hurt
+	- Particles upon player death
 - UX
 	- Softlock detection: show R to restart when no moves are possible
 	- Hold down direction to move automatically

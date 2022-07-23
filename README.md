@@ -41,4 +41,7 @@ Below, the specific cells you attack when the given face is turned up are marked
 Die Krypta was created by [Aaron Friesen](https://frie.dev) in under 12 hours for the 2022 GMTK Game Jam.
 
 Die Krypta was made using [Godot Engine](https://godotengine.org), with sprites made using [GIMP](https://gimp.org).
+
+`ShakeCamera2D.gd` adapted from `shake_camera_2D.gd` from the [Godot Camera Shake](https://github.com/scipioceaser/Godot-Camera-Shake) plugin by [Alex Nagel](https://github.com/scipioceaser).
+
 The font used is [pixelFJ8pt](https://www.1001fonts.com/pixelfj8pt1-font.html) by [MBommeli](https://www.1001fonts.com/users/flashjunior/), licensed under the [1001Fonts FFC License](https://www.1001fonts.com/licenses/ffc.html).

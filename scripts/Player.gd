@@ -1,10 +1,11 @@
 extends Node2D
-
 class_name Player
 
 
 const MOVE_SPEED := 15.0
 const MAX_HEALTH := 3
+const HIT_STRESS := 0.5
+const HURT_STRESS := 0.5
 
 
 onready var main: Node2D = get_node(@"/root/Main")
@@ -95,6 +96,7 @@ func hitv(cellv: Vector2) -> bool:
 	var enemy = self.main.enemy_map.get(self.cellv + cellv)
 	if enemy != null:
 		enemy.hurt(1)
+		self.camera.add_stress(0.5)
 		return true
 	else:
 		return false
@@ -194,6 +196,7 @@ func die():
 func hurt(amount: int):
 	self.health -= amount
 	self.draw_health()
+	self.camera.add_stress(self.HURT_STRESS)
 	if self.health <= 0:
 		self.die()
 

@@ -28,12 +28,18 @@ _global_script_classes=[ {
 "class": "Player",
 "language": "GDScript",
 "path": "res://scripts/Player.gd"
+}, {
+"base": "Camera2D",
+"class": "ShakeCamera2D",
+"language": "GDScript",
+"path": "res://scripts/ShakeCamera2D.gd"
 } ]
 _global_script_class_icons={
 "Enemy": "",
 "Main": "",
 "MapRoom": "",
-"Player": ""
+"Player": "",
+"ShakeCamera2D": ""
 }
 
 [application]
