@@ -17,7 +17,6 @@
 		- Health increases
 	- Enemy pathfinding
 	- FOV
-- Music/ambiance
 - Sound effects
 	- Roll
 	- Attack
