@@ -10,7 +10,7 @@ onready var tile_map: TileMap = main.get_node(@"TileMap")
 onready var player: Player = main.get_node(@"Player")
 onready var sprite: Sprite = $Sprite
 onready var death_particles: Particles2D = $DeathParticles
-onready var death_timer: Timer = $DeathTimer
+onready var death_sound: AudioStreamPlayer2D = $DeathSound
 
 
 var prev_cellv: Vector2
@@ -69,7 +69,8 @@ func die():
 	self.sprite.visible = false
 	self.prev_cellv = self.cellv
 	self.death_particles.emitting = true
-	self.death_timer.start()
+	self.death_sound.pitch_scale = randf() + 0.5
+	self.death_sound.play()
 
 
 func hurt(amount: int):
@@ -92,5 +93,5 @@ func _process(delta):
 	)
 
 
-func _on_DeathTimer_timeout():
+func _on_DeathSound_finished():
 	self.queue_free()
