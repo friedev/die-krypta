@@ -1,10 +1,11 @@
-[gd_scene load_steps=28 format=2]
+[gd_scene load_steps=29 format=2]
 
 [ext_resource path="res://scripts/Player.gd" type="Script" id=1]
 [ext_resource path="res://sprites/moves.png" type="Texture" id=2]
 [ext_resource path="res://sprites/dice.png" type="Texture" id=3]
 [ext_resource path="res://scripts/ShakeCamera2D.gd" type="Script" id=4]
 [ext_resource path="res://sound/player_move.ogg" type="AudioStream" id=5]
+[ext_resource path="res://sound/player_hurt.wav" type="AudioStream" id=6]
 [ext_resource path="res://sprites/attack_orthogonal.png" type="Texture" id=9]
 [ext_resource path="res://sprites/attack_diagonal.png" type="Texture" id=10]
 
@@ -284,6 +285,9 @@ process_material = SubResource( 27 )
 
 [node name="MoveSound" type="AudioStreamPlayer2D" parent="."]
 stream = ExtResource( 5 )
+
+[node name="HurtSound" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource( 6 )
 
 [connection signal="animation_finished" from="Attacks/Left" to="." method="_on_animation_finished"]
 [connection signal="animation_finished" from="Attacks/Right" to="." method="_on_animation_finished"]

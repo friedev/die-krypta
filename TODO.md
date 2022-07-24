@@ -17,9 +17,6 @@
 		- Health increases
 	- Enemy pathfinding
 	- FOV
-- Sound effects
-	- Player hurt
-	- Separate attack sound from enemy death sound
 - Better dungeon generation
 	- Recursively branch during room generation
 	- Corridors?
@@ -34,8 +31,16 @@
 		- Sound
 		- Screen shake
 		- Fullscreen
+	- Speedrun timer
 - Graphics
 	- Autotiled walls
 	- Additional aesthetic wall/floor tiles
 	- Torches or something?
 	- Vignette?
+- Refactoring
+	- Extract functions to their relevant nodes
+		- Attack animations to Attacks
+		- Move drawing to MoveMap
+		- Health drawing to HealthMap
+	- Use signals to decouple code
+	- Separate attack sound from enemy death sound

@@ -20,6 +20,7 @@ onready var attacks: Node2D = $Attacks
 onready var camera: Camera2D = $Camera2D
 onready var hurt_particles: Particles2D = $HurtParticles
 onready var move_sound: AudioStreamPlayer2D = $MoveSound
+onready var hurt_sound: AudioStreamPlayer2D = $HurtSound
 
 onready var attack_animations = [
 	[$Attacks/LeftUp,   $Attacks/Up,   $Attacks/RightUp  ],
@@ -207,6 +208,8 @@ func hurt(amount: int, direction: Vector2):
 	self.camera.add_stress(self.HURT_STRESS)
 	self.hurt_particles.rotation = direction.angle()
 	self.hurt_particles.restart()
+	self.hurt_sound.pitch_scale = randf() * 0.5 + 0.75
+	self.hurt_sound.play()
 
 	if self.health <= 0:
 		self.die()
