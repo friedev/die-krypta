@@ -16,13 +16,15 @@ onready var health_map: TileMap = main.get_node(@"CanvasLayer/HealthMap")
 onready var win_label: Label = main.get_node(@"CanvasLayer/WinLabel")
 onready var restart_label: Label = main.get_node(@"CanvasLayer/RestartLabel")
 onready var sprite: AnimatedSprite = $Sprite
+onready var attacks: Node2D = $Attacks
 onready var camera: Camera2D = $Camera2D
+onready var death_particles: Particles2D = $DeathParticles
 onready var move_sound: AudioStreamPlayer2D = $MoveSound
 
 onready var attack_animations = [
-	[$AttackLeftUp,   $AttackUp,   $AttackRightUp  ],
-	[$AttackLeft,     null,        $AttackRight    ],
-	[$AttackLeftDown, $AttackDown, $AttackRightDown],
+	[$Attacks/LeftUp,   $Attacks/Up,   $Attacks/RightUp  ],
+	[$Attacks/Left,     null,          $Attacks/Right    ],
+	[$Attacks/LeftDown, $Attacks/Down, $Attacks/RightDown],
 ]
 
 var cellv: Vector2
@@ -81,11 +83,9 @@ func clear_maps():
 
 
 func stop_animations():
-	for animations in attack_animations:
-		for animation in animations:
-			if animation != null:
-				animation.stop()
-				animation.visible = false
+	for animation in self.attacks.get_children():
+		animation.stop()
+		animation.visible = false
 
 
 func hitv(cellv: Vector2) -> bool:
@@ -190,10 +190,15 @@ func roll(cellv: Vector2) -> bool:
 
 
 func die():
-	self.visible = false
+	self.sprite.visible = false
+	self.attacks.visible = false
+	self.move_map.visible = false
 	self.restart_label.visible = true
 	self.stop_animations()
 	self.clear_maps()
+
+	self.death_particles.emitting = true
+
 	self.set_process_input(false)
 
 
@@ -234,7 +239,9 @@ func setup():
 	self.side = 1
 	self.side_left = 4
 	self.side_up = 5
-	self.visible = true
+	self.sprite.visible = true
+	self.attacks.visible = true
+	self.move_map.visible = true
 	self.restart_label.visible = false
 	self.win_label.visible = false
 	self.max_room = self.main.rooms[0]
