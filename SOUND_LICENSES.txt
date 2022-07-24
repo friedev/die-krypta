@@ -5,3 +5,7 @@ licensed under CC-BY 3.0 <http://creativecommons.org/licenses/by/3.0/>
 Ghost breath <https://opengameart.org/content/ghost-breath>
 by qubodup <https://opengameart.org/users/qubodup>
 licensed under CC0 <http://creativecommons.org/publicdomain/zero/1.0/>
+
+RPG Audio <https://kenney.nl/assets/rpg-audio>
+by Kenney <https://kenney.nl/>
+licensed under CC0 <https://creativecommons.org/publicdomain/zero/1.0/>

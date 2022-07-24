@@ -69,7 +69,7 @@ func die():
 	self.sprite.visible = false
 	self.prev_cellv = self.cellv
 	self.death_particles.emitting = true
-	self.death_sound.pitch_scale = randf() + 0.5
+	self.death_sound.pitch_scale = randf() + 0.75
 	self.death_sound.play()
 
 

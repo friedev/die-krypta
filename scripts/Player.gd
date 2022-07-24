@@ -17,6 +17,7 @@ onready var win_label: Label = main.get_node(@"CanvasLayer/WinLabel")
 onready var restart_label: Label = main.get_node(@"CanvasLayer/RestartLabel")
 onready var sprite: AnimatedSprite = $Sprite
 onready var camera: Camera2D = $Camera2D
+onready var move_sound: AudioStreamPlayer2D = $MoveSound
 
 onready var attack_animations = [
 	[$AttackLeftUp,   $AttackUp,   $AttackRightUp  ],
@@ -181,6 +182,9 @@ func roll(cellv: Vector2) -> bool:
 	else:
 		self.main.animate_enemies = true
 		self.stop_animations()
+
+	self.move_sound.pitch_scale = randf() * 0.5 + 0.75
+	self.move_sound.play()
 
 	return true
 
