@@ -43,6 +43,11 @@ Die Krypta was created by [Aaron Friesen](https://frie.dev) in under 12 hours fo
 - Engine: [Godot Engine](https://godotengine.org)
 - Art: [GIMP](https://gimp.org)
 - Music: [LMMS](https://lmms.io/), using samples by [Erang](https://erang.bandcamp.com) ([1](https://erang.bandcamp.com/album/dungeon-synth-free-samples-pack), [2](https://erang.bandcamp.com/album/dungeon-synth-free-samples-pack-tome-ii))
-- Sounds: SOUND_LICENSES.md
+- Sounds: `SOUND_LICENSES.md`
 - Font: [pixelFJ8pt](https://www.1001fonts.com/pixelfj8pt1-font.html) by [MBommeli](https://www.1001fonts.com/users/flashjunior/), licensed under the [1001Fonts FFC License](https://www.1001fonts.com/licenses/ffc.html)
 - Camera Shake: `ShakeCamera2D.gd` adapted from `shake_camera_2D.gd` from the [Godot Camera Shake](https://github.com/scipioceaser/Godot-Camera-Shake) plugin by [Alex Nagel](https://github.com/scipioceaser)
+
+## License
+
+- The source code is licensed under the [GNU Affero General Public License v3](https://www.gnu.org/licenses/agpl-3.0.en.html) (see `LICENSE.txt`).
+- All original assets (art, music, and original sound effects) are licensed under the [Creative Commons Attribution-ShareAlike 4.0 International License (CC BY-SA 4.0)](https://creativecommons.org/licenses/by-sa/4.0/) (see `ASSET_LICENSE.txt`).
