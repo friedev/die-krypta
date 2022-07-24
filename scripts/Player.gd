@@ -18,7 +18,7 @@ onready var restart_label: Label = main.get_node(@"CanvasLayer/RestartLabel")
 onready var sprite: AnimatedSprite = $Sprite
 onready var attacks: Node2D = $Attacks
 onready var camera: Camera2D = $Camera2D
-onready var death_particles: Particles2D = $DeathParticles
+onready var hurt_particles: Particles2D = $HurtParticles
 onready var move_sound: AudioStreamPlayer2D = $MoveSound
 
 onready var attack_animations = [
@@ -88,7 +88,7 @@ func stop_animations():
 		animation.visible = false
 
 
-func hitv(cellv: Vector2) -> bool:
+func hitv(cellv: Vector2 = Vector2()) -> bool:
 	var animation: AnimatedSprite = self.attack_animations[cellv.y + 1][cellv.x + 1]
 	animation.visible = true
 	animation.frame = 0
@@ -96,7 +96,7 @@ func hitv(cellv: Vector2) -> bool:
 
 	var enemy = self.main.enemy_map.get(self.cellv + cellv)
 	if enemy != null:
-		enemy.hurt(1)
+		enemy.hurt(1, (enemy.cellv - self.cellv).normalized())
 		self.camera.add_stress(0.5)
 		return true
 	else:
@@ -197,15 +197,17 @@ func die():
 	self.stop_animations()
 	self.clear_maps()
 
-	self.death_particles.emitting = true
-
 	self.set_process_input(false)
 
 
-func hurt(amount: int):
+func hurt(amount: int, direction: Vector2):
 	self.health -= amount
+
 	self.draw_health()
 	self.camera.add_stress(self.HURT_STRESS)
+	self.hurt_particles.rotation = direction.angle()
+	self.hurt_particles.restart()
+
 	if self.health <= 0:
 		self.die()
 

@@ -18,15 +18,11 @@
 	- Enemy pathfinding
 	- FOV
 - Sound effects
-	- Roll
-	- Attack
-	- Damaged
+	- Player hurt
+	- Separate attack sound from enemy death sound
 - Better dungeon generation
 	- Recursively branch during room generation
 	- Corridors?
-- Game feel
-	- Modulate upon player hurt
-	- Particles upon player death
 - UX
 	- Softlock detection: show R to restart when no moves are possible
 	- Hold down direction to move automatically

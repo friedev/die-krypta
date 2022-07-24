@@ -9,7 +9,7 @@ onready var main: Node2D = get_node(@"/root/Main")
 onready var tile_map: TileMap = main.get_node(@"TileMap")
 onready var player: Player = main.get_node(@"Player")
 onready var sprite: Sprite = $Sprite
-onready var death_particles: Particles2D = $DeathParticles
+onready var hurt_particles: Particles2D = $HurtParticles
 onready var death_sound: AudioStreamPlayer2D = $DeathSound
 
 
@@ -58,7 +58,7 @@ func is_player_in_room():
 
 func update():
 	if (self.player.cellv - self.cellv).length() == 1.0:
-		self.player.hurt(1)
+		self.player.hurt(1, (self.player.cellv - self.cellv).normalized())
 	elif self.is_player_in_room():
 		self.chase_player()
 
@@ -69,12 +69,14 @@ func die():
 	self.sprite.visible = false
 	self.prev_cellv = self.cellv
 
-	self.death_particles.emitting = true
 	self.death_sound.pitch_scale = randf() + 0.75
 	self.death_sound.play()
 
 
-func hurt(amount: int):
+func hurt(amount: int, direction: Vector2 = Vector2()):
+	self.hurt_particles.rotation = direction.angle()
+	self.hurt_particles.restart()
+
 	self.die()
 
 
