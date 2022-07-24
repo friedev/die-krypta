@@ -23,6 +23,7 @@
 - UX
 	- Softlock detection: show R to restart when no moves are possible
 	- Hold down direction to move automatically
+	- Mouse movement
 	- Show attack areas as icons on bottom of screen
 	- Title screen
 	- Game over screen

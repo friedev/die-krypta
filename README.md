@@ -38,7 +38,7 @@ Below, the specific cells you attack when the given face is turned up are marked
 
 ## Credits
 
-Die Krypta was created by [Aaron Friesen](https://frie.dev) in under 12 hours for the 2022 GMTK Game Jam.
+Die Krypta was created by [Aaron Friesen](https://frie.dev) in under 12 hours for the [2022 GMTK Game Jam](https://itch.io/jam/gmtk-jam-2022).
 
 - Engine: [Godot Engine](https://godotengine.org)
 - Art: [GIMP](https://gimp.org)
