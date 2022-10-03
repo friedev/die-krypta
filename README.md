@@ -1,5 +1,8 @@
 # Die Krypta
 
+Roll yourself through the crypt and attack with each of your faces.
+Made in under 12 hours for the [2022 GMTK Game Jam](https://itch.io/jam/gmtk-jam-2022).
+
 > In a life long past, you were cursed by Die Hexe, a malevolent conjurer of geometric transformation.
 > With your spirit imprisoned within a crystalline prism, you were left to wander the earth forever in silence...
 > 
@@ -38,7 +41,7 @@ Below, the specific cells you attack when the given face is turned up are marked
 
 ## Credits
 
-Die Krypta was created by [Aaron Friesen](https://frie.dev) in under 12 hours for the [2022 GMTK Game Jam](https://itch.io/jam/gmtk-jam-2022).
+Die Krypta was created by [Aaron Friesen](https://frie.dev).
 
 - Engine: [Godot Engine](https://godotengine.org)
 - Art: [GIMP](https://gimp.org)
