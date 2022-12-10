@@ -1,25 +1,22 @@
 # TODO
 
-- Content
-	- More enemies
-		- Ranged
-		- Only damaged by a certain numbered attack (but slow)
-		- Diagonal movement (but slow)
-		- Enemy dice (boss?)
-	- Puzzle elements
-		- Face-sensitive sigils/gates
-		- Face-sensitive pressure plates that open doors
-- Mechanics
-	- Multiple levels
-	- Upgrades
-		- Per-side damage increases
-		- Per-side range increases
-		- Health increases
-	- Enemy pathfinding
-	- FOV
-- Better dungeon generation
-	- Recursively branch during room generation
-	- Corridors?
+- Redesign in the style of Hoplite
+	- Each level fits on the screen (ideally)
+	- You're placed somewhere on the level
+	- Enemies are scattered around the level and can all see you
+	- You either have to reach a staircase or kill all enemies
+	- After each level, you can upgrade or heal
+- More enemies
+	- Ranged
+	- Only damaged by a certain numbered attack (but slow)
+	- Diagonal movement (but slow)
+	- Multiple HP
+		- Knocked back and/or stunned upon taking damage
+	- Flying enemies and chasms
+- Upgrades
+	- Per-side damage increases
+	- Per-side range increases
+	- Health increases
 - UX
 	- Softlock detection: show R to restart when no moves are possible
 	- Hold down direction to move automatically
@@ -44,4 +41,4 @@
 		- Move drawing to MoveMap
 		- Health drawing to HealthMap
 	- Use signals to decouple code
-	- Separate attack sound from enemy death sound
+	- Separate attack sound from enemy death sound (in the case of multi-HP enemies)
