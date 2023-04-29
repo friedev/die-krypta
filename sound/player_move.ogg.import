@@ -1,15 +1,19 @@
 [remap]
 
-importer="ogg_vorbis"
-type="AudioStreamOGGVorbis"
-path="res://.import/player_move.ogg-f53fa16ede04345dc8eb6b292b16edfa.oggstr"
+importer="oggvorbisstr"
+type="AudioStreamOggVorbis"
+uid="uid://c50way2nmvqdx"
+path="res://.godot/imported/player_move.ogg-f53fa16ede04345dc8eb6b292b16edfa.oggvorbisstr"
 
 [deps]
 
 source_file="res://sound/player_move.ogg"
-dest_files=[ "res://.import/player_move.ogg-f53fa16ede04345dc8eb6b292b16edfa.oggstr" ]
+dest_files=["res://.godot/imported/player_move.ogg-f53fa16ede04345dc8eb6b292b16edfa.oggvorbisstr"]
 
 [params]
 
 loop=false
 loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

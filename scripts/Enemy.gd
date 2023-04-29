@@ -5,12 +5,12 @@ class_name Enemy
 const MOVE_SPEED := 15.0
 
 
-onready var main: Node2D = get_node(@"/root/Main")
-onready var tile_map: TileMap = main.get_node(@"TileMap")
-onready var player: Player = main.get_node(@"Player")
-onready var sprite: Sprite = $Sprite
-onready var hurt_particles: Particles2D = $HurtParticles
-onready var death_sound: AudioStreamPlayer2D = $DeathSound
+@onready var main: Node2D = get_node("/root/Main")
+@onready var tile_map: TileMap = main.get_node("TileMap")
+@onready var player: Player = main.get_node("Player")
+@onready var sprite: Sprite2D = $Sprite2D
+@onready var hurt_particles: GPUParticles2D = $HurtParticles
+@onready var death_sound: AudioStreamPlayer2D = $DeathSound
 
 
 var prev_cellv: Vector2
@@ -33,8 +33,8 @@ func move(x: int, y: int) -> bool:
 func chase_player():
 	var dy := player.cellv.y - self.cellv.y
 	var dx := player.cellv.x - self.cellv.x
-	var x_dir := dx / max(1, abs(dx))
-	var y_dir := dy / max(1, abs(dy))
+	var x_dir := int(dx / max(1, abs(dx)))
+	var y_dir := int(dy / max(1, abs(dy)))
 	var x_first = abs(dx) > abs(dy) or (abs(dx) == abs(dy) and randi() % 2 == 0)
 	if x_first:
 		self.move(x_dir, 0) or self.move(0, y_dir)
@@ -87,7 +87,7 @@ func _ready():
 func _process(delta):
 	self.position = lerp(
 		self.position,
-		self.tile_map.map_to_world(
+		self.tile_map.map_to_local(
 			self.cellv
 			if self.main.animate_enemies
 			else self.prev_cellv

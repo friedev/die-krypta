@@ -18,8 +18,8 @@ const ROOM_ENEMY_RANGE := 3
 const ENEMY_SCENE := preload("res://scenes/Enemy.tscn")
 
 
-onready var player: Player = $Player
-onready var tile_map: TileMap = $TileMap
+@onready var player: Player = $Player
+@onready var tile_map: TileMap = $TileMap
 
 
 var rooms := []
@@ -31,7 +31,7 @@ var animate_enemies := true
 func is_cell_open(cellv: Vector2) -> bool:
 	return (
 		not self.enemy_map.has(cellv)
-		and self.tile_map.get_cellv(cellv) == self.TILE_FLOOR
+		and self.tile_map.get_cell_source_id(0, cellv) == self.TILE_FLOOR
 		and self.player.cellv != cellv
 	)
 
@@ -62,10 +62,10 @@ func update():
 
 
 func place_enemy(cellv: Vector2) -> Enemy:
-	var enemy: Enemy = self.ENEMY_SCENE.instance()
+	var enemy: Enemy = self.ENEMY_SCENE.instantiate()
 	enemy.cellv = cellv
 	enemy.prev_cellv = cellv
-	enemy.position = self.tile_map.map_to_world(enemy.cellv)
+	enemy.position = self.tile_map.map_to_local(enemy.cellv)
 	self.enemies.append(enemy)
 	self.enemy_map[enemy.cellv] = enemy
 	self.add_child(enemy)
@@ -96,7 +96,7 @@ func find_open_cell() -> Vector2:
 func fill_map(id: int):
 	for x in range(self.MAP_WIDTH):
 		for y in range(self.MAP_HEIGHT):
-			self.tile_map.set_cell(x, y, id)
+			self.tile_map.set_cell(0, Vector2i(x, y), id, Vector2i.ZERO)
 
 
 func generate_map():
@@ -112,7 +112,7 @@ func generate_map():
 		# Should be x - 1 and y - 1 for a general algorithm
 		for x2 in range(x, x + room_width + 2):
 			for y2 in range(y, y + room_height + 2):
-				if self.tile_map.get_cell(x2, y2) == self.TILE_FLOOR:
+				if self.tile_map.get_cell_source_id(0, Vector2i(x2, y2)) == self.TILE_FLOOR:
 					valid = false
 					break
 			if not valid:
@@ -130,31 +130,31 @@ func generate_map():
 					or y2 == y - 1
 					or y2 == y + room_height + 1
 				):
-					if self.tile_map.get_cell(x2, y2) == self.TILE_EMPTY:
-						self.tile_map.set_cell(x2, y2, self.TILE_WALL)
+					if self.tile_map.get_cell_source_id(0, Vector2i(x2, y2)) == self.TILE_EMPTY:
+						self.tile_map.set_cell(0, Vector2i(x2, y2), self.TILE_WALL, Vector2i.ZERO)
 				else:
-					self.tile_map.set_cell(x2, y2, self.TILE_FLOOR)
+					self.tile_map.set_cell(0, Vector2i(x2, y2), self.TILE_FLOOR, Vector2i.ZERO)
 
 		# Create door to previous room
 		if len(self.rooms) > 1:
-			if self.tile_map.get_cell(x - 2, y) == self.TILE_FLOOR:
+			if self.tile_map.get_cell_source_id(0, Vector2i(x - 2, y)) == self.TILE_FLOOR:
 				var max_dy := 0
 				for dy in range(room_height + 1):
 					max_dy = dy
-					if self.tile_map.get_cell(x - 2, y + dy) == self.TILE_WALL:
+					if self.tile_map.get_cell_source_id(0, Vector2i(x - 2, y + dy)) == self.TILE_WALL:
 						break
-				self.tile_map.set_cell(x - 1, y + randi() % max_dy, self.TILE_FLOOR)
+				self.tile_map.set_cell(0, Vector2i(x - 1, y + randi() % max_dy), self.TILE_FLOOR, Vector2i.ZERO)
 			else:
 				var max_dx := 0
 				for dx in range(room_width + 1):
 					max_dx = dx
-					if self.tile_map.get_cell(x + dx, y - 2) == self.TILE_WALL:
+					if self.tile_map.get_cell_source_id(0, Vector2i(x + dx, y - 2)) == self.TILE_WALL:
 						break
-				self.tile_map.set_cell(x + randi() % max_dx, y - 1, self.TILE_FLOOR)
+				self.tile_map.set_cell(0, Vector2i(x + randi() % max_dx, y - 1), self.TILE_FLOOR, Vector2i.ZERO)
 
 		# Place win tile
 		if len(self.rooms) == self.ROOM_COUNT:
-			self.tile_map.set_cell(x + room_width, y + room_height, self.TILE_WIN)
+			self.tile_map.set_cell(0, Vector2i(x + room_width, y + room_height), self.TILE_WIN, Vector2i.ZERO)
 			break
 
 		# Advance pointer to next room
@@ -179,11 +179,11 @@ func setup():
 	self.generate_map()
 
 	self.player.cellv = Vector2(1, 1)
-	self.player.position = self.tile_map.map_to_world(self.player.cellv)
+	self.player.position = self.tile_map.map_to_local(self.player.cellv)
 	self.player.setup()
-	self.player.camera.smoothing_enabled = false
+	self.player.camera.position_smoothing_enabled = false
 	self.player.camera.force_update_scroll()
-	self.player.camera.smoothing_enabled = true
+	self.player.camera.position_smoothing_enabled = true
 
 	for room_idx in range(1, ROOM_COUNT):
 		var room: MapRoom = rooms[room_idx]

@@ -8,21 +8,21 @@ const HIT_STRESS := 0.5
 const HURT_STRESS := 0.5
 
 
-onready var main: Node2D = get_node(@"/root/Main")
-onready var tile_map: TileMap = main.get_node(@"TileMap")
-onready var blank_map: TileMap = main.get_node(@"BlankMap")
-onready var move_map: TileMap = $MoveMap
-onready var health_map: TileMap = main.get_node(@"CanvasLayer/HealthMap")
-onready var win_label: Label = main.get_node(@"CanvasLayer/WinLabel")
-onready var restart_label: Label = main.get_node(@"CanvasLayer/RestartLabel")
-onready var sprite: AnimatedSprite = $Sprite
-onready var attacks: Node2D = $Attacks
-onready var camera: Camera2D = $Camera2D
-onready var hurt_particles: Particles2D = $HurtParticles
-onready var move_sound: AudioStreamPlayer2D = $MoveSound
-onready var hurt_sound: AudioStreamPlayer2D = $HurtSound
+@onready var main: Node2D = get_node("/root/Main")
+@onready var tile_map: TileMap = main.get_node("TileMap")
+@onready var blank_map: TileMap = main.get_node("BlankMap")
+@onready var move_map: TileMap = $MoveMap
+@onready var health_map: TileMap = main.get_node("CanvasLayer/HealthMap")
+@onready var win_label: Label = main.get_node("CanvasLayer/WinLabel")
+@onready var restart_label: Label = main.get_node("CanvasLayer/RestartLabel")
+@onready var sprite: AnimatedSprite2D = $Sprite2D
+@onready var attacks: Node2D = $Attacks
+@onready var camera: Camera2D = $Camera2D
+@onready var hurt_particles: GPUParticles2D = $HurtParticles
+@onready var move_sound: AudioStreamPlayer2D = $MoveSound
+@onready var hurt_sound: AudioStreamPlayer2D = $HurtSound
 
-onready var attack_animations = [
+@onready var attack_animations = [
 	[$Attacks/LeftUp,   $Attacks/Up,   $Attacks/RightUp  ],
 	[$Attacks/Left,     null,          $Attacks/Right    ],
 	[$Attacks/LeftDown, $Attacks/Down, $Attacks/RightDown],
@@ -60,11 +60,11 @@ func set_neighbor_if_open(
 ):
 	var abs_cellv := self.cellv + cellv
 	if (
-		self.tile_map.get_cellv(abs_cellv) == self.main.TILE_FLOOR
+		self.tile_map.get_cell_source_id(0, abs_cellv) == self.main.TILE_FLOOR
 		and not self.main.enemy_map.has(abs_cellv)
 	):
-		self.blank_map.set_cellv(abs_cellv, 0)
-		map.set_cellv(abs_cellv if absolute else cellv, id)
+		self.blank_map.set_cell(0, abs_cellv, 0, Vector2i.ZERO)
+		map.set_cell(0, abs_cellv if absolute else cellv, 0, Vector2i(id, 0))
 
 
 func draw_move(cellv: Vector2, id: int):
@@ -89,13 +89,13 @@ func stop_animations():
 		animation.visible = false
 
 
-func hitv(cellv: Vector2 = Vector2()) -> bool:
-	var animation: AnimatedSprite = self.attack_animations[cellv.y + 1][cellv.x + 1]
+func hitv(hit_cellv: Vector2 = Vector2()) -> bool:
+	var animation: AnimatedSprite2D = self.attack_animations[hit_cellv.y + 1][hit_cellv.x + 1]
 	animation.visible = true
 	animation.frame = 0
 	animation.play()
 
-	var enemy = self.main.enemy_map.get(self.cellv + cellv)
+	var enemy = self.main.enemy_map.get(self.cellv + hit_cellv)
 	if enemy != null:
 		enemy.hurt(1, (enemy.cellv - self.cellv).normalized())
 		self.camera.add_stress(0.5)
@@ -149,8 +149,8 @@ func attack(cellv: Vector2) -> bool:
 				Vector2(1, 1),
 			]
 
-	for cellv in cells:
-		attacked = self.hitv(cellv) or attacked
+	for hit_cellv in cells:
+		attacked = self.hitv(hit_cellv) or attacked
 
 	return attacked
 
@@ -160,7 +160,7 @@ func roll(cellv: Vector2) -> bool:
 	assert(cellv.is_normalized() and (cellv.x == 0 or cellv.y == 0))
 
 	var new_cellv := self.cellv + cellv
-	if self.tile_map.get_cellv(new_cellv) == self.main.TILE_WIN:
+	if self.tile_map.get_cell_source_id(0, new_cellv) == self.main.TILE_WIN:
 		self.win()
 		return false
 
@@ -236,7 +236,7 @@ func input(event) -> bool:
 
 func draw_health():
 	for i in range(MAX_HEALTH):
-		self.health_map.set_cell(i, 0, 0 if i < health else 1)
+		self.health_map.set_cell(0, Vector2i(i, 0), 0 if i < health else 1, Vector2i.ZERO)
 
 
 func setup():
@@ -265,7 +265,7 @@ func _input(event):
 func _process(delta):
 	self.position = lerp(
 		self.position,
-		self.tile_map.map_to_world(self.cellv),
+		self.tile_map.map_to_local(self.cellv),
 		delta * self.MOVE_SPEED
 	)
 
