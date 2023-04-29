@@ -13,27 +13,38 @@
 	- Multiple HP
 		- Knocked back and/or stunned upon taking damage
 	- Flying enemies and chasms
+	- Enemies with delayed/AoE attacks that can damage other enemies
+- Level elements
+	- Doors that you can open by moving into them
+	- Barricades that be destroyed by attacking them
+	- Hazards that deal damage if you attack them
+	- Gates that can only be passed through with a certain face
+	- Basic positional traps (spikes, linear arrow/flame traps)
 - Upgrades
 	- Per-side damage increases
 	- Per-side range increases
 	- Health increases
 - UX
-	- Softlock detection: show R to restart when no moves are possible
 	- Hold down direction to move automatically
 	- Mouse movement
 	- Show attack areas as icons on bottom of screen
-	- Title screen
-	- Game over screen
-	- Options menu
-		- Music
-		- Sound
-		- Screen shake
-		- Fullscreen
+	- Menus
+		- Main menu
+		- Game over
+		- Credits
+		- Options
+			- Music
+			- Sound
+			- Screen shake
+			- Particles
+			- Fullscreen
 	- Speedrun timer
 - Graphics
 	- Autotiled walls
-	- Additional aesthetic wall/floor tiles
-	- Torches or something?
+	- Aesthetic tiles
+		- Torches
+		- Bones
+		- Debris
 	- Vignette?
 - Refactoring
 	- Extract functions to their relevant nodes
@@ -42,3 +53,8 @@
 		- Health drawing to HealthMap
 	- Use signals to decouple code
 	- Separate attack sound from enemy death sound (in the case of multi-HP enemies)
+
+Notes and ideas:
+
+- Being surrounded by enemies is more fun than fighting them in single file; the Hoplite idea addresses this
+- Destroying multiple enemies in one move is satisfying; try to encourage this
