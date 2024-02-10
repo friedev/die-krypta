@@ -150,9 +150,9 @@ point_count = 2
 curve = SubResource("25")
 
 [sub_resource type="ParticleProcessMaterial" id="27"]
-gravity = Vector3(0, 0, 0)
 initial_velocity_min = 48.0
 initial_velocity_max = 80.0
+gravity = Vector3(0, 0, 0)
 damping_min = 128.0
 damping_max = 128.0
 scale_min = 4.0
