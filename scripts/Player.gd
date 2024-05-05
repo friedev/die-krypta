@@ -1,12 +1,9 @@
-extends Node2D
-class_name Player
-
+class_name Player extends Node2D
 
 const MOVE_SPEED := 15.0
 const MAX_HEALTH := 3
 const HIT_STRESS := 0.5
 const HURT_STRESS := 0.5
-
 
 @onready var main: Node2D = get_node("/root/Main")
 @onready var tile_map: TileMap = main.get_node("TileMap")

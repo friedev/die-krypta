@@ -1,6 +1,4 @@
-extends Node2D
-class_name Main
-
+class_name Main extends Node2D
 
 const TILE_EMPTY := -1
 const TILE_FLOOR := 0
@@ -17,10 +15,8 @@ const ROOM_ENEMY_RANGE := 3
 
 const ENEMY_SCENE := preload("res://scenes/Enemy.tscn")
 
-
 @onready var player: Player = $Player
 @onready var tile_map: TileMap = $TileMap
-
 
 var rooms := []
 var enemies := []

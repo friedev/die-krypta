@@ -1,9 +1,6 @@
-extends Node2D
-class_name Enemy
-
+class_name Enemy extends Node2D
 
 const MOVE_SPEED := 15.0
-
 
 @onready var main: Node2D = get_node("/root/Main")
 @onready var tile_map: TileMap = main.get_node("TileMap")
@@ -11,7 +8,6 @@ const MOVE_SPEED := 15.0
 @onready var sprite: Sprite2D = $Sprite2D
 @onready var hurt_particles: GPUParticles2D = $HurtParticles
 @onready var death_sound: AudioStreamPlayer2D = $DeathSound
-
 
 var prev_cellv: Vector2
 var cellv: Vector2
@@ -40,6 +36,7 @@ func chase_player():
 		self.move(x_dir, 0) or self.move(0, y_dir)
 	else:
 		self.move(0, y_dir) or self.move(x_dir, 0)
+
 
 # Checks if the player is in or past this enemy's room, or within one cell of it
 func is_player_in_room():
