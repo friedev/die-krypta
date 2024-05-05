@@ -187,6 +187,31 @@ func roll(cellv: Vector2) -> bool:
 	return true
 
 
+func wait() -> bool:
+	self.main.animate_enemies = true
+	return true
+
+
+func roll_toward(target: Vector2) -> bool:
+	if target == self.cellv:
+		return self.wait()
+
+	# Try to move along the axis of greater distance toward the target
+	# Failing that, move along the axis of lesser distance
+	var delta := target - self.cellv
+	var x_direction := Vector2(delta.x, 0).normalized()
+	var y_direction := Vector2(0, delta.y).normalized()
+	var direction_priority: Array[Vector2]
+	if delta.abs().x >= delta.abs().y:
+		direction_priority = [x_direction, y_direction]
+	else:
+		direction_priority = [y_direction, x_direction]
+
+	for direction in direction_priority:
+		if direction != Vector2.ZERO and self.roll(direction):
+			return true
+	return false
+
 func die() -> void:
 	self.sprite.visible = false
 	self.attacks.visible = false
@@ -225,8 +250,11 @@ func input(event: InputEvent) -> bool:
 	if event.is_action_pressed(&"move_down"):
 		return self.roll(Vector2.DOWN)
 	if event.is_action_pressed(&"wait"):
-		self.main.animate_enemies = true
-		return true
+		return self.wait()
+	if event.is_action_pressed(&"mouse_move"):
+		return self.roll_toward(
+			self.tile_map.local_to_map(self.tile_map.get_local_mouse_position())
+		)
 	return false
 
 
