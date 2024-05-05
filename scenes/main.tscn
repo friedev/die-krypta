@@ -215,4 +215,5 @@ autoplay = true
 
 [connection signal="died" from="Player" to="." method="_on_player_died"]
 [connection signal="health_changed" from="Player" to="." method="_on_player_health_changed"]
+[connection signal="moved" from="Player" to="." method="_on_player_moved"]
 [connection signal="won" from="Player" to="." method="_on_player_won"]

@@ -3,6 +3,7 @@ class_name Player extends Node2D
 signal won
 signal died
 signal health_changed(health: int)
+signal moved
 
 @export var move_speed: float
 @export var max_health: int
@@ -264,9 +265,8 @@ func handle_input(action: StringName) -> void:
 			push_error("Unknown action %s" % action)
 			success = false
 
-	# TODO use signal
 	if success:
-		self.main.update()
+		self.moved.emit()
 
 	self.last_action = action
 	self.move_timer.start()
