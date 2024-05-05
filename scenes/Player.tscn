@@ -1,9 +1,9 @@
 [gd_scene load_steps=35 format=3 uid="uid://ckkml6my1wkk6"]
 
-[ext_resource type="Script" path="res://scripts/Player.gd" id="1"]
+[ext_resource type="Script" path="res://scenes/Player.gd" id="1"]
 [ext_resource type="Texture2D" uid="uid://hhog17hdqo2j" path="res://sprites/moves.png" id="2"]
 [ext_resource type="Texture2D" uid="uid://b08y3gsghwd2a" path="res://sprites/dice.png" id="3"]
-[ext_resource type="Script" path="res://scripts/ShakeCamera2D.gd" id="4"]
+[ext_resource type="Script" path="res://scenes/ShakeCamera2D.gd" id="4"]
 [ext_resource type="AudioStream" uid="uid://c50way2nmvqdx" path="res://sound/player_move.ogg" id="5"]
 [ext_resource type="AudioStream" uid="uid://b552magwrsv7j" path="res://sound/player_hurt.wav" id="6"]
 [ext_resource type="Texture2D" uid="uid://cjeyx6xpagtfo" path="res://sprites/attack_orthogonal.png" id="9"]

@@ -1,7 +1,7 @@
 [gd_scene load_steps=7 format=3 uid="uid://bgn76dmrwwjl7"]
 
 [ext_resource type="Texture2D" uid="uid://byetd7d400hjj" path="res://sprites/enemy.png" id="1"]
-[ext_resource type="Script" path="res://scripts/Enemy.gd" id="2"]
+[ext_resource type="Script" path="res://scenes/Enemy.gd" id="1_awkll"]
 [ext_resource type="AudioStream" uid="uid://bsfjwhx6m0iak" path="res://sound/enemy_death.wav" id="3"]
 
 [sub_resource type="Curve" id="1"]
@@ -24,7 +24,7 @@ scale_max = 6.0
 scale_curve = SubResource("4")
 
 [node name="Enemy" type="Node2D" node_paths=PackedStringArray("sprite", "hurt_particles", "death_sound")]
-script = ExtResource("2")
+script = ExtResource("1_awkll")
 sprite = NodePath("Sprite2D")
 hurt_particles = NodePath("HurtParticles")
 death_sound = NodePath("DeathSound")
