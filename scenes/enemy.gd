@@ -10,12 +10,12 @@ var main: Main
 var tile_map: TileMap
 var player: Player
 
-var prev_cellv: Vector2
-var cellv: Vector2
+var prev_cellv: Vector2i
+var cellv: Vector2i
 var room: MapRoom
 
 
-func movev(cellv: Vector2) -> bool:
+func movev(cellv: Vector2i) -> bool:
 	var new_cellv := self.cellv + cellv
 	if not self.main.is_cell_open(new_cellv):
 		return false
@@ -24,7 +24,7 @@ func movev(cellv: Vector2) -> bool:
 
 
 func move(x: int, y: int) -> bool:
-	return self.movev(Vector2(x, y))
+	return self.movev(Vector2i(x, y))
 
 
 func chase_player() -> void:
@@ -56,7 +56,7 @@ func is_player_in_room() -> bool:
 
 func update() -> void:
 	if (self.player.cellv - self.cellv).length() == 1.0:
-		self.player.hurt(1, (self.player.cellv - self.cellv).normalized())
+		self.player.hurt(1, self.player.cellv - self.cellv)
 	elif self.is_player_in_room():
 		self.chase_player()
 
@@ -71,8 +71,8 @@ func die() -> void:
 	self.death_sound.play()
 
 
-func hurt(amount: int, direction := Vector2()) -> void:
-	self.hurt_particles.rotation = direction.angle()
+func hurt(amount: int, direction := Vector2i()) -> void:
+	self.hurt_particles.rotation = Vector2(direction).angle()
 	self.hurt_particles.restart()
 
 	self.die()
