@@ -5,7 +5,7 @@
 [ext_resource type="Texture2D" uid="uid://xtcfxh4p1xyc" path="res://sprites/tiles.png" id="3_safsw"]
 [ext_resource type="PackedScene" uid="uid://ckkml6my1wkk6" path="res://scenes/player.tscn" id="4_wkwvu"]
 [ext_resource type="Texture2D" uid="uid://dmv2bg7aaam4l" path="res://sprites/health.png" id="5_07ub3"]
-[ext_resource type="Theme" uid="uid://b75jwyb7wacx0" path="res://ui/themes/theme_ui.tres" id="6_jq00p"]
+[ext_resource type="Theme" uid="uid://cp2dw8jh1pmps" path="res://ui/theme.tres" id="6_rupnf"]
 [ext_resource type="AudioStream" uid="uid://c3ebkqbf75lae" path="res://music/die_krypta.ogg" id="7_8djxl"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_qnd7i"]
@@ -190,7 +190,7 @@ offset_left = -196.0
 offset_top = 16.0
 offset_right = -16.0
 offset_bottom = 52.0
-theme = ExtResource("6_jq00p")
+theme = ExtResource("6_rupnf")
 theme_override_colors/font_color = Color(1, 0.8, 0, 1)
 text = "You Win!"
 horizontal_alignment = 2
@@ -204,7 +204,7 @@ offset_left = -392.0
 offset_top = 16.0
 offset_right = -16.0
 offset_bottom = 52.0
-theme = ExtResource("6_jq00p")
+theme = ExtResource("6_rupnf")
 theme_override_colors/font_color = Color(1, 0, 0, 1)
 text = "Press R to Restart"
 horizontal_alignment = 2

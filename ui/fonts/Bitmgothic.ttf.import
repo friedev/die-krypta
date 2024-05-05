@@ -2,13 +2,13 @@
 
 importer="font_data_dynamic"
 type="FontFile"
-uid="uid://b2pveisjesshw"
-path="res://.godot/imported/pixelFJ8pt1.ttf-6db54d156546f7d5dd11d63a1ca5f080.fontdata"
+uid="uid://cl4p3jkjhorjv"
+path="res://.godot/imported/Bitmgothic.ttf-40a56ebd6c8e2ca4a9656eb1c8ddac19.fontdata"
 
 [deps]
 
-source_file="res://ui/fonts/pixelFJ8pt1.ttf"
-dest_files=["res://.godot/imported/pixelFJ8pt1.ttf-6db54d156546f7d5dd11d63a1ca5f080.fontdata"]
+source_file="res://ui/fonts/Bitmgothic.ttf"
+dest_files=["res://.godot/imported/Bitmgothic.ttf-40a56ebd6c8e2ca4a9656eb1c8ddac19.fontdata"]
 
 [params]
 
@@ -31,7 +31,8 @@ preload=[{
 "chars": [],
 "glyphs": [],
 "name": "New Configuration",
-"size": Vector2i(16, 0)
+"size": Vector2i(16, 0),
+"variation_embolden": 0.0
 }]
 language_support={}
 script_support={}

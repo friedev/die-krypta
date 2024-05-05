@@ -47,7 +47,8 @@ Die Krypta was created by [Aaron Friesen](https://frie.dev).
 - Art: [GIMP](https://gimp.org)
 - Music: [LMMS](https://lmms.io/), using samples by [Erang](https://erang.bandcamp.com) ([1](https://erang.bandcamp.com/album/dungeon-synth-free-samples-pack), [2](https://erang.bandcamp.com/album/dungeon-synth-free-samples-pack-tome-ii))
 - Sounds: `SOUND_LICENSES.md`
-- Font: [pixelFJ8pt](https://www.1001fonts.com/pixelfj8pt1-font.html) by [MBommeli](https://www.1001fonts.com/users/flashjunior/), licensed under the [1001Fonts FFC License](https://www.1001fonts.com/licenses/ffc.html)
+- UI Font: [pixelFJ8pt](https://www.1001fonts.com/pixelfj8pt1-font.html) by [MBommeli](https://www.1001fonts.com/users/flashjunior/), licensed under the [1001Fonts FFC License](https://www.1001fonts.com/licenses/ffc.html)
+- Title Font: [BitmGothic](https://www.1001fonts.com/bitmgothic-font.html) by [Nomi](http://www.thenomi.org), licensed under the [1001Fonts FFC License](https://www.1001fonts.com/licenses/ffc.html)
 
 ## License
 
