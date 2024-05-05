@@ -18,8 +18,8 @@ const ROOM_ENEMY_RANGE := 3
 @export var player: Player
 @export var tile_map: TileMap
 
-var rooms := []
-var enemies := []
+var rooms: Array[MapRoom] = []
+var enemies: Array[Enemy] = []
 var enemy_map := {}
 var animate_enemies := true
 
