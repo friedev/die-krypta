@@ -24,8 +24,7 @@ Each face has a different attack, highlighted in red after you move.
 
 - Arrows/WASD/HJKL: Roll
 - Space/Period: Wait
-- R: Restart
-- Escape: Quit (desktop only) 
+- Escape: Pause
 
 ### Attacks
 
@@ -43,14 +42,15 @@ Below, the specific cells you attack when the given face is turned up are marked
 
 Die Krypta was created by [Aaron Friesen](https://frie.dev).
 
+Software used:
+
 - Engine: [Godot Engine](https://godotengine.org)
 - Art: [GIMP](https://gimp.org)
-- Music: [LMMS](https://lmms.io/), using samples by [Erang](https://erang.bandcamp.com) ([1](https://erang.bandcamp.com/album/dungeon-synth-free-samples-pack), [2](https://erang.bandcamp.com/album/dungeon-synth-free-samples-pack-tome-ii))
-- Sounds: `SOUND_LICENSES.md`
-- UI Font: [pixelFJ8pt](https://www.1001fonts.com/pixelfj8pt1-font.html) by [MBommeli](https://www.1001fonts.com/users/flashjunior/), licensed under the [1001Fonts FFC License](https://www.1001fonts.com/licenses/ffc.html)
-- Title Font: [BitmGothic](https://www.1001fonts.com/bitmgothic-font.html) by [Nomi](http://www.thenomi.org), licensed under the [1001Fonts FFC License](https://www.1001fonts.com/licenses/ffc.html)
+- Music: [LMMS](https://lmms.io/)
+
+See [THIRD-PARTY_LICENSES.md](THIRD-PARTY_LICENSES.md) for the list of third-party assets used and their licenses.
 
 ## License
 
-- The source code is licensed under the [GNU Affero General Public License v3](https://www.gnu.org/licenses/agpl-3.0.en.html) (see `LICENSE.txt`).
-- All original assets (art, music, and original sound effects) are licensed under the [Creative Commons Attribution-ShareAlike 4.0 International License (CC BY-SA 4.0)](https://creativecommons.org/licenses/by-sa/4.0/) (see `ASSET_LICENSE.txt`).
+- Source Code: [GNU Affero General Public License v3](https://www.gnu.org/licenses/agpl-3.0.en.html) (see [LICENSE.txt](LICENSE.txt))
+- Original Assets: [Creative Commons Attribution-ShareAlike 4.0 International License (CC BY-SA 4.0)](https://creativecommons.org/licenses/by-sa/4.0/) (see [ASSET_LICENSE.txt](ASSET_LICENSE.txt))
