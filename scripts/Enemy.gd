@@ -2,12 +2,13 @@ class_name Enemy extends Node2D
 
 const MOVE_SPEED := 15.0
 
-@onready var main: Node2D = get_node("/root/Main")
-@onready var tile_map: TileMap = main.get_node("TileMap")
-@onready var player: Player = main.get_node("Player")
-@onready var sprite: Sprite2D = $Sprite2D
-@onready var hurt_particles: GPUParticles2D = $HurtParticles
-@onready var death_sound: AudioStreamPlayer2D = $DeathSound
+@export var sprite: Sprite2D
+@export var hurt_particles: GPUParticles2D
+@export var death_sound: AudioStreamPlayer2D
+
+var main: Main
+var tile_map: TileMap
+var player: Player
 
 var prev_cellv: Vector2
 var cellv: Vector2
@@ -78,8 +79,11 @@ func hurt(amount: int, direction: Vector2 = Vector2()):
 
 
 func _ready():
-	self.room = null
+	assert(self.main != null)
+	assert(self.tile_map != null)
+	assert(self.player != null)
 
+	self.room = null
 
 func _process(delta):
 	self.position = lerp(

@@ -195,8 +195,15 @@ scale_min = 4.0
 scale_max = 6.0
 scale_curve = SubResource("26")
 
-[node name="Player" type="Node2D"]
+[node name="Player" type="Node2D" node_paths=PackedStringArray("sprite", "attacks", "side_icons", "camera", "hurt_particles", "move_sound", "hurt_sound")]
 script = ExtResource("1")
+sprite = NodePath("Sprite2D")
+attacks = NodePath("Attacks")
+side_icons = NodePath("SideIcons")
+camera = NodePath("Camera2D")
+hurt_particles = NodePath("HurtParticles")
+move_sound = NodePath("MoveSound")
+hurt_sound = NodePath("HurtSound")
 
 [node name="Sprite2D" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("24")

@@ -13,10 +13,10 @@ const ROOM_HEIGHT_RANGE := 6
 const ROOM_ENEMY_MIN := 3
 const ROOM_ENEMY_RANGE := 3
 
-const ENEMY_SCENE := preload("res://scenes/Enemy.tscn")
+@export var enemy_scene: PackedScene
 
-@onready var player: Player = $Player
-@onready var tile_map: TileMap = $TileMap
+@export var player: Player
+@export var tile_map: TileMap
 
 var rooms := []
 var enemies := []
@@ -57,7 +57,10 @@ func update():
 
 
 func place_enemy(cellv: Vector2) -> Enemy:
-	var enemy: Enemy = self.ENEMY_SCENE.instantiate()
+	var enemy := self.enemy_scene.instantiate() as Enemy
+	enemy.main = self
+	enemy.tile_map = self.tile_map
+	enemy.player = self.player
 	enemy.cellv = cellv
 	enemy.prev_cellv = cellv
 	enemy.position = self.tile_map.map_to_local(enemy.cellv)

@@ -23,8 +23,11 @@ scale_min = 4.0
 scale_max = 6.0
 scale_curve = SubResource("4")
 
-[node name="Enemy" type="Node2D"]
+[node name="Enemy" type="Node2D" node_paths=PackedStringArray("sprite", "hurt_particles", "death_sound")]
 script = ExtResource("2")
+sprite = NodePath("Sprite2D")
+hurt_particles = NodePath("HurtParticles")
+death_sound = NodePath("DeathSound")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 texture = ExtResource("1")

@@ -5,18 +5,19 @@ const MAX_HEALTH := 3
 const HIT_STRESS := 0.5
 const HURT_STRESS := 0.5
 
-@onready var main: Node2D = get_node("/root/Main")
-@onready var tile_map: TileMap = main.get_node("TileMap")
-@onready var health_map: TileMap = main.get_node("CanvasLayer/HealthMap")
-@onready var win_label: Label = main.get_node("CanvasLayer/WinLabel")
-@onready var restart_label: Label = main.get_node("CanvasLayer/RestartLabel")
-@onready var sprite: AnimatedSprite2D = $Sprite2D
-@onready var attacks: Node2D = $Attacks
-@onready var side_icons: Node2D = $SideIcons
-@onready var camera: Camera2D = $Camera2D
-@onready var hurt_particles: GPUParticles2D = $HurtParticles
-@onready var move_sound: AudioStreamPlayer2D = $MoveSound
-@onready var hurt_sound: AudioStreamPlayer2D = $HurtSound
+@export var main: Main
+@export var tile_map: TileMap
+@export var health_map: TileMap
+@export var win_label: Label
+@export var restart_label: Label
+
+@export var sprite: AnimatedSprite2D
+@export var attacks: Node2D
+@export var side_icons: Node2D
+@export var camera: Camera2D
+@export var hurt_particles: GPUParticles2D
+@export var move_sound: AudioStreamPlayer2D
+@export var hurt_sound: AudioStreamPlayer2D
 
 @onready var attack_animations = [
 	[$Attacks/LeftUp,   $Attacks/Up,   $Attacks/RightUp  ],
