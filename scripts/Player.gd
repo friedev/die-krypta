@@ -10,7 +10,6 @@ const HURT_STRESS := 0.5
 
 @onready var main: Node2D = get_node("/root/Main")
 @onready var tile_map: TileMap = main.get_node("TileMap")
-@onready var blank_map: TileMap = main.get_node("BlankMap")
 @onready var health_map: TileMap = main.get_node("CanvasLayer/HealthMap")
 @onready var win_label: Label = main.get_node("CanvasLayer/WinLabel")
 @onready var restart_label: Label = main.get_node("CanvasLayer/RestartLabel")
@@ -65,7 +64,6 @@ func draw_move(cellv: Vector2, move: int):
 		self.tile_map.get_cell_source_id(0, abs_cellv) == self.main.TILE_FLOOR
 		and not self.main.enemy_map.has(abs_cellv)
 	):
-		self.blank_map.set_cell(0, abs_cellv, 0, Vector2i.ZERO)
 		side_icon.show()
 		side_icon.frame = move - 1
 	else:
@@ -77,10 +75,6 @@ func draw_moves():
 	self.draw_move(Vector2.RIGHT, self.side_left)
 	self.draw_move(Vector2.UP, 7 - self.side_up)
 	self.draw_move(Vector2.DOWN, self.side_up)
-
-
-func clear_maps():
-	self.blank_map.clear()
 
 
 func stop_animations():
@@ -168,7 +162,6 @@ func roll(cellv: Vector2) -> bool:
 		return false
 
 	self.stop_animations()
-	self.clear_maps()
 
 	self.cellv = new_cellv
 	var new_room: MapRoom = self.main.get_room(self.cellv)
@@ -196,7 +189,6 @@ func die():
 	self.side_icons.visible = false
 	self.restart_label.visible = true
 	self.stop_animations()
-	self.clear_maps()
 
 	self.set_process_input(false)
 
@@ -252,7 +244,6 @@ func setup():
 	self.max_room = self.main.rooms[0]
 	self.set_process_input(true)
 	self.stop_animations()
-	self.clear_maps()
 	self.draw_moves()
 	self.draw_health()
 
