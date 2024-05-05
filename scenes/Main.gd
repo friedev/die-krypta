@@ -14,9 +14,11 @@ const ROOM_ENEMY_MIN := 3
 const ROOM_ENEMY_RANGE := 3
 
 @export var enemy_scene: PackedScene
-
 @export var player: Player
 @export var tile_map: TileMap
+@export var health_map: TileMap
+@export var win_label: Label
+@export var restart_label: Label
 
 var rooms: Array[MapRoom] = []
 var enemies: Array[Enemy] = []
@@ -191,6 +193,9 @@ func setup():
 
 	self.animate_enemies = true
 
+	self.restart_label.hide()
+	self.win_label.hide()
+
 
 func _ready():
 	self.setup()
@@ -204,3 +209,17 @@ func _input(event):
 			self.setup()
 		else:
 			get_tree().quit()
+
+
+func _on_player_died() -> void:
+	self.restart_label.show()
+
+
+func _on_player_won() -> void:
+	self.win_label.show()
+
+
+func _on_player_health_changed(health: int) -> void:
+	self.health_map.clear()
+	for i in range(self.player.MAX_HEALTH):
+		self.health_map.set_cell(0, Vector2i(i, 0), 0 if i < health else 1, Vector2i.ZERO)

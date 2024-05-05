@@ -1,5 +1,9 @@
 class_name Player extends Node2D
 
+signal won
+signal died
+signal health_changed(health: int)
+
 const MOVE_SPEED := 15.0
 const MAX_HEALTH := 3
 const HIT_STRESS := 0.5
@@ -7,9 +11,6 @@ const HURT_STRESS := 0.5
 
 @export var main: Main
 @export var tile_map: TileMap
-@export var health_map: TileMap
-@export var win_label: Label
-@export var restart_label: Label
 
 @export var sprite: AnimatedSprite2D
 @export var attacks: Node2D
@@ -35,8 +36,13 @@ var cellv: Vector2
 var side := 1
 var side_left := 4
 var side_up := 5
-var health := MAX_HEALTH
 var max_room: MapRoom = null
+
+var health := MAX_HEALTH:
+	set(value):
+		health = value
+		self.health_changed.emit(self.health)
+
 
 
 func set_sides(cellv: Vector2):
@@ -185,16 +191,16 @@ func die():
 	self.sprite.visible = false
 	self.attacks.visible = false
 	self.side_icons.visible = false
-	self.restart_label.visible = true
 	self.stop_animations()
 
 	self.set_process_input(false)
+
+	self.died.emit()
 
 
 func hurt(amount: int, direction: Vector2):
 	self.health -= amount
 
-	self.draw_health()
 	self.camera.add_stress(self.HURT_STRESS)
 	self.hurt_particles.rotation = direction.angle()
 	self.hurt_particles.restart()
@@ -206,7 +212,7 @@ func hurt(amount: int, direction: Vector2):
 
 
 func win():
-	self.win_label.visible = true
+	self.won.emit()
 
 
 func input(event) -> bool:
@@ -224,11 +230,6 @@ func input(event) -> bool:
 	return false
 
 
-func draw_health():
-	for i in range(MAX_HEALTH):
-		self.health_map.set_cell(0, Vector2i(i, 0), 0 if i < health else 1, Vector2i.ZERO)
-
-
 func setup():
 	self.health = MAX_HEALTH
 	self.side = 1
@@ -237,13 +238,10 @@ func setup():
 	self.sprite.visible = true
 	self.attacks.visible = true
 	self.side_icons.visible = true
-	self.restart_label.visible = false
-	self.win_label.visible = false
 	self.max_room = self.main.rooms[0]
 	self.set_process_input(true)
 	self.stop_animations()
 	self.draw_moves()
-	self.draw_health()
 
 
 func _input(event):
@@ -262,3 +260,4 @@ func _process(delta):
 func _on_animation_finished():
 	self.stop_animations()
 	self.main.animate_enemies = true
+
