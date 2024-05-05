@@ -19,6 +19,7 @@ signal health_changed(health: int)
 @export var hurt_particles: GPUParticles2D
 @export var move_sound: AudioStreamPlayer2D
 @export var hurt_sound: AudioStreamPlayer2D
+@export var move_timer: Timer
 
 @onready var attack_animations = [
 	[$Attacks/LeftUp,   $Attacks/Up,   $Attacks/RightUp  ],
@@ -37,6 +38,7 @@ var side := 1
 var side_left := 4
 var side_up := 5
 var max_room: MapRoom = null
+var last_action: StringName
 
 var health: int:
 	set(value):
@@ -212,6 +214,7 @@ func roll_toward(target: Vector2) -> bool:
 			return true
 	return false
 
+
 func die() -> void:
 	self.sprite.visible = false
 	self.attacks.visible = false
@@ -240,22 +243,40 @@ func win() -> void:
 	self.won.emit()
 
 
-func input(event: InputEvent) -> bool:
-	if event.is_action_pressed(&"move_left"):
-		return self.roll(Vector2.LEFT)
-	if event.is_action_pressed(&"move_right"):
-		return self.roll(Vector2.RIGHT)
-	if event.is_action_pressed(&"move_up"):
-		return self.roll(Vector2.UP)
-	if event.is_action_pressed(&"move_down"):
-		return self.roll(Vector2.DOWN)
-	if event.is_action_pressed(&"wait"):
-		return self.wait()
-	if event.is_action_pressed(&"mouse_move"):
-		return self.roll_toward(
-			self.tile_map.local_to_map(self.tile_map.get_local_mouse_position())
-		)
-	return false
+func handle_input(action: StringName) -> void:
+	var success: bool
+	match action:
+		&"move_left":
+			success = self.roll(Vector2.LEFT)
+		&"move_right":
+			success = self.roll(Vector2.RIGHT)
+		&"move_up":
+			success = self.roll(Vector2.UP)
+		&"move_down":
+			success = self.roll(Vector2.DOWN)
+		&"wait":
+			success = self.wait()
+		&"mouse_move":
+			success = self.roll_toward(
+				self.tile_map.local_to_map(self.tile_map.get_local_mouse_position())
+			)
+		_:
+			push_error("Unknown action %s" % action)
+			success = false
+
+	# TODO use signal
+	if success:
+		self.main.update()
+
+	self.last_action = action
+	self.move_timer.start()
+
+
+func _on_move_timer_timeout() -> void:
+	# If the last action is still held down, repeat it
+	if Input.is_action_pressed(self.last_action):
+		self.handle_input(self.last_action)
+		self.move_timer.start()
 
 
 func setup() -> void:
@@ -273,8 +294,18 @@ func setup() -> void:
 
 
 func _input(event: InputEvent) -> void:
-	if self.input(event):
-		self.main.update()
+	var action_order: Array[StringName] = [
+		&"move_left",
+		&"move_right",
+		&"move_up",
+		&"move_down",
+		&"wait",
+		&"mouse_move"
+	]
+	for action in action_order:
+		if event.is_action_pressed(action):
+			self.handle_input(action)
+			break
 
 
 func _process(delta: float) -> void:
@@ -287,4 +318,3 @@ func _process(delta: float) -> void:
 func _on_animation_finished() -> void:
 	self.stop_animations()
 	self.main.animate_enemies = true
-

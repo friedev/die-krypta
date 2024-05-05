@@ -195,7 +195,7 @@ scale_min = 4.0
 scale_max = 6.0
 scale_curve = SubResource("26")
 
-[node name="Player" type="Node2D" node_paths=PackedStringArray("sprite", "attacks", "side_icons", "camera", "hurt_particles", "move_sound", "hurt_sound")]
+[node name="Player" type="Node2D" node_paths=PackedStringArray("sprite", "attacks", "side_icons", "camera", "hurt_particles", "move_sound", "hurt_sound", "move_timer")]
 script = ExtResource("1")
 move_speed = 15.0
 max_health = 3
@@ -208,6 +208,7 @@ camera = NodePath("Camera2D")
 hurt_particles = NodePath("HurtParticles")
 move_sound = NodePath("MoveSound")
 hurt_sound = NodePath("HurtSound")
+move_timer = NodePath("MoveTimer")
 
 [node name="Sprite2D" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("24")
@@ -327,6 +328,10 @@ stream = ExtResource("5")
 [node name="HurtSound" type="AudioStreamPlayer2D" parent="."]
 stream = ExtResource("6")
 
+[node name="MoveTimer" type="Timer" parent="."]
+wait_time = 0.25
+one_shot = true
+
 [connection signal="animation_finished" from="Attacks/Left" to="." method="_on_animation_finished"]
 [connection signal="animation_finished" from="Attacks/Right" to="." method="_on_animation_finished"]
 [connection signal="animation_finished" from="Attacks/Up" to="." method="_on_animation_finished"]
@@ -335,3 +340,4 @@ stream = ExtResource("6")
 [connection signal="animation_finished" from="Attacks/LeftDown" to="." method="_on_animation_finished"]
 [connection signal="animation_finished" from="Attacks/RightUp" to="." method="_on_animation_finished"]
 [connection signal="animation_finished" from="Attacks/RightDown" to="." method="_on_animation_finished"]
+[connection signal="timeout" from="MoveTimer" to="." method="_on_move_timer_timeout"]
