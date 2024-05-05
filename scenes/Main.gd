@@ -47,7 +47,7 @@ func get_room(cellv: Vector2) -> MapRoom:
 	return null
 
 
-func update():
+func update() -> void:
 	for enemy in self.enemies:
 		self.enemy_map.erase(enemy.cellv)
 		enemy.prev_cellv = enemy.cellv
@@ -72,7 +72,7 @@ func place_enemy(cellv: Vector2) -> Enemy:
 	return enemy
 
 
-func spawn_room_enemy(room: MapRoom):
+func spawn_room_enemy(room: MapRoom) -> void:
 	var cellv := Vector2(
 		room.x + randi() % (room.width + 1),
 		room.y + randi() % (room.height + 1)
@@ -93,7 +93,7 @@ func find_open_cell() -> Vector2:
 	return open_cells[randi() % len(open_cells)]
 
 
-func generate_map():
+func generate_map() -> void:
 	var x := 1
 	var y := 1
 	while len(self.rooms) < self.room_count:
@@ -160,7 +160,7 @@ func generate_map():
 			y += randi() % room_height
 
 
-func setup():
+func setup() -> void:
 	randomize()
 
 	for enemy in self.enemies:
@@ -191,11 +191,11 @@ func setup():
 	self.win_label.hide()
 
 
-func _ready():
+func _ready() -> void:
 	self.setup()
 
 
-func _input(event):
+func _input(event: InputEvent) -> void:
 	if event.is_action_pressed(&"restart"):
 		self.setup()
 	elif event.is_action_pressed(&"exit"):

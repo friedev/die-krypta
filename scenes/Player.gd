@@ -15,7 +15,7 @@ signal health_changed(health: int)
 @export var sprite: AnimatedSprite2D
 @export var attacks: Node2D
 @export var side_icons: Node2D
-@export var camera: Camera2D
+@export var camera: ShakeCamera2D
 @export var hurt_particles: GPUParticles2D
 @export var move_sound: AudioStreamPlayer2D
 @export var hurt_sound: AudioStreamPlayer2D
@@ -45,8 +45,8 @@ var health: int:
 
 
 
-func set_sides(cellv: Vector2):
-	var old_side = self.side
+func set_sides(cellv: Vector2) -> void:
+	var old_side := self.side
 	if cellv == Vector2.LEFT:
 		self.side = 7 - self.side_left
 		self.side_left = old_side
@@ -61,7 +61,7 @@ func set_sides(cellv: Vector2):
 		self.side_up = 7 - old_side
 
 
-func draw_move(cellv: Vector2, move: int):
+func draw_move(cellv: Vector2, move: int) -> void:
 	var abs_cellv := self.cellv + cellv
 	var side_icon := self.side_icon_sprites[cellv.y + 1][cellv.x + 1] as AnimatedSprite2D
 	if (
@@ -74,15 +74,15 @@ func draw_move(cellv: Vector2, move: int):
 		side_icon.hide()
 
 
-func draw_moves():
+func draw_moves() -> void:
 	self.draw_move(Vector2.LEFT, 7 - self.side_left)
 	self.draw_move(Vector2.RIGHT, self.side_left)
 	self.draw_move(Vector2.UP, 7 - self.side_up)
 	self.draw_move(Vector2.DOWN, self.side_up)
 
 
-func stop_animations():
-	for animation in self.attacks.get_children():
+func stop_animations() -> void:
+	for animation: AnimatedSprite2D in self.attacks.get_children():
 		animation.stop()
 		animation.visible = false
 
@@ -93,7 +93,7 @@ func hitv(hit_cellv: Vector2 = Vector2()) -> bool:
 	animation.frame = 0
 	animation.play()
 
-	var enemy = self.main.enemy_map.get(self.cellv + hit_cellv)
+	var enemy := self.main.enemy_map.get(self.cellv + hit_cellv) as Enemy
 	if enemy != null:
 		enemy.hurt(1, (enemy.cellv - self.cellv).normalized())
 		self.camera.add_stress(0.5)
@@ -187,7 +187,7 @@ func roll(cellv: Vector2) -> bool:
 	return true
 
 
-func die():
+func die() -> void:
 	self.sprite.visible = false
 	self.attacks.visible = false
 	self.side_icons.visible = false
@@ -198,7 +198,7 @@ func die():
 	self.died.emit()
 
 
-func hurt(amount: int, direction: Vector2):
+func hurt(amount: int, direction: Vector2) -> void:
 	self.health -= amount
 
 	self.camera.add_stress(self.hurt_stress)
@@ -211,11 +211,11 @@ func hurt(amount: int, direction: Vector2):
 		self.die()
 
 
-func win():
+func win() -> void:
 	self.won.emit()
 
 
-func input(event) -> bool:
+func input(event: InputEvent) -> bool:
 	if event.is_action_pressed(&"move_left"):
 		return self.roll(Vector2.LEFT)
 	if event.is_action_pressed(&"move_right"):
@@ -230,7 +230,7 @@ func input(event) -> bool:
 	return false
 
 
-func setup():
+func setup() -> void:
 	self.health = self.max_health
 	self.side = 1
 	self.side_left = 4
@@ -244,20 +244,19 @@ func setup():
 	self.draw_moves()
 
 
-func _input(event):
+func _input(event: InputEvent) -> void:
 	if self.input(event):
 		self.main.update()
 
 
-func _process(delta):
-	self.position = lerp(
-		self.position,
+func _process(delta: float) -> void:
+	self.position = self.position.lerp(
 		self.tile_map.map_to_local(self.cellv),
 		delta * self.move_speed
 	)
 
 
-func _on_animation_finished():
+func _on_animation_finished() -> void:
 	self.stop_animations()
 	self.main.animate_enemies = true
 

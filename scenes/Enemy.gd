@@ -27,12 +27,12 @@ func move(x: int, y: int) -> bool:
 	return self.movev(Vector2(x, y))
 
 
-func chase_player():
+func chase_player() -> void:
 	var dy := player.cellv.y - self.cellv.y
 	var dx := player.cellv.x - self.cellv.x
-	var x_dir := int(dx / max(1, abs(dx)))
-	var y_dir := int(dy / max(1, abs(dy)))
-	var x_first = abs(dx) > abs(dy) or (abs(dx) == abs(dy) and randi() % 2 == 0)
+	var x_dir := int(dx / maxi(1, absi(dx)))
+	var y_dir := int(dy / maxi(1, absi(dy)))
+	var x_first := absi(dx) > absi(dy) or (absi(dx) == absi(dy) and randi() % 2 == 0)
 	if x_first:
 		self.move(x_dir, 0) or self.move(0, y_dir)
 	else:
@@ -40,7 +40,7 @@ func chase_player():
 
 
 # Checks if the player is in or past this enemy's room, or within one cell of it
-func is_player_in_room():
+func is_player_in_room() -> bool:
 	if self.room == null:
 		return true
 	if self.player.max_room == null:
@@ -54,14 +54,14 @@ func is_player_in_room():
 	)
 
 
-func update():
+func update() -> void:
 	if (self.player.cellv - self.cellv).length() == 1.0:
 		self.player.hurt(1, (self.player.cellv - self.cellv).normalized())
 	elif self.is_player_in_room():
 		self.chase_player()
 
 
-func die():
+func die() -> void:
 	self.main.enemy_map.erase(self.cellv)
 	self.main.enemies.erase(self)
 	self.sprite.visible = false
@@ -71,23 +71,22 @@ func die():
 	self.death_sound.play()
 
 
-func hurt(amount: int, direction: Vector2 = Vector2()):
+func hurt(amount: int, direction := Vector2()) -> void:
 	self.hurt_particles.rotation = direction.angle()
 	self.hurt_particles.restart()
 
 	self.die()
 
 
-func _ready():
+func _ready() -> void:
 	assert(self.main != null)
 	assert(self.tile_map != null)
 	assert(self.player != null)
 
 	self.room = null
 
-func _process(delta):
-	self.position = lerp(
-		self.position,
+func _process(delta: float) -> void:
+	self.position = self.position.lerp(
 		self.tile_map.map_to_local(
 			self.cellv
 			if self.main.animate_enemies
@@ -97,5 +96,5 @@ func _process(delta):
 	)
 
 
-func _on_DeathSound_finished():
+func _on_DeathSound_finished() -> void:
 	self.queue_free()
