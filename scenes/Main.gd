@@ -8,10 +8,10 @@ const TILE_WIN := 2
 @export var room_count: int
 @export var room_width_min: int
 @export var room_height_min: int
-@export var room_width_range: int
-@export var room_height_range: int
+@export var room_width_max: int
+@export var room_height_max: int
 @export var room_enemy_min: int
-@export var room_enemy_range: int
+@export var room_enemy_max: int
 
 @export var enemy_scene: PackedScene
 @export var player: Player
@@ -97,8 +97,8 @@ func generate_map():
 	var x := 1
 	var y := 1
 	while len(self.rooms) < self.room_count:
-		var room_width := randi() % self.room_width_range + self.room_width_min
-		var room_height := randi() % self.room_height_range + self.room_height_min
+		var room_width := randi_range(self.room_width_min, self.room_width_max)
+		var room_height := randi_range(self.room_height_min, self.room_height_max)
 		var room := MapRoom.new(x, y, room_width, room_height)
 
 		# Check if room will fit
@@ -181,7 +181,7 @@ func setup():
 
 	for room_idx in range(1, self.room_count):
 		var room: MapRoom = rooms[room_idx]
-		var enemy_count := randi() % self.room_enemy_range + self.room_enemy_min
+		var enemy_count := randi_range(self.room_enemy_min, self.room_enemy_max)
 		for _enemy_idx in range(enemy_count):
 			self.spawn_room_enemy(room)
 
@@ -202,7 +202,7 @@ func _input(event):
 		if OS.get_name() == "HTML5":
 			self.setup()
 		else:
-			get_tree().quit()
+			self.get_tree().quit()
 
 
 func _on_player_died() -> void:
