@@ -96,7 +96,7 @@ func hitv(hit_cellv: Vector2 = Vector2()) -> bool:
 	var enemy := self.main.enemy_map.get(self.cellv + hit_cellv) as Enemy
 	if enemy != null:
 		enemy.hurt(1, (enemy.cellv - self.cellv).normalized())
-		self.camera.add_stress(0.5)
+		self.camera.shake += self.hit_stress
 		return true
 	else:
 		return false
@@ -201,7 +201,7 @@ func die() -> void:
 func hurt(amount: int, direction: Vector2) -> void:
 	self.health -= amount
 
-	self.camera.add_stress(self.hurt_stress)
+	self.camera.shake += self.hurt_stress
 	self.hurt_particles.rotation = direction.angle()
 	self.hurt_particles.restart()
 	self.hurt_sound.pitch_scale = randf() * 0.5 + 0.75

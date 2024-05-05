@@ -218,6 +218,9 @@ offset = Vector2(8, 8)
 zoom = Vector2(4, 4)
 position_smoothing_enabled = true
 script = ExtResource("4")
+shake_rate = 1.0
+max_offset = 24.0
+shake_reduction = 0.05
 
 [node name="SideIcons" type="Node2D" parent="."]
 
