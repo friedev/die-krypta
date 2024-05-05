@@ -11,12 +11,12 @@ const HURT_STRESS := 0.5
 @onready var main: Node2D = get_node("/root/Main")
 @onready var tile_map: TileMap = main.get_node("TileMap")
 @onready var blank_map: TileMap = main.get_node("BlankMap")
-@onready var move_map: TileMap = $MoveMap
 @onready var health_map: TileMap = main.get_node("CanvasLayer/HealthMap")
 @onready var win_label: Label = main.get_node("CanvasLayer/WinLabel")
 @onready var restart_label: Label = main.get_node("CanvasLayer/RestartLabel")
 @onready var sprite: AnimatedSprite2D = $Sprite2D
 @onready var attacks: Node2D = $Attacks
+@onready var side_icons: Node2D = $SideIcons
 @onready var camera: Camera2D = $Camera2D
 @onready var hurt_particles: GPUParticles2D = $HurtParticles
 @onready var move_sound: AudioStreamPlayer2D = $MoveSound
@@ -26,6 +26,12 @@ const HURT_STRESS := 0.5
 	[$Attacks/LeftUp,   $Attacks/Up,   $Attacks/RightUp  ],
 	[$Attacks/Left,     null,          $Attacks/Right    ],
 	[$Attacks/LeftDown, $Attacks/Down, $Attacks/RightDown],
+]
+
+@onready var side_icon_sprites = [
+	[null,            $SideIcons/Up,   null            ],
+	[$SideIcons/Left, null,            $SideIcons/Right],
+	[null,            $SideIcons/Down, null            ],
 ]
 
 var cellv: Vector2
@@ -52,23 +58,18 @@ func set_sides(cellv: Vector2):
 		self.side_up = 7 - old_side
 
 
-func set_neighbor_if_open(
-	map: TileMap,
-	cellv: Vector2,
-	id: int,
-	absolute: bool = true
-):
+func draw_move(cellv: Vector2, move: int):
 	var abs_cellv := self.cellv + cellv
+	var side_icon := self.side_icon_sprites[cellv.y + 1][cellv.x + 1] as AnimatedSprite2D
 	if (
 		self.tile_map.get_cell_source_id(0, abs_cellv) == self.main.TILE_FLOOR
 		and not self.main.enemy_map.has(abs_cellv)
 	):
 		self.blank_map.set_cell(0, abs_cellv, 0, Vector2i.ZERO)
-		map.set_cell(0, abs_cellv if absolute else cellv, 0, Vector2i(id, 0))
-
-
-func draw_move(cellv: Vector2, id: int):
-	self.set_neighbor_if_open(self.move_map, cellv, id - 1, false)
+		side_icon.show()
+		side_icon.frame = move - 1
+	else:
+		side_icon.hide()
 
 
 func draw_moves():
@@ -80,7 +81,6 @@ func draw_moves():
 
 func clear_maps():
 	self.blank_map.clear()
-	self.move_map.clear()
 
 
 func stop_animations():
@@ -193,7 +193,7 @@ func roll(cellv: Vector2) -> bool:
 func die():
 	self.sprite.visible = false
 	self.attacks.visible = false
-	self.move_map.visible = false
+	self.side_icons.visible = false
 	self.restart_label.visible = true
 	self.stop_animations()
 	self.clear_maps()
@@ -246,7 +246,7 @@ func setup():
 	self.side_up = 5
 	self.sprite.visible = true
 	self.attacks.visible = true
-	self.move_map.visible = true
+	self.side_icons.visible = true
 	self.restart_label.visible = false
 	self.win_label.visible = false
 	self.max_room = self.main.rooms[0]
