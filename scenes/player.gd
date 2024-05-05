@@ -15,7 +15,7 @@ signal health_changed(health: int)
 @export var sprite: AnimatedSprite2D
 @export var attacks: Node2D
 @export var side_icons: Node2D
-@export var camera: ShakeCamera2D
+@export var camera: ShakeCamera
 @export var hurt_particles: GPUParticles2D
 @export var move_sound: AudioStreamPlayer2D
 @export var hurt_sound: AudioStreamPlayer2D

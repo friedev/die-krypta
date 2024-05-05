@@ -1,5 +1,5 @@
 extends Camera2D
-class_name ShakeCamera2D
+class_name ShakeCamera
 
 
 const MAX_OFFSET := 4.0
