@@ -216,15 +216,15 @@ func win():
 
 
 func input(event) -> bool:
-	if event.is_action_pressed("move_left"):
+	if event.is_action_pressed(&"move_left"):
 		return self.roll(Vector2.LEFT)
-	if event.is_action_pressed("move_right"):
+	if event.is_action_pressed(&"move_right"):
 		return self.roll(Vector2.RIGHT)
-	if event.is_action_pressed("move_up"):
+	if event.is_action_pressed(&"move_up"):
 		return self.roll(Vector2.UP)
-	if event.is_action_pressed("move_down"):
+	if event.is_action_pressed(&"move_down"):
 		return self.roll(Vector2.DOWN)
-	if event.is_action_pressed("wait"):
+	if event.is_action_pressed(&"wait"):
 		self.main.animate_enemies = true
 		return true
 	return false

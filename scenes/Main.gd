@@ -196,9 +196,9 @@ func _ready():
 
 
 func _input(event):
-	if event.is_action_pressed("restart"):
+	if event.is_action_pressed(&"restart"):
 		self.setup()
-	elif event.is_action_pressed("exit"):
+	elif event.is_action_pressed(&"exit"):
 		if OS.get_name() == "HTML5":
 			self.setup()
 		else:
