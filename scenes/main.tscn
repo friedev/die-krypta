@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3 uid="uid://c4pnltqkwa20j"]
+[gd_scene load_steps=20 format=3 uid="uid://c4pnltqkwa20j"]
 
 [ext_resource type="Script" path="res://scenes/main.gd" id="1_yugwm"]
 [ext_resource type="PackedScene" uid="uid://bgn76dmrwwjl7" path="res://scenes/enemy.tscn" id="2_kyqkm"]
@@ -7,6 +7,11 @@
 [ext_resource type="Texture2D" uid="uid://dmv2bg7aaam4l" path="res://sprites/health.png" id="5_07ub3"]
 [ext_resource type="Theme" uid="uid://cp2dw8jh1pmps" path="res://ui/theme.tres" id="6_rupnf"]
 [ext_resource type="AudioStream" uid="uid://c3ebkqbf75lae" path="res://music/die_krypta.ogg" id="7_8djxl"]
+[ext_resource type="PackedScene" uid="uid://dwbkolmyih02g" path="res://scenes/ui/menus/main_menu.tscn" id="7_mr1vb"]
+[ext_resource type="PackedScene" uid="uid://b8aue815rv5va" path="res://scenes/ui/menus/options_menu.tscn" id="8_c260w"]
+[ext_resource type="PackedScene" uid="uid://btptdcsf7o1lc" path="res://scenes/ui/menus/credits_menu.tscn" id="9_iidar"]
+[ext_resource type="PackedScene" uid="uid://cpgmxhix5jqaa" path="res://scenes/ui/menus/game_over_menu.tscn" id="10_odyjr"]
+[ext_resource type="PackedScene" uid="uid://cswjis18hols6" path="res://scenes/ui/menus/pause_menu.tscn" id="11_d13m3"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_qnd7i"]
 texture = ExtResource("3_safsw")
@@ -147,7 +152,7 @@ tile_size = Vector2i(8, 8)
 sources/0 = SubResource("TileSetAtlasSource_hqbq2")
 sources/1 = SubResource("TileSetAtlasSource_n0hwp")
 
-[node name="Main" type="Node2D" node_paths=PackedStringArray("player", "tile_map", "health_map", "win_label", "restart_label")]
+[node name="Main" type="Node2D" node_paths=PackedStringArray("player", "tile_map", "health_map")]
 script = ExtResource("1_yugwm")
 room_count = 10
 room_width_min = 2
@@ -160,8 +165,6 @@ enemy_scene = ExtResource("2_kyqkm")
 player = NodePath("Player")
 tile_map = NodePath("TileMap")
 health_map = NodePath("CanvasLayer/HealthMap")
-win_label = NodePath("CanvasLayer/WinLabel")
-restart_label = NodePath("CanvasLayer/RestartLabel")
 
 [node name="TileMap" type="TileMap" parent="."]
 z_index = -4
@@ -170,6 +173,7 @@ tile_set = SubResource("4")
 format = 2
 
 [node name="Player" parent="." node_paths=PackedStringArray("main", "tile_map") instance=ExtResource("4_wkwvu")]
+visible = false
 main = NodePath("..")
 tile_map = NodePath("../TileMap")
 
@@ -181,39 +185,48 @@ scale = Vector2(8, 8)
 tile_set = SubResource("2")
 format = 2
 
-[node name="WinLabel" type="Label" parent="CanvasLayer"]
-visible = false
-anchors_preset = 1
-anchor_left = 1.0
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer"]
+anchors_preset = 15
 anchor_right = 1.0
-offset_left = -196.0
-offset_top = 16.0
-offset_right = -16.0
-offset_bottom = 52.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 theme = ExtResource("6_rupnf")
-theme_override_colors/font_color = Color(1, 0.8, 0, 1)
-text = "You Win!"
-horizontal_alignment = 2
 
-[node name="RestartLabel" type="Label" parent="CanvasLayer"]
+[node name="MainMenu" parent="CanvasLayer/MarginContainer" instance=ExtResource("7_mr1vb")]
 visible = false
-anchors_preset = 1
-anchor_left = 1.0
-anchor_right = 1.0
-offset_left = -392.0
-offset_top = 16.0
-offset_right = -16.0
-offset_bottom = 52.0
-theme = ExtResource("6_rupnf")
-theme_override_colors/font_color = Color(1, 0, 0, 1)
-text = "Press R to Restart"
-horizontal_alignment = 2
+layout_mode = 2
+
+[node name="OptionsMenu" parent="CanvasLayer/MarginContainer" instance=ExtResource("8_c260w")]
+visible = false
+layout_mode = 2
+
+[node name="CreditsMenu" parent="CanvasLayer/MarginContainer" instance=ExtResource("9_iidar")]
+visible = false
+layout_mode = 2
+
+[node name="GameOverMenu" parent="CanvasLayer/MarginContainer" instance=ExtResource("10_odyjr")]
+visible = false
+layout_mode = 2
+
+[node name="PauseMenu" parent="CanvasLayer/MarginContainer" instance=ExtResource("11_d13m3")]
+visible = false
+layout_mode = 2
 
 [node name="Music" type="AudioStreamPlayer" parent="."]
+process_mode = 3
 stream = ExtResource("7_8djxl")
 autoplay = true
 
-[connection signal="died" from="Player" to="." method="_on_player_died"]
+[connection signal="died" from="Player" to="CanvasLayer/MarginContainer/GameOverMenu" method="_on_player_died"]
 [connection signal="health_changed" from="Player" to="." method="_on_player_health_changed"]
 [connection signal="moved" from="Player" to="." method="_on_player_moved"]
-[connection signal="won" from="Player" to="." method="_on_player_won"]
+[connection signal="won" from="Player" to="CanvasLayer/MarginContainer/GameOverMenu" method="_on_player_won"]
+[connection signal="credits_pressed" from="CanvasLayer/MarginContainer/MainMenu" to="CanvasLayer/MarginContainer/CreditsMenu" method="open"]
+[connection signal="options_pressed" from="CanvasLayer/MarginContainer/MainMenu" to="CanvasLayer/MarginContainer/OptionsMenu" method="open"]
+[connection signal="play_pressed" from="CanvasLayer/MarginContainer/MainMenu" to="." method="_on_main_menu_play_pressed"]
+[connection signal="play_pressed" from="CanvasLayer/MarginContainer/MainMenu" to="CanvasLayer/MarginContainer/PauseMenu" method="_on_main_menu_play_pressed"]
+[connection signal="menu_pressed" from="CanvasLayer/MarginContainer/GameOverMenu" to="CanvasLayer/MarginContainer/MainMenu" method="open"]
+[connection signal="opened" from="CanvasLayer/MarginContainer/GameOverMenu" to="CanvasLayer/MarginContainer/PauseMenu" method="_on_game_over_menu_opened"]
+[connection signal="menu_pressed" from="CanvasLayer/MarginContainer/PauseMenu" to="CanvasLayer/MarginContainer/MainMenu" method="open"]
+[connection signal="options_pressed" from="CanvasLayer/MarginContainer/PauseMenu" to="CanvasLayer/MarginContainer/OptionsMenu" method="open"]

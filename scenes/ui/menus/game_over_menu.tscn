@@ -1,0 +1,33 @@
+[gd_scene load_steps=4 format=3 uid="uid://cpgmxhix5jqaa"]
+
+[ext_resource type="Theme" uid="uid://bid6esvxy4apf" path="res://ui/theme_title.tres" id="1_2qsgr"]
+[ext_resource type="Script" path="res://scenes/ui/menus/game_over_menu.gd" id="1_urla7"]
+[ext_resource type="Theme" uid="uid://cp2dw8jh1pmps" path="res://ui/theme.tres" id="1_wdbid"]
+
+[node name="GameOverMenu" type="CenterContainer" node_paths=PackedStringArray("label")]
+process_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_wdbid")
+script = ExtResource("1_urla7")
+label = NodePath("VBoxContainer/Label")
+can_go_back = false
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+theme = ExtResource("1_2qsgr")
+text = "Game Over"
+horizontal_alignment = 1
+
+[node name="MenuButton" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Back to Menu"
+
+[connection signal="pressed" from="VBoxContainer/MenuButton" to="." method="_on_menu_button_pressed"]

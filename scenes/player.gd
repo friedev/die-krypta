@@ -47,7 +47,6 @@ var health: int:
 		self.health_changed.emit(self.health)
 
 
-
 func set_sides(cellv: Vector2) -> void:
 	var old_side := self.side
 	if cellv == Vector2.LEFT:
@@ -105,13 +104,9 @@ func hitv(hit_cellv: Vector2 = Vector2()) -> bool:
 		return false
 
 
-func hit(x: int, y: int) -> bool:
-	return self.hitv(Vector2(x, y))
-
-
 func attack(cellv: Vector2) -> bool:
 	var attacked := false
-	var cells := []
+	var cells: Array[Vector2] = []
 
 	match side:
 		1:
@@ -217,9 +212,9 @@ func roll_toward(target: Vector2) -> bool:
 
 
 func die() -> void:
-	self.sprite.visible = false
-	self.attacks.visible = false
-	self.side_icons.visible = false
+	self.sprite.hide()
+	self.attacks.hide()
+	self.side_icons.hide()
 	self.stop_animations()
 
 	self.set_process_input(false)
@@ -245,6 +240,9 @@ func win() -> void:
 
 
 func handle_input(action: StringName) -> void:
+	if Globals.is_menu_open:
+		return
+
 	var success: bool
 	match action:
 		&"move_left":
@@ -284,9 +282,10 @@ func setup() -> void:
 	self.side = 1
 	self.side_left = 4
 	self.side_up = 5
-	self.sprite.visible = true
-	self.attacks.visible = true
-	self.side_icons.visible = true
+	self.show()
+	self.sprite.show()
+	self.attacks.show()
+	self.side_icons.show()
 	self.max_room = self.main.rooms[0]
 	self.set_process_input(true)
 	self.stop_animations()

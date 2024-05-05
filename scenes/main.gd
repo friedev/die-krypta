@@ -17,8 +17,6 @@ const TILE_WIN := 2
 @export var player: Player
 @export var tile_map: TileMap
 @export var health_map: TileMap
-@export var win_label: Label
-@export var restart_label: Label
 
 var rooms: Array[MapRoom] = []
 var enemies: Array[Enemy] = []
@@ -187,31 +185,6 @@ func setup() -> void:
 
 	self.animate_enemies = true
 
-	self.restart_label.hide()
-	self.win_label.hide()
-
-
-func _ready() -> void:
-	self.setup()
-
-
-func _input(event: InputEvent) -> void:
-	if event.is_action_pressed(&"restart"):
-		self.setup()
-	elif event.is_action_pressed(&"exit"):
-		if OS.get_name() == "HTML5":
-			self.setup()
-		else:
-			self.get_tree().quit()
-
-
-func _on_player_died() -> void:
-	self.restart_label.show()
-
-
-func _on_player_won() -> void:
-	self.win_label.show()
-
 
 func _on_player_health_changed(health: int) -> void:
 	self.health_map.clear()
@@ -221,3 +194,7 @@ func _on_player_health_changed(health: int) -> void:
 
 func _on_player_moved() -> void:
 	self.update()
+
+
+func _on_main_menu_play_pressed(previous: Menu) -> void:
+		self.setup()

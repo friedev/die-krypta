@@ -1,0 +1,57 @@
+[gd_scene load_steps=4 format=3 uid="uid://dwbkolmyih02g"]
+
+[ext_resource type="Script" path="res://scenes/ui/menus/main_menu.gd" id="1_1mo1v"]
+[ext_resource type="Theme" uid="uid://bid6esvxy4apf" path="res://ui/theme_title.tres" id="1_ech4f"]
+[ext_resource type="Theme" uid="uid://cp2dw8jh1pmps" path="res://ui/theme.tres" id="1_lmopb"]
+
+[node name="MainMenu" type="CenterContainer" node_paths=PackedStringArray("quit_button")]
+process_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_lmopb")
+script = ExtResource("1_1mo1v")
+quit_button = NodePath("VBoxContainer/VBoxContainer/QuitButton")
+can_go_back = false
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="TitleLabel" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+theme = ExtResource("1_ech4f")
+text = "Die Krypta"
+horizontal_alignment = 1
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+
+[node name="PlayButton" type="Button" parent="VBoxContainer/VBoxContainer"]
+layout_mode = 2
+text = "Play"
+
+[node name="OptionsButton" type="Button" parent="VBoxContainer/VBoxContainer"]
+layout_mode = 2
+text = "Options"
+
+[node name="CreditsButton" type="Button" parent="VBoxContainer/VBoxContainer"]
+layout_mode = 2
+text = "Credits"
+
+[node name="QuitButton" type="Button" parent="VBoxContainer/VBoxContainer"]
+layout_mode = 2
+text = "Quit
+"
+
+[node name="VersionLabel" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+text = "v0.3.0-dev"
+horizontal_alignment = 1
+
+[connection signal="pressed" from="VBoxContainer/VBoxContainer/PlayButton" to="." method="_on_play_button_pressed"]
+[connection signal="pressed" from="VBoxContainer/VBoxContainer/OptionsButton" to="." method="_on_options_button_pressed"]
+[connection signal="pressed" from="VBoxContainer/VBoxContainer/CreditsButton" to="." method="_on_credits_button_pressed"]
+[connection signal="pressed" from="VBoxContainer/VBoxContainer/QuitButton" to="." method="_on_quit_button_pressed"]
