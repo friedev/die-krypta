@@ -5,13 +5,13 @@ const TILE_FLOOR := 0
 const TILE_WALL := 1
 const TILE_WIN := 2
 
-const ROOM_COUNT := 10
-const ROOM_WIDTH_MIN := 2
-const ROOM_HEIGHT_MIN := 2
-const ROOM_WIDTH_RANGE := 6
-const ROOM_HEIGHT_RANGE := 6
-const ROOM_ENEMY_MIN := 3
-const ROOM_ENEMY_RANGE := 3
+@export var room_count: int
+@export var room_width_min: int
+@export var room_height_min: int
+@export var room_width_range: int
+@export var room_height_range: int
+@export var room_enemy_min: int
+@export var room_enemy_range: int
 
 @export var enemy_scene: PackedScene
 @export var player: Player
@@ -93,18 +93,12 @@ func find_open_cell() -> Vector2:
 	return open_cells[randi() % len(open_cells)]
 
 
-func fill_map(id: int):
-	for x in range(self.MAP_WIDTH):
-		for y in range(self.MAP_HEIGHT):
-			self.tile_map.set_cell(0, Vector2i(x, y), id, Vector2i.ZERO)
-
-
 func generate_map():
 	var x := 1
 	var y := 1
-	while len(self.rooms) < self.ROOM_COUNT:
-		var room_width := randi() % self.ROOM_WIDTH_RANGE + self.ROOM_WIDTH_MIN
-		var room_height := randi() % self.ROOM_HEIGHT_RANGE + self.ROOM_HEIGHT_MIN
+	while len(self.rooms) < self.room_count:
+		var room_width := randi() % self.room_width_range + self.room_width_min
+		var room_height := randi() % self.room_height_range + self.room_height_min
 		var room := MapRoom.new(x, y, room_width, room_height)
 
 		# Check if room will fit
@@ -153,7 +147,7 @@ func generate_map():
 				self.tile_map.set_cell(0, Vector2i(x + randi() % max_dx, y - 1), self.TILE_FLOOR, Vector2i.ZERO)
 
 		# Place win tile
-		if len(self.rooms) == self.ROOM_COUNT:
+		if len(self.rooms) == self.room_count:
 			self.tile_map.set_cell(0, Vector2i(x + room_width, y + room_height), self.TILE_WIN, Vector2i.ZERO)
 			break
 
@@ -185,9 +179,9 @@ func setup():
 	self.player.camera.force_update_scroll()
 	self.player.camera.position_smoothing_enabled = true
 
-	for room_idx in range(1, ROOM_COUNT):
+	for room_idx in range(1, self.room_count):
 		var room: MapRoom = rooms[room_idx]
-		var enemy_count := randi() % ROOM_ENEMY_RANGE + ROOM_ENEMY_MIN
+		var enemy_count := randi() % self.room_enemy_range + self.room_enemy_min
 		for _enemy_idx in range(enemy_count):
 			self.spawn_room_enemy(room)
 
@@ -221,5 +215,5 @@ func _on_player_won() -> void:
 
 func _on_player_health_changed(health: int) -> void:
 	self.health_map.clear()
-	for i in range(self.player.MAX_HEALTH):
+	for i in range(self.player.max_health):
 		self.health_map.set_cell(0, Vector2i(i, 0), 0 if i < health else 1, Vector2i.ZERO)

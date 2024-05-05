@@ -4,10 +4,10 @@ signal won
 signal died
 signal health_changed(health: int)
 
-const MOVE_SPEED := 15.0
-const MAX_HEALTH := 3
-const HIT_STRESS := 0.5
-const HURT_STRESS := 0.5
+@export var move_speed: float
+@export var max_health: int
+@export var hit_stress: float
+@export var hurt_stress: float
 
 @export var main: Main
 @export var tile_map: TileMap
@@ -38,7 +38,7 @@ var side_left := 4
 var side_up := 5
 var max_room: MapRoom = null
 
-var health := MAX_HEALTH:
+var health: int:
 	set(value):
 		health = value
 		self.health_changed.emit(self.health)
@@ -201,7 +201,7 @@ func die():
 func hurt(amount: int, direction: Vector2):
 	self.health -= amount
 
-	self.camera.add_stress(self.HURT_STRESS)
+	self.camera.add_stress(self.hurt_stress)
 	self.hurt_particles.rotation = direction.angle()
 	self.hurt_particles.restart()
 	self.hurt_sound.pitch_scale = randf() * 0.5 + 0.75
@@ -231,7 +231,7 @@ func input(event) -> bool:
 
 
 func setup():
-	self.health = MAX_HEALTH
+	self.health = self.max_health
 	self.side = 1
 	self.side_left = 4
 	self.side_up = 5
@@ -253,7 +253,7 @@ func _process(delta):
 	self.position = lerp(
 		self.position,
 		self.tile_map.map_to_local(self.cellv),
-		delta * self.MOVE_SPEED
+		delta * self.move_speed
 	)
 
 

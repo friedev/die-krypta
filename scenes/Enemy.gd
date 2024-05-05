@@ -1,6 +1,6 @@
 class_name Enemy extends Node2D
 
-const MOVE_SPEED := 15.0
+@export var move_speed: float
 
 @export var sprite: Sprite2D
 @export var hurt_particles: GPUParticles2D
@@ -93,7 +93,7 @@ func _process(delta):
 			if self.main.animate_enemies
 			else self.prev_cellv
 		),
-		delta * self.MOVE_SPEED
+		delta * self.move_speed
 	)
 
 
