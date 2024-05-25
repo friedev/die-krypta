@@ -159,8 +159,6 @@ func generate_map() -> void:
 
 
 func setup() -> void:
-	randomize()
-
 	for enemy in self.enemies:
 		enemy.queue_free()
 	self.enemies.clear()
