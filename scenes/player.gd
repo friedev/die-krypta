@@ -21,17 +21,25 @@ signal moved
 @export var hurt_sound: AudioStreamPlayer2D
 @export var move_timer: Timer
 
-@onready var attack_animations = [
-	[$Attacks/LeftUp,   $Attacks/Up,   $Attacks/RightUp  ],
-	[$Attacks/Left,     null,          $Attacks/Right    ],
-	[$Attacks/LeftDown, $Attacks/Down, $Attacks/RightDown],
-]
+# TODO typed dictionary
+@onready var attack_animations = {
+	Vector2i(-1, -1): $Attacks/LeftUp,
+	Vector2i(-1,  0): $Attacks/Left,
+	Vector2i(-1,  1): $Attacks/LeftDown,
+	Vector2i( 0, -1): $Attacks/Up,
+	Vector2i( 0,  1): $Attacks/Down,
+	Vector2i( 1, -1): $Attacks/RightUp,
+	Vector2i( 1,  0): $Attacks/Right,
+	Vector2i( 1,  1): $Attacks/RightDown,
+}
 
-@onready var side_icon_sprites = [
-	[null,            $SideIcons/Up,   null            ],
-	[$SideIcons/Left, null,            $SideIcons/Right],
-	[null,            $SideIcons/Down, null            ],
-]
+# TODO typed dictionary
+@onready var side_icon_sprites = {
+	Vector2i.LEFT: $SideIcons/Left,
+	Vector2i.UP: $SideIcons/Up,
+	Vector2i.DOWN: $SideIcons/Down,
+	Vector2i.RIGHT: $SideIcons/Right,
+}
 
 var coords: Vector2i
 var side := 1
@@ -63,7 +71,7 @@ func set_sides(coords: Vector2i) -> void:
 
 func draw_move(coords: Vector2i, move: int) -> void:
 	var abs_coords := self.coords + coords
-	var side_icon := self.side_icon_sprites[coords.y + 1][coords.x + 1] as AnimatedSprite2D
+	var side_icon := self.side_icon_sprites[coords] as AnimatedSprite2D
 	if (
 		self.tile_map.get_cell_atlas_coords(abs_coords) == self.main.TILE_FLOOR
 		and not self.main.enemy_map.has(abs_coords)
@@ -82,15 +90,12 @@ func draw_moves() -> void:
 
 
 func stop_animations() -> void:
-	for animation: AnimatedSprite2D in self.attacks.get_children():
+	for animation: AttackAnimation in self.attacks.get_children():
 		animation.stop()
-		animation.visible = false
 
 
 func hitv(hit_coords := Vector2i()) -> bool:
-	var animation := self.attack_animations[hit_coords.y + 1][hit_coords.x + 1] as AnimatedSprite2D
-	animation.visible = true
-	animation.frame = 0
+	var animation := self.attack_animations[hit_coords] as AttackAnimation
 	animation.play()
 
 	var enemy := self.main.enemy_map.get(self.coords + hit_coords) as Enemy

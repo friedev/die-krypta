@@ -3,9 +3,10 @@ class_name Main extends Node2D
 signal level_started(level: int)
 
 const TILE_EMPTY := Vector2i(-1, -1)
-const TILE_FLOOR := Vector2i(0, 0)
-const TILE_WALL := Vector2i(1, 0)
-const TILE_WIN := Vector2i(2, 0)
+const TILE_FLOOR := Vector2i(0, 3)
+const TILE_WALL := Vector2i(1, 3)
+const TILE_FULL_HEART := Vector2i(0, 7)
+const TILE_EMPTY_HEART := Vector2i(1, 7)
 
 @export var starting_enemies: int
 @export var min_enemy_spawn_distance: int  # in tiles (manhattan distance)
@@ -130,8 +131,8 @@ func generate_map() -> void:
 		rect_size = Vector2i(short_dimension, long_dimension)
 
 	start = Vector2i(
-		randi_range(rect1.position.x - rect_size.x, rect1.end.x - 1),
-		randi_range(rect1.position.y - rect_size.y, rect1.end.y - 1)
+		randi_range(rect1.position.x - rect_size.x + 1, rect1.end.x - 1),
+		randi_range(rect1.position.y - rect_size.y + 1, rect1.end.y - 1)
 	)
 	var rect2 := Rect2i(start, rect_size)
 
@@ -175,7 +176,11 @@ func new_level() -> void:
 func _on_player_health_changed(health: int) -> void:
 	self.health_map.clear()
 	for i in range(self.player.max_health):
-		self.health_map.set_cell(Vector2i(i, 0), 0, Vector2i(0 if i < health else 1, 0))
+		self.health_map.set_cell(
+			Vector2i(i, 0), 
+			0,
+			self.TILE_FULL_HEART if i < health else self.TILE_EMPTY_HEART
+		)
 
 
 func _on_player_moved() -> void:

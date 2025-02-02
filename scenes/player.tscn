@@ -1,181 +1,111 @@
-[gd_scene load_steps=35 format=3 uid="uid://ckkml6my1wkk6"]
+[gd_scene load_steps=25 format=3 uid="uid://ckkml6my1wkk6"]
 
 [ext_resource type="Script" path="res://scenes/player.gd" id="1"]
-[ext_resource type="Texture2D" uid="uid://hhog17hdqo2j" path="res://sprites/moves.png" id="2"]
-[ext_resource type="Texture2D" uid="uid://b08y3gsghwd2a" path="res://sprites/dice.png" id="3"]
+[ext_resource type="Texture2D" uid="uid://bsef7p2yyfkw2" path="res://spritesheet.svg" id="2_v7aya"]
 [ext_resource type="Script" path="res://scenes/shake_camera.gd" id="4"]
+[ext_resource type="PackedScene" uid="uid://7da4eaftycw5" path="res://scenes/diagonal_attack.tscn" id="4_1mvfg"]
 [ext_resource type="AudioStream" uid="uid://c50way2nmvqdx" path="res://sound/player_move.ogg" id="5"]
+[ext_resource type="PackedScene" uid="uid://b6nj4gn24seaf" path="res://scenes/orthogonal_attack.tscn" id="5_qjdf4"]
 [ext_resource type="AudioStream" uid="uid://b552magwrsv7j" path="res://sound/player_hurt.wav" id="6"]
-[ext_resource type="Texture2D" uid="uid://cjeyx6xpagtfo" path="res://sprites/attack_orthogonal.png" id="9"]
-[ext_resource type="Texture2D" uid="uid://dj0bowdcup5op" path="res://sprites/attack_diagonal.png" id="10"]
 
-[sub_resource type="AtlasTexture" id="18"]
-atlas = ExtResource("3")
-region = Rect2(0, 0, 12, 12)
+[sub_resource type="AtlasTexture" id="AtlasTexture_00chi"]
+atlas = ExtResource("2_v7aya")
+region = Rect2(0, 64, 64, 64)
 
-[sub_resource type="AtlasTexture" id="19"]
-atlas = ExtResource("3")
-region = Rect2(12, 0, 12, 12)
+[sub_resource type="AtlasTexture" id="AtlasTexture_orjdt"]
+atlas = ExtResource("2_v7aya")
+region = Rect2(64, 64, 64, 64)
 
-[sub_resource type="AtlasTexture" id="20"]
-atlas = ExtResource("3")
-region = Rect2(24, 0, 12, 12)
+[sub_resource type="AtlasTexture" id="AtlasTexture_c1kep"]
+atlas = ExtResource("2_v7aya")
+region = Rect2(128, 64, 64, 64)
 
-[sub_resource type="AtlasTexture" id="21"]
-atlas = ExtResource("3")
-region = Rect2(36, 0, 12, 12)
+[sub_resource type="AtlasTexture" id="AtlasTexture_e8s11"]
+atlas = ExtResource("2_v7aya")
+region = Rect2(192, 64, 64, 64)
 
-[sub_resource type="AtlasTexture" id="22"]
-atlas = ExtResource("3")
-region = Rect2(48, 0, 12, 12)
+[sub_resource type="AtlasTexture" id="AtlasTexture_syryd"]
+atlas = ExtResource("2_v7aya")
+region = Rect2(256, 64, 64, 64)
 
-[sub_resource type="AtlasTexture" id="23"]
-atlas = ExtResource("3")
-region = Rect2(60, 0, 12, 12)
-
-[sub_resource type="SpriteFrames" id="24"]
-animations = [{
-"frames": [{
-"duration": 1.0,
-"texture": SubResource("18")
-}, {
-"duration": 1.0,
-"texture": SubResource("19")
-}, {
-"duration": 1.0,
-"texture": SubResource("20")
-}, {
-"duration": 1.0,
-"texture": SubResource("21")
-}, {
-"duration": 1.0,
-"texture": SubResource("22")
-}, {
-"duration": 1.0,
-"texture": SubResource("23")
-}],
-"loop": true,
-"name": &"default",
-"speed": 5.0
-}]
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_4tmww"]
-atlas = ExtResource("2")
-region = Rect2(0, 0, 12, 12)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_pm7fs"]
-atlas = ExtResource("2")
-region = Rect2(12, 0, 12, 12)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_kwixd"]
-atlas = ExtResource("2")
-region = Rect2(24, 0, 12, 12)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_wppsu"]
-atlas = ExtResource("2")
-region = Rect2(36, 0, 12, 12)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_4kmay"]
-atlas = ExtResource("2")
-region = Rect2(48, 0, 12, 12)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_w0sev"]
-atlas = ExtResource("2")
-region = Rect2(60, 0, 12, 12)
+[sub_resource type="AtlasTexture" id="AtlasTexture_5x7hu"]
+atlas = ExtResource("2_v7aya")
+region = Rect2(320, 64, 64, 64)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_4v4w7"]
 animations = [{
 "frames": [{
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_4tmww")
+"texture": SubResource("AtlasTexture_00chi")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_pm7fs")
+"texture": SubResource("AtlasTexture_orjdt")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_kwixd")
+"texture": SubResource("AtlasTexture_c1kep")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_wppsu")
+"texture": SubResource("AtlasTexture_e8s11")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_4kmay")
+"texture": SubResource("AtlasTexture_syryd")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_w0sev")
+"texture": SubResource("AtlasTexture_5x7hu")
 }],
 "loop": true,
 "name": &"default",
 "speed": 5.0
 }]
 
-[sub_resource type="AtlasTexture" id="7"]
-atlas = ExtResource("10")
-region = Rect2(0, 0, 24, 24)
+[sub_resource type="AtlasTexture" id="AtlasTexture_u76uu"]
+atlas = ExtResource("2_v7aya")
+region = Rect2(0, 0, 64, 64)
 
-[sub_resource type="AtlasTexture" id="8"]
-atlas = ExtResource("10")
-region = Rect2(0, 24, 24, 24)
+[sub_resource type="AtlasTexture" id="AtlasTexture_ri88m"]
+atlas = ExtResource("2_v7aya")
+region = Rect2(64, 0, 64, 64)
 
-[sub_resource type="AtlasTexture" id="9"]
-atlas = ExtResource("10")
-region = Rect2(0, 48, 24, 24)
+[sub_resource type="AtlasTexture" id="AtlasTexture_txxvj"]
+atlas = ExtResource("2_v7aya")
+region = Rect2(128, 0, 64, 64)
 
-[sub_resource type="AtlasTexture" id="10"]
-atlas = ExtResource("10")
-region = Rect2(0, 72, 24, 24)
+[sub_resource type="AtlasTexture" id="AtlasTexture_yiuim"]
+atlas = ExtResource("2_v7aya")
+region = Rect2(192, 0, 64, 64)
 
-[sub_resource type="AtlasTexture" id="2"]
-atlas = ExtResource("9")
-region = Rect2(0, 0, 24, 12)
+[sub_resource type="AtlasTexture" id="AtlasTexture_bdbu5"]
+atlas = ExtResource("2_v7aya")
+region = Rect2(256, 0, 64, 64)
 
-[sub_resource type="AtlasTexture" id="3"]
-atlas = ExtResource("9")
-region = Rect2(0, 12, 24, 12)
+[sub_resource type="AtlasTexture" id="AtlasTexture_2eub1"]
+atlas = ExtResource("2_v7aya")
+region = Rect2(320, 0, 64, 64)
 
-[sub_resource type="AtlasTexture" id="4"]
-atlas = ExtResource("9")
-region = Rect2(0, 24, 24, 12)
-
-[sub_resource type="AtlasTexture" id="5"]
-atlas = ExtResource("9")
-region = Rect2(0, 36, 24, 12)
-
-[sub_resource type="SpriteFrames" id="6"]
+[sub_resource type="SpriteFrames" id="SpriteFrames_f8gbo"]
 animations = [{
 "frames": [{
 "duration": 1.0,
-"texture": SubResource("7")
+"texture": SubResource("AtlasTexture_u76uu")
 }, {
 "duration": 1.0,
-"texture": SubResource("8")
+"texture": SubResource("AtlasTexture_ri88m")
 }, {
 "duration": 1.0,
-"texture": SubResource("9")
+"texture": SubResource("AtlasTexture_txxvj")
 }, {
 "duration": 1.0,
-"texture": SubResource("10")
+"texture": SubResource("AtlasTexture_yiuim")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_bdbu5")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_2eub1")
 }],
-"loop": false,
-"name": &"diagonal",
-"speed": 20.0
-}, {
-"frames": [{
-"duration": 1.0,
-"texture": SubResource("2")
-}, {
-"duration": 1.0,
-"texture": SubResource("3")
-}, {
-"duration": 1.0,
-"texture": SubResource("4")
-}, {
-"duration": 1.0,
-"texture": SubResource("5")
-}],
-"loop": false,
-"name": &"orthogonal",
-"speed": 20.0
+"loop": true,
+"name": &"default",
+"speed": 5.0
 }]
 
 [sub_resource type="Curve" id="25"]
@@ -191,8 +121,8 @@ initial_velocity_max = 80.0
 gravity = Vector3(0, 0, 0)
 damping_min = 128.0
 damping_max = 128.0
-scale_min = 4.0
-scale_max = 6.0
+scale_min = 16.0
+scale_max = 24.0
 scale_curve = SubResource("26")
 
 [node name="Player" type="Node2D" node_paths=PackedStringArray("sprite", "attacks", "side_icons", "camera", "hurt_particles", "move_sound", "hurt_sound", "move_timer")]
@@ -210,111 +140,67 @@ move_sound = NodePath("MoveSound")
 hurt_sound = NodePath("HurtSound")
 move_timer = NodePath("MoveTimer")
 
-[node name="Sprite2D" type="AnimatedSprite2D" parent="."]
-sprite_frames = SubResource("24")
-centered = false
-
 [node name="Camera2D" type="Camera2D" parent="."]
 offset = Vector2(8, 8)
-zoom = Vector2(4, 4)
+zoom = Vector2(0.75, 0.75)
 position_smoothing_enabled = true
 script = ExtResource("4")
 shake_rate = 1.0
 max_offset = 24.0
 shake_reduction = 0.05
 
+[node name="Attacks" type="Node2D" parent="."]
+
+[node name="LeftUp" parent="Attacks" instance=ExtResource("4_1mvfg")]
+
+[node name="RightUp" parent="Attacks" instance=ExtResource("4_1mvfg")]
+rotation = 1.5708
+
+[node name="RightDown" parent="Attacks" instance=ExtResource("4_1mvfg")]
+rotation = 3.14159
+
+[node name="LeftDown" parent="Attacks" instance=ExtResource("4_1mvfg")]
+rotation = 4.71239
+
+[node name="Right" parent="Attacks" instance=ExtResource("5_qjdf4")]
+
+[node name="Down" parent="Attacks" instance=ExtResource("5_qjdf4")]
+rotation = 1.5708
+
+[node name="Left" parent="Attacks" instance=ExtResource("5_qjdf4")]
+rotation = 3.14159
+
+[node name="Up" parent="Attacks" instance=ExtResource("5_qjdf4")]
+rotation = 4.71239
+
 [node name="SideIcons" type="Node2D" parent="."]
 
 [node name="Left" type="AnimatedSprite2D" parent="SideIcons"]
 sprite_frames = SubResource("SpriteFrames_4v4w7")
 frame = 5
-centered = false
-offset = Vector2(-12, 0)
+offset = Vector2(-64, 0)
 
 [node name="Right" type="AnimatedSprite2D" parent="SideIcons"]
 sprite_frames = SubResource("SpriteFrames_4v4w7")
 frame = 5
-centered = false
-offset = Vector2(12, 0)
+offset = Vector2(64, 0)
 
 [node name="Up" type="AnimatedSprite2D" parent="SideIcons"]
 sprite_frames = SubResource("SpriteFrames_4v4w7")
 frame = 5
-centered = false
-offset = Vector2(0, -12)
+offset = Vector2(0, -64)
 
 [node name="Down" type="AnimatedSprite2D" parent="SideIcons"]
 sprite_frames = SubResource("SpriteFrames_4v4w7")
 frame = 5
-centered = false
-offset = Vector2(0, 12)
+offset = Vector2(0, 64)
 
-[node name="Attacks" type="Node2D" parent="."]
-
-[node name="Left" type="AnimatedSprite2D" parent="Attacks"]
-visible = false
-sprite_frames = SubResource("6")
-animation = &"orthogonal"
-centered = false
-offset = Vector2(-12, 0)
-flip_h = true
-
-[node name="Right" type="AnimatedSprite2D" parent="Attacks"]
-visible = false
-sprite_frames = SubResource("6")
-animation = &"orthogonal"
-centered = false
-
-[node name="Up" type="AnimatedSprite2D" parent="Attacks"]
-visible = false
-rotation = -1.5708
-sprite_frames = SubResource("6")
-animation = &"orthogonal"
-centered = false
-offset = Vector2(-12, 0)
-
-[node name="Down" type="AnimatedSprite2D" parent="Attacks"]
-visible = false
-rotation = 1.5708
-sprite_frames = SubResource("6")
-animation = &"orthogonal"
-centered = false
-offset = Vector2(0, -12)
-
-[node name="LeftUp" type="AnimatedSprite2D" parent="Attacks"]
-visible = false
-sprite_frames = SubResource("6")
-animation = &"diagonal"
-centered = false
-offset = Vector2(-12, -12)
-flip_h = true
-
-[node name="LeftDown" type="AnimatedSprite2D" parent="Attacks"]
-visible = false
-sprite_frames = SubResource("6")
-animation = &"diagonal"
-centered = false
-offset = Vector2(-12, 0)
-flip_h = true
-flip_v = true
-
-[node name="RightUp" type="AnimatedSprite2D" parent="Attacks"]
-visible = false
-sprite_frames = SubResource("6")
-animation = &"diagonal"
-centered = false
-offset = Vector2(0, -12)
-
-[node name="RightDown" type="AnimatedSprite2D" parent="Attacks"]
-visible = false
-sprite_frames = SubResource("6")
-animation = &"diagonal"
-centered = false
-flip_v = true
+[node name="Sprite2D" type="AnimatedSprite2D" parent="."]
+sprite_frames = SubResource("SpriteFrames_f8gbo")
 
 [node name="HurtParticles" type="GPUParticles2D" parent="."]
 z_index = -2
-position = Vector2(6, 6)
+scale = Vector2(4, 4)
 emitting = false
 amount = 4
 process_material = SubResource("27")
@@ -332,12 +218,12 @@ stream = ExtResource("6")
 wait_time = 0.25
 one_shot = true
 
-[connection signal="animation_finished" from="Attacks/Left" to="." method="_on_animation_finished"]
-[connection signal="animation_finished" from="Attacks/Right" to="." method="_on_animation_finished"]
-[connection signal="animation_finished" from="Attacks/Up" to="." method="_on_animation_finished"]
-[connection signal="animation_finished" from="Attacks/Down" to="." method="_on_animation_finished"]
 [connection signal="animation_finished" from="Attacks/LeftUp" to="." method="_on_animation_finished"]
-[connection signal="animation_finished" from="Attacks/LeftDown" to="." method="_on_animation_finished"]
 [connection signal="animation_finished" from="Attacks/RightUp" to="." method="_on_animation_finished"]
 [connection signal="animation_finished" from="Attacks/RightDown" to="." method="_on_animation_finished"]
+[connection signal="animation_finished" from="Attacks/LeftDown" to="." method="_on_animation_finished"]
+[connection signal="animation_finished" from="Attacks/Right" to="." method="_on_animation_finished"]
+[connection signal="animation_finished" from="Attacks/Down" to="." method="_on_animation_finished"]
+[connection signal="animation_finished" from="Attacks/Left" to="." method="_on_animation_finished"]
+[connection signal="animation_finished" from="Attacks/Up" to="." method="_on_animation_finished"]
 [connection signal="timeout" from="MoveTimer" to="." method="_on_move_timer_timeout"]
