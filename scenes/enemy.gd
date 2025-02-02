@@ -10,16 +10,16 @@ var main: Main
 var tile_map: TileMapLayer
 var player: Player
 
-var prev_cellv: Vector2i
-var cellv: Vector2i
+var prev_coords: Vector2i
+var coords: Vector2i
 var room: MapRoom
 
 
-func movev(cellv: Vector2i) -> bool:
-	var new_cellv := self.cellv + cellv
-	if not self.main.is_cell_open(new_cellv):
+func movev(coords: Vector2i) -> bool:
+	var new_coords := self.coords + coords
+	if not self.main.is_cell_open(new_coords):
 		return false
-	self.cellv = new_cellv
+	self.coords = new_coords
 	return true
 
 
@@ -28,8 +28,8 @@ func move(x: int, y: int) -> bool:
 
 
 func chase_player() -> void:
-	var dy := player.cellv.y - self.cellv.y
-	var dx := player.cellv.x - self.cellv.x
+	var dy := player.coords.y - self.coords.y
+	var dx := player.coords.x - self.coords.x
 	var x_dir := int(dx / maxi(1, absi(dx)))
 	var y_dir := int(dy / maxi(1, absi(dy)))
 	var x_first := absi(dx) > absi(dy) or (absi(dx) == absi(dy) and randi() % 2 == 0)
@@ -45,8 +45,8 @@ func is_player_in_room() -> bool:
 		return true
 	if self.player.max_room == null:
 		return (
-			self.player.cellv.x >= self.room.x - 1
-			and self.player.cellv.y >= self.room.y - 1
+			self.player.coords.x >= self.room.x - 1
+			and self.player.coords.y >= self.room.y - 1
 		)
 	return (
 		self.player.max_room.x >= self.room.x
@@ -55,17 +55,17 @@ func is_player_in_room() -> bool:
 
 
 func update() -> void:
-	if (self.player.cellv - self.cellv).length() == 1.0:
-		self.player.hurt(1, self.player.cellv - self.cellv)
+	if (self.player.coords - self.coords).length() == 1.0:
+		self.player.hurt(1, self.player.coords - self.coords)
 	elif self.is_player_in_room():
 		self.chase_player()
 
 
 func die() -> void:
-	self.main.enemy_map.erase(self.cellv)
+	self.main.enemy_map.erase(self.coords)
 	self.main.enemies.erase(self)
 	self.sprite.visible = false
-	self.prev_cellv = self.cellv
+	self.prev_coords = self.coords
 
 	self.death_sound.pitch_scale = randf() + 0.75
 	self.death_sound.play()
@@ -88,9 +88,9 @@ func _ready() -> void:
 func _process(delta: float) -> void:
 	self.position = self.position.lerp(
 		self.tile_map.map_to_local(
-			self.cellv
+			self.coords
 			if self.main.animate_enemies
-			else self.prev_cellv
+			else self.prev_coords
 		),
 		delta * self.move_speed
 	)

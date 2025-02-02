@@ -34,7 +34,7 @@ signal moved
 	[null,            $SideIcons/Down, null            ],
 ]
 
-var cellv: Vector2i
+var coords: Vector2i
 var side := 1
 var side_left := 4
 var side_up := 5
@@ -47,28 +47,28 @@ var health: int:
 		self.health_changed.emit(self.health)
 
 
-func set_sides(cellv: Vector2i) -> void:
+func set_sides(coords: Vector2i) -> void:
 	var old_side := self.side
-	if cellv == Vector2i.LEFT:
+	if coords == Vector2i.LEFT:
 		self.side = 7 - self.side_left
 		self.side_left = old_side
-	elif cellv == Vector2i.RIGHT:
+	elif coords == Vector2i.RIGHT:
 		self.side = self.side_left
 		self.side_left = 7 - old_side
-	elif cellv == Vector2i.UP:
+	elif coords == Vector2i.UP:
 		self.side = 7 - self.side_up
 		self.side_up = old_side
-	elif cellv == Vector2i.DOWN:
+	elif coords == Vector2i.DOWN:
 		self.side = self.side_up
 		self.side_up = 7 - old_side
 
 
-func draw_move(cellv: Vector2i, move: int) -> void:
-	var abs_cellv := self.cellv + cellv
-	var side_icon := self.side_icon_sprites[cellv.y + 1][cellv.x + 1] as AnimatedSprite2D
+func draw_move(coords: Vector2i, move: int) -> void:
+	var abs_coords := self.coords + coords
+	var side_icon := self.side_icon_sprites[coords.y + 1][coords.x + 1] as AnimatedSprite2D
 	if (
-		self.tile_map.get_cell_atlas_coords(abs_cellv) == self.main.TILE_FLOOR
-		and not self.main.enemy_map.has(abs_cellv)
+		self.tile_map.get_cell_atlas_coords(abs_coords) == self.main.TILE_FLOOR
+		and not self.main.enemy_map.has(abs_coords)
 	):
 		side_icon.show()
 		side_icon.frame = move - 1
@@ -89,28 +89,28 @@ func stop_animations() -> void:
 		animation.visible = false
 
 
-func hitv(hit_cellv := Vector2i()) -> bool:
-	var animation := self.attack_animations[hit_cellv.y + 1][hit_cellv.x + 1] as AnimatedSprite2D
+func hitv(hit_coords := Vector2i()) -> bool:
+	var animation := self.attack_animations[hit_coords.y + 1][hit_coords.x + 1] as AnimatedSprite2D
 	animation.visible = true
 	animation.frame = 0
 	animation.play()
 
-	var enemy := self.main.enemy_map.get(self.cellv + hit_cellv) as Enemy
+	var enemy := self.main.enemy_map.get(self.coords + hit_coords) as Enemy
 	if enemy != null:
-		enemy.hurt(1, (enemy.cellv - self.cellv))
+		enemy.hurt(1, (enemy.coords - self.coords))
 		self.camera.shake += self.hit_stress
 		return true
 	else:
 		return false
 
 
-func attack(cellv: Vector2i) -> bool:
+func attack(coords: Vector2i) -> bool:
 	var attacked := false
 	var cells: Array[Vector2i] = []
 
 	match side:
 		1:
-			cells = [cellv]
+			cells = [coords]
 		2:
 			cells = [
 				Vector2i(-1, -1),
@@ -145,35 +145,35 @@ func attack(cellv: Vector2i) -> bool:
 				Vector2i(1, 1),
 			]
 
-	for hit_cellv in cells:
-		attacked = self.hitv(hit_cellv) or attacked
+	for hit_coords in cells:
+		attacked = self.hitv(hit_coords) or attacked
 
 	return attacked
 
 
-func roll(cellv: Vector2i) -> bool:
+func roll(coords: Vector2i) -> bool:
 	# Vector must be orthogonal and length 1
-	assert(cellv.length() == 1 and (cellv.x == 0 or cellv.y == 0))
+	assert(coords.length() == 1 and (coords.x == 0 or coords.y == 0))
 
-	var new_cellv := self.cellv + cellv
-	if self.tile_map.get_cell_atlas_coords(new_cellv) == self.main.TILE_WIN:
+	var new_coords := self.coords + coords
+	if self.tile_map.get_cell_atlas_coords(new_coords) == self.main.TILE_WIN:
 		self.win()
 		return false
 
-	if not self.main.is_cell_open(new_cellv):
+	if not self.main.is_cell_open(new_coords):
 		return false
 
 	self.stop_animations()
 
-	self.cellv = new_cellv
-	var new_room: MapRoom = self.main.get_room(self.cellv)
+	self.coords = new_coords
+	var new_room: MapRoom = self.main.get_room(self.coords)
 	if new_room.x >= self.max_room.x and new_room.y >= self.max_room.y:
 		self.max_room = new_room
 
-	self.set_sides(cellv)
+	self.set_sides(coords)
 	self.sprite.frame = self.side - 1
 
-	if self.attack(cellv):
+	if self.attack(coords):
 		self.main.animate_enemies = false
 	else:
 		self.main.animate_enemies = true
@@ -191,12 +191,12 @@ func wait() -> bool:
 
 
 func roll_toward(target: Vector2i) -> bool:
-	if target == self.cellv:
+	if target == self.coords:
 		return self.wait()
 
 	# Try to move along the axis of greater distance toward the target
 	# Failing that, move along the axis of lesser distance
-	var delta := target - self.cellv
+	var delta := target - self.coords
 	var x_direction := Vector2i(clampi(delta.x, -1, 1), 0)
 	var y_direction := Vector2i(0, clampi(delta.y, -1, 1))
 	var direction_priority: Array[Vector2i]
@@ -309,7 +309,7 @@ func _input(event: InputEvent) -> void:
 
 func _process(delta: float) -> void:
 	self.position = self.position.lerp(
-		self.tile_map.map_to_local(self.cellv),
+		self.tile_map.map_to_local(self.coords),
 		delta * self.move_speed
 	)
 

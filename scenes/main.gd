@@ -24,22 +24,22 @@ var enemy_map := {}
 var animate_enemies := true
 
 
-func is_cell_open(cellv: Vector2i) -> bool:
+func is_cell_open(coords: Vector2i) -> bool:
 	return (
-		not self.enemy_map.has(cellv)
-		and self.tile_map.get_cell_atlas_coords(cellv) == self.TILE_FLOOR
-		and self.player.cellv != cellv
+		not self.enemy_map.has(coords)
+		and self.tile_map.get_cell_atlas_coords(coords) == self.TILE_FLOOR
+		and self.player.coords != coords
 	)
 
 
-func get_room(cellv: Vector2i) -> MapRoom:
+func get_room(coords: Vector2i) -> MapRoom:
 	# TODO optimize
 	for room in self.rooms:
 		if (
-			room.x - 1 <= cellv.x
-			and cellv.x <= room.x_end
-			and room.y - 1 <= cellv.y
-			and cellv.y <= room.y_end
+			room.x - 1 <= coords.x
+			and coords.x <= room.x_end
+			and room.y - 1 <= coords.y
+			and coords.y <= room.y_end
 		):
 			return room
 	return null
@@ -47,42 +47,42 @@ func get_room(cellv: Vector2i) -> MapRoom:
 
 func update() -> void:
 	for enemy in self.enemies:
-		self.enemy_map.erase(enemy.cellv)
-		enemy.prev_cellv = enemy.cellv
+		self.enemy_map.erase(enemy.coords)
+		enemy.prev_coords = enemy.coords
 		enemy.update()
-		self.enemy_map[enemy.cellv] = enemy
+		self.enemy_map[enemy.coords] = enemy
 
 	if self.player.health > 0:
 		self.player.draw_moves()
 
 
-func place_enemy(cellv: Vector2i) -> Enemy:
+func place_enemy(coords: Vector2i) -> Enemy:
 	var enemy := self.enemy_scene.instantiate() as Enemy
 	enemy.main = self
 	enemy.tile_map = self.tile_map
 	enemy.player = self.player
-	enemy.cellv = cellv
-	enemy.prev_cellv = cellv
-	enemy.position = self.tile_map.map_to_local(enemy.cellv)
+	enemy.coords = coords
+	enemy.prev_coords = coords
+	enemy.position = self.tile_map.map_to_local(enemy.coords)
 	self.enemies.append(enemy)
-	self.enemy_map[enemy.cellv] = enemy
+	self.enemy_map[enemy.coords] = enemy
 	self.add_child(enemy)
 	return enemy
 
 
 func spawn_room_enemy(room: MapRoom) -> void:
-	var cellv := Vector2i(
+	var coords := Vector2i(
 		room.x + randi() % (room.width + 1),
 		room.y + randi() % (room.height + 1)
 	)
 
-	while not self.is_cell_open(cellv):
-		cellv = Vector2i(
+	while not self.is_cell_open(coords):
+		coords = Vector2i(
 			room.x + randi() % (room.width + 1),
 			room.y + randi() % (room.height + 1)
 		)
 
-	var enemy := self.place_enemy(cellv)
+	var enemy := self.place_enemy(coords)
 	enemy.room = room
 
 
@@ -168,8 +168,8 @@ func setup() -> void:
 	self.tile_map.clear()
 	self.generate_map()
 
-	self.player.cellv = Vector2i(1, 1)
-	self.player.position = self.tile_map.map_to_local(self.player.cellv)
+	self.player.coords = Vector2i(1, 1)
+	self.player.position = self.tile_map.map_to_local(self.player.coords)
 	self.player.setup()
 	self.player.camera.position_smoothing_enabled = false
 	self.player.camera.force_update_scroll()
