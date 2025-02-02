@@ -276,7 +276,6 @@ func setup() -> void:
 	self.side_icons.show()
 	self.set_process_input(true)
 	self.stop_animations()
-	self.draw_moves()
 
 
 func _input(event: InputEvent) -> void:

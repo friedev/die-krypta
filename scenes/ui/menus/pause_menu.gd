@@ -4,6 +4,10 @@ signal menu_pressed(previous: Menu)
 signal options_pressed(previous: Menu)
 
 
+func _ready() -> void:
+	self.hide()
+
+
 func open(previous: Menu = null) -> void:
 	self.get_tree().paused = true
 	super.open(previous)

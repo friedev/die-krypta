@@ -9,6 +9,10 @@ signal closed
 var previous: Menu
 
 
+func _ready() -> void:
+	self.hide()
+
+
 func open(previous: Menu = null) -> void:
 	if self.visible:
 		return

@@ -5,6 +5,10 @@ signal menu_pressed(previous: Menu)
 @export var label: Label
 
 
+func _ready() -> void:
+	self.hide()
+
+
 func _on_menu_button_pressed() -> void:
 	self.hide()
 	self.menu_pressed.emit(self)

@@ -1,5 +1,7 @@
 class_name Enemy extends Node2D
 
+signal died(enemy: Enemy)
+
 @export var move_speed: float
 
 @export var sprite: Sprite2D
@@ -53,6 +55,8 @@ func die() -> void:
 
 	self.death_sound.pitch_scale = randf() + 0.75
 	self.death_sound.play()
+
+	self.died.emit(self)
 
 
 func hurt(amount: int, direction := Vector2i()) -> void:

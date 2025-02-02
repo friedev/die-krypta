@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=3 uid="uid://c4pnltqkwa20j"]
+[gd_scene load_steps=18 format=3 uid="uid://c4pnltqkwa20j"]
 
 [ext_resource type="Script" path="res://scenes/main.gd" id="1_yugwm"]
 [ext_resource type="PackedScene" uid="uid://bgn76dmrwwjl7" path="res://scenes/enemy.tscn" id="2_kyqkm"]
@@ -8,6 +8,7 @@
 [ext_resource type="Theme" uid="uid://cp2dw8jh1pmps" path="res://ui/theme.tres" id="6_rupnf"]
 [ext_resource type="AudioStream" uid="uid://c3ebkqbf75lae" path="res://music/die_krypta.ogg" id="7_8djxl"]
 [ext_resource type="PackedScene" uid="uid://dwbkolmyih02g" path="res://scenes/ui/menus/main_menu.tscn" id="7_mr1vb"]
+[ext_resource type="Script" path="res://scenes/level_label.gd" id="7_x22ue"]
 [ext_resource type="PackedScene" uid="uid://b8aue815rv5va" path="res://scenes/ui/menus/options_menu.tscn" id="8_c260w"]
 [ext_resource type="PackedScene" uid="uid://btptdcsf7o1lc" path="res://scenes/ui/menus/credits_menu.tscn" id="9_iidar"]
 [ext_resource type="PackedScene" uid="uid://cpgmxhix5jqaa" path="res://scenes/ui/menus/game_over_menu.tscn" id="10_odyjr"]
@@ -37,7 +38,7 @@ sources/0 = SubResource("TileSetAtlasSource_kocre")
 [node name="Main" type="Node2D" node_paths=PackedStringArray("player", "tile_map", "health_map")]
 script = ExtResource("1_yugwm")
 level_size = Vector2i(9, 9)
-starting_enemies = 3
+starting_enemies = 4
 min_enemy_spawn_distance = 3
 enemy_scene = ExtResource("2_kyqkm")
 player = NodePath("Player")
@@ -70,8 +71,17 @@ grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("6_rupnf")
 
+[node name="LevelLabel" type="Label" parent="CanvasLayer/MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 0
+theme = ExtResource("6_rupnf")
+theme_override_font_sizes/font_size = 32
+text = "Level X"
+horizontal_alignment = 2
+script = ExtResource("7_x22ue")
+
 [node name="MainMenu" parent="CanvasLayer/MarginContainer" instance=ExtResource("7_mr1vb")]
-visible = false
 layout_mode = 2
 
 [node name="OptionsMenu" parent="CanvasLayer/MarginContainer" instance=ExtResource("8_c260w")]
@@ -89,12 +99,14 @@ layout_mode = 2
 [node name="PauseMenu" parent="CanvasLayer/MarginContainer" instance=ExtResource("11_d13m3")]
 visible = false
 layout_mode = 2
+can_go_back = null
 
 [node name="Music" type="AudioStreamPlayer" parent="."]
 process_mode = 3
 stream = ExtResource("7_8djxl")
 autoplay = true
 
+[connection signal="level_started" from="." to="CanvasLayer/MarginContainer/LevelLabel" method="_on_level_started"]
 [connection signal="died" from="Player" to="CanvasLayer/MarginContainer/GameOverMenu" method="_on_player_died"]
 [connection signal="health_changed" from="Player" to="." method="_on_player_health_changed"]
 [connection signal="moved" from="Player" to="." method="_on_player_moved"]
