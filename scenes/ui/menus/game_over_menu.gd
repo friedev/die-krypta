@@ -15,10 +15,3 @@ func _on_player_died() -> void:
 		return
 	self.label.text = "Game Over"
 	self.open()
-
-
-func _on_player_won() -> void:
-	if self.visible:
-		return
-	self.label.text = "You Win"
-	self.open()

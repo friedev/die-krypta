@@ -12,7 +12,6 @@ var player: Player
 
 var prev_coords: Vector2i
 var coords: Vector2i
-var room: MapRoom
 
 
 func movev(coords: Vector2i) -> bool:
@@ -39,25 +38,10 @@ func chase_player() -> void:
 		self.move(0, y_dir) or self.move(x_dir, 0)
 
 
-# Checks if the player is in or past this enemy's room, or within one cell of it
-func is_player_in_room() -> bool:
-	if self.room == null:
-		return true
-	if self.player.max_room == null:
-		return (
-			self.player.coords.x >= self.room.x - 1
-			and self.player.coords.y >= self.room.y - 1
-		)
-	return (
-		self.player.max_room.x >= self.room.x
-		and self.player.max_room.y >= self.room.y
-	)
-
-
 func update() -> void:
 	if (self.player.coords - self.coords).length() == 1.0:
 		self.player.hurt(1, self.player.coords - self.coords)
-	elif self.is_player_in_room():
+	else:
 		self.chase_player()
 
 
@@ -83,7 +67,6 @@ func _ready() -> void:
 	assert(self.tile_map != null)
 	assert(self.player != null)
 
-	self.room = null
 
 func _process(delta: float) -> void:
 	self.position = self.position.lerp(
