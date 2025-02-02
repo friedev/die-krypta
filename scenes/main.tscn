@@ -36,13 +36,9 @@ sources/0 = SubResource("TileSetAtlasSource_kocre")
 
 [node name="Main" type="Node2D" node_paths=PackedStringArray("player", "tile_map", "health_map")]
 script = ExtResource("1_yugwm")
-room_count = 10
-room_width_min = 2
-room_height_min = 2
-room_width_max = 7
-room_height_max = 7
-room_enemy_min = 3
-room_enemy_max = 5
+level_size = Vector2i(9, 9)
+starting_enemies = 3
+min_enemy_spawn_distance = 3
 enemy_scene = ExtResource("2_kyqkm")
 player = NodePath("Player")
 tile_map = NodePath("TileMap")
@@ -102,7 +98,6 @@ autoplay = true
 [connection signal="died" from="Player" to="CanvasLayer/MarginContainer/GameOverMenu" method="_on_player_died"]
 [connection signal="health_changed" from="Player" to="." method="_on_player_health_changed"]
 [connection signal="moved" from="Player" to="." method="_on_player_moved"]
-[connection signal="won" from="Player" to="CanvasLayer/MarginContainer/GameOverMenu" method="_on_player_won"]
 [connection signal="credits_pressed" from="CanvasLayer/MarginContainer/MainMenu" to="CanvasLayer/MarginContainer/CreditsMenu" method="open"]
 [connection signal="options_pressed" from="CanvasLayer/MarginContainer/MainMenu" to="CanvasLayer/MarginContainer/OptionsMenu" method="open"]
 [connection signal="play_pressed" from="CanvasLayer/MarginContainer/MainMenu" to="." method="_on_main_menu_play_pressed"]

@@ -1,6 +1,5 @@
 class_name Player extends Node2D
 
-signal won
 signal died
 signal health_changed(health: int)
 signal moved
@@ -38,7 +37,6 @@ var coords: Vector2i
 var side := 1
 var side_left := 4
 var side_up := 5
-var max_room: MapRoom = null
 var last_action: StringName
 
 var health: int:
@@ -156,9 +154,6 @@ func roll(coords: Vector2i) -> bool:
 	assert(coords.length() == 1 and (coords.x == 0 or coords.y == 0))
 
 	var new_coords := self.coords + coords
-	if self.tile_map.get_cell_atlas_coords(new_coords) == self.main.TILE_WIN:
-		self.win()
-		return false
 
 	if not self.main.is_cell_open(new_coords):
 		return false
@@ -166,9 +161,6 @@ func roll(coords: Vector2i) -> bool:
 	self.stop_animations()
 
 	self.coords = new_coords
-	var new_room: MapRoom = self.main.get_room(self.coords)
-	if new_room.x >= self.max_room.x and new_room.y >= self.max_room.y:
-		self.max_room = new_room
 
 	self.set_sides(coords)
 	self.sprite.frame = self.side - 1
@@ -235,10 +227,6 @@ func hurt(amount: int, direction: Vector2i) -> void:
 		self.die()
 
 
-func win() -> void:
-	self.won.emit()
-
-
 func handle_input(action: StringName) -> void:
 	if Globals.is_menu_open:
 		return
@@ -286,7 +274,6 @@ func setup() -> void:
 	self.sprite.show()
 	self.attacks.show()
 	self.side_icons.show()
-	self.max_room = self.main.rooms[0]
 	self.set_process_input(true)
 	self.stop_animations()
 	self.draw_moves()
