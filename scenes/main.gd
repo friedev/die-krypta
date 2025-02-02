@@ -7,7 +7,6 @@ const TILE_FLOOR := Vector2i(0, 0)
 const TILE_WALL := Vector2i(1, 0)
 const TILE_WIN := Vector2i(2, 0)
 
-@export var level_size: Vector2i
 @export var starting_enemies: int
 @export var min_enemy_spawn_distance: int  # in tiles (manhattan distance)
 
@@ -87,17 +86,57 @@ func get_open_cells() -> Array[Vector2i]:
 	return self.tile_map.get_used_cells_by_id(0, self.TILE_FLOOR)
 
 
-func generate_map() -> void:
-	var level_start := -self.level_size / 2
-	var level_end := level_start + self.level_size
-	for x in range(level_start.x - 1, level_end.x + 1):
-		for y in range(level_start.y - 1, level_end.y + 1):
+func place_rect(rect: Rect2i) -> void:
+	var walled_rect := rect.grow(1)
+	for x in range(walled_rect.position.x, walled_rect.end.x):
+		for y in range(walled_rect.position.y, walled_rect.end.y):
+			var p := Vector2i(x, y)
 			var atlas_coords: Vector2i
-			if level_start.x <= x and x < level_end.x and level_start.y <= y and y < level_end.y:
+			if rect.has_point(p):
 				atlas_coords = self.TILE_FLOOR
-			else:
+			elif self.tile_map.get_cell_atlas_coords(p) == self.TILE_EMPTY:
 				atlas_coords = self.TILE_WALL
+			else:
+				continue
 			self.tile_map.set_cell(Vector2i(x, y), 0, atlas_coords)
+
+
+
+func generate_map() -> void:
+	var long_dimension := randi_range(6, 9)
+	var short_dimension := randi_range(3, 5)
+
+	var rect_size: Vector2i
+	var long_x := randi() % 2 == 0
+
+	if long_x:
+		rect_size = Vector2i(long_dimension, short_dimension)
+	else:
+		rect_size = Vector2i(short_dimension, long_dimension)
+
+	var start := Vector2i(
+		randi_range(-rect_size.x + 1, -1),
+		randi_range(-rect_size.y + 1, -1)
+	)
+	var rect1 := Rect2i(start, rect_size)
+
+	long_dimension = randi_range(6, 9)
+	short_dimension = randi_range(3, 5)
+
+	long_x = not long_x
+	if long_x:
+		rect_size = Vector2i(long_dimension, short_dimension)
+	else:
+		rect_size = Vector2i(short_dimension, long_dimension)
+
+	start = Vector2i(
+		randi_range(rect1.position.x - rect_size.x, rect1.end.x - 1),
+		randi_range(rect1.position.y - rect_size.y, rect1.end.y - 1)
+	)
+	var rect2 := Rect2i(start, rect_size)
+
+	self.place_rect(rect1)
+	self.place_rect(rect2)
 
 
 func new_game() -> void:
