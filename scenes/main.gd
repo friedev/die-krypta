@@ -15,8 +15,8 @@ const TILE_WIN := 2
 
 @export var enemy_scene: PackedScene
 @export var player: Player
-@export var tile_map: TileMap
-@export var health_map: TileMap
+@export var tile_map: TileMapLayer
+@export var health_map: TileMapLayer
 
 var rooms: Array[MapRoom] = []
 var enemies: Array[Enemy] = []
@@ -27,7 +27,7 @@ var animate_enemies := true
 func is_cell_open(cellv: Vector2i) -> bool:
 	return (
 		not self.enemy_map.has(cellv)
-		and self.tile_map.get_cell_source_id(0, cellv) == self.TILE_FLOOR
+		and self.tile_map.get_cell_source_id(cellv) == self.TILE_FLOOR
 		and self.player.cellv != cellv
 	)
 
@@ -104,7 +104,7 @@ func generate_map() -> void:
 		# Should be x - 1 and y - 1 for a general algorithm
 		for x2 in range(x, x + room_width + 2):
 			for y2 in range(y, y + room_height + 2):
-				if self.tile_map.get_cell_source_id(0, Vector2i(x2, y2)) == self.TILE_FLOOR:
+				if self.tile_map.get_cell_source_id(Vector2i(x2, y2)) == self.TILE_FLOOR:
 					valid = false
 					break
 			if not valid:
@@ -122,31 +122,31 @@ func generate_map() -> void:
 					or y2 == y - 1
 					or y2 == y + room_height + 1
 				):
-					if self.tile_map.get_cell_source_id(0, Vector2i(x2, y2)) == self.TILE_EMPTY:
-						self.tile_map.set_cell(0, Vector2i(x2, y2), self.TILE_WALL, Vector2i.ZERO)
+					if self.tile_map.get_cell_source_id(Vector2i(x2, y2)) == self.TILE_EMPTY:
+						self.tile_map.set_cell(Vector2i(x2, y2), self.TILE_WALL, Vector2i.ZERO)
 				else:
-					self.tile_map.set_cell(0, Vector2i(x2, y2), self.TILE_FLOOR, Vector2i.ZERO)
+					self.tile_map.set_cell(Vector2i(x2, y2), self.TILE_FLOOR, Vector2i.ZERO)
 
 		# Create door to previous room
 		if len(self.rooms) > 1:
-			if self.tile_map.get_cell_source_id(0, Vector2i(x - 2, y)) == self.TILE_FLOOR:
+			if self.tile_map.get_cell_source_id(Vector2i(x - 2, y)) == self.TILE_FLOOR:
 				var max_dy := 0
 				for dy in range(room_height + 1):
 					max_dy = dy
-					if self.tile_map.get_cell_source_id(0, Vector2i(x - 2, y + dy)) == self.TILE_WALL:
+					if self.tile_map.get_cell_source_id(Vector2i(x - 2, y + dy)) == self.TILE_WALL:
 						break
-				self.tile_map.set_cell(0, Vector2i(x - 1, y + randi() % max_dy), self.TILE_FLOOR, Vector2i.ZERO)
+				self.tile_map.set_cell(Vector2i(x - 1, y + randi() % max_dy), self.TILE_FLOOR, Vector2i.ZERO)
 			else:
 				var max_dx := 0
 				for dx in range(room_width + 1):
 					max_dx = dx
-					if self.tile_map.get_cell_source_id(0, Vector2i(x + dx, y - 2)) == self.TILE_WALL:
+					if self.tile_map.get_cell_source_id(Vector2i(x + dx, y - 2)) == self.TILE_WALL:
 						break
-				self.tile_map.set_cell(0, Vector2i(x + randi() % max_dx, y - 1), self.TILE_FLOOR, Vector2i.ZERO)
+				self.tile_map.set_cell(Vector2i(x + randi() % max_dx, y - 1), self.TILE_FLOOR, Vector2i.ZERO)
 
 		# Place win tile
 		if len(self.rooms) == self.room_count:
-			self.tile_map.set_cell(0, Vector2i(x + room_width, y + room_height), self.TILE_WIN, Vector2i.ZERO)
+			self.tile_map.set_cell(Vector2i(x + room_width, y + room_height), self.TILE_WIN, Vector2i.ZERO)
 			break
 
 		# Advance pointer to next room
@@ -187,7 +187,7 @@ func setup() -> void:
 func _on_player_health_changed(health: int) -> void:
 	self.health_map.clear()
 	for i in range(self.player.max_health):
-		self.health_map.set_cell(0, Vector2i(i, 0), 0 if i < health else 1, Vector2i.ZERO)
+		self.health_map.set_cell(Vector2i(i, 0), 0 if i < health else 1, Vector2i.ZERO)
 
 
 func _on_player_moved() -> void:

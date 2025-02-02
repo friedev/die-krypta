@@ -7,7 +7,7 @@ class_name Enemy extends Node2D
 @export var death_sound: AudioStreamPlayer2D
 
 var main: Main
-var tile_map: TileMap
+var tile_map: TileMapLayer
 var player: Player
 
 var prev_cellv: Vector2i

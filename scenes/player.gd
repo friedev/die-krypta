@@ -11,7 +11,7 @@ signal moved
 @export var hurt_stress: float
 
 @export var main: Main
-@export var tile_map: TileMap
+@export var tile_map: TileMapLayer
 
 @export var sprite: AnimatedSprite2D
 @export var attacks: Node2D
@@ -67,7 +67,7 @@ func draw_move(cellv: Vector2i, move: int) -> void:
 	var abs_cellv := self.cellv + cellv
 	var side_icon := self.side_icon_sprites[cellv.y + 1][cellv.x + 1] as AnimatedSprite2D
 	if (
-		self.tile_map.get_cell_source_id(0, abs_cellv) == self.main.TILE_FLOOR
+		self.tile_map.get_cell_source_id(abs_cellv) == self.main.TILE_FLOOR
 		and not self.main.enemy_map.has(abs_cellv)
 	):
 		side_icon.show()
@@ -156,7 +156,7 @@ func roll(cellv: Vector2i) -> bool:
 	assert(cellv.length() == 1 and (cellv.x == 0 or cellv.y == 0))
 
 	var new_cellv := self.cellv + cellv
-	if self.tile_map.get_cell_source_id(0, new_cellv) == self.main.TILE_WIN:
+	if self.tile_map.get_cell_source_id(new_cellv) == self.main.TILE_WIN:
 		self.win()
 		return false
 

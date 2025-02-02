@@ -166,11 +166,10 @@ player = NodePath("Player")
 tile_map = NodePath("TileMap")
 health_map = NodePath("CanvasLayer/HealthMap")
 
-[node name="TileMap" type="TileMap" parent="."]
-z_index = -4
+[node name="TileMap" type="TileMapLayer" parent="."]
+use_parent_material = true
 position = Vector2(6, 6)
 tile_set = SubResource("4")
-format = 2
 
 [node name="Player" parent="." node_paths=PackedStringArray("main", "tile_map") instance=ExtResource("4_wkwvu")]
 visible = false
@@ -179,11 +178,11 @@ tile_map = NodePath("../TileMap")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
-[node name="HealthMap" type="TileMap" parent="CanvasLayer"]
+[node name="HealthMap" type="TileMapLayer" parent="CanvasLayer"]
+use_parent_material = true
 position = Vector2(16, 16)
 scale = Vector2(8, 8)
 tile_set = SubResource("2")
-format = 2
 
 [node name="MarginContainer" type="MarginContainer" parent="CanvasLayer"]
 anchors_preset = 15
