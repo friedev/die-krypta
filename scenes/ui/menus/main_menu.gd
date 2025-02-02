@@ -5,10 +5,12 @@ signal options_pressed(previous: Menu)
 signal credits_pressed(previous: Menu)
 
 @export var quit_button: Button
+@export var version_label: Label
 
 
 func _ready() -> void:
 	self.quit_button.visible = OS.get_name() != "Web"
+	self.version_label.text = "v%s" % ProjectSettings.get_setting("application/config/version")
 	self.open()
 
 
