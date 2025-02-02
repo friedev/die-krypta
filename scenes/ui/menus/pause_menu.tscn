@@ -32,6 +32,7 @@ layout_mode = 2
 text = "Resume"
 
 [node name="OptionsButton" type="Button" parent="VBoxContainer/HBoxContainer"]
+visible = false
 layout_mode = 2
 text = "Options"
 
