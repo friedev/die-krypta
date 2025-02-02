@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.2.1 (2025-02-02)
+
+- Update to Godot 4.3
+- Add mouse movement
+- Allow holding down keys to move
+- Add menus
+- Update UI theme
+- Update soundtrack
+- Add icon
+
 ## 0.2.0 (2022-07-24)
 
 - Add animations
