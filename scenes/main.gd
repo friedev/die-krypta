@@ -1,5 +1,7 @@
 class_name Main extends Node2D
 
+signal level_started(level: int)
+
 const TILE_EMPTY := Vector2i(-1, -1)
 const TILE_FLOOR := Vector2i(0, 0)
 const TILE_WALL := Vector2i(1, 0)
@@ -14,14 +16,11 @@ const TILE_WIN := Vector2i(2, 0)
 @export var tile_map: TileMapLayer
 @export var health_map: TileMapLayer
 
+var level := 0
 var enemy_count: int
 var enemies: Array[Enemy] = []
 var enemy_map := {}
 var animate_enemies := true
-
-
-func _ready() -> void:
-	self.enemy_count = self.starting_enemies
 
 
 func is_cell_open(coords: Vector2i) -> bool:
@@ -41,6 +40,10 @@ func update() -> void:
 
 	if self.player.health > 0:
 		self.player.draw_moves()
+
+		if len(self.enemies) == 0:
+			self.level += 1
+			self.new_level()
 
 
 func place_enemy(coords: Vector2i) -> Enemy:
@@ -97,25 +100,37 @@ func generate_map() -> void:
 			self.tile_map.set_cell(Vector2i(x, y), 0, atlas_coords)
 
 
-func setup() -> void:
+func new_game() -> void:
 	for enemy in self.enemies:
 		enemy.queue_free()
 	self.enemies.clear()
 	self.enemy_map.clear()
 
-	self.tile_map.clear()
-	self.generate_map()
-
-	self.player.coords = Vector2i(0, 0)
-	self.player.position = self.tile_map.map_to_local(self.player.coords)
 	self.player.setup()
 	self.player.camera.position_smoothing_enabled = false
 	self.player.camera.force_update_scroll()
 	self.player.camera.position_smoothing_enabled = true
 
-	self.spawn_enemies(self.enemy_count)
-
 	self.animate_enemies = true
+
+	self.enemy_count = self.starting_enemies
+	self.level = 0
+
+	self.new_level()
+
+
+func new_level() -> void:
+	self.tile_map.clear()
+	self.generate_map()
+
+	self.player.coords = Vector2i(0, 0)
+	self.player.position = self.tile_map.map_to_local(self.player.coords)
+
+	self.spawn_enemies(self.starting_enemies + self.level)
+
+	self.player.draw_moves()
+
+	self.level_started.emit(self.level)
 
 
 func _on_player_health_changed(health: int) -> void:
@@ -129,4 +144,4 @@ func _on_player_moved() -> void:
 
 
 func _on_main_menu_play_pressed(previous: Menu) -> void:
-	self.setup()
+	self.new_game()
