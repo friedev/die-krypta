@@ -1,0 +1,15 @@
+[gd_scene load_steps=4 format=3 uid="uid://c73rvehfjyn3g"]
+
+[ext_resource type="Script" path="res://scenes/projectiles/projectile.gd" id="1_5wqlp"]
+[ext_resource type="Texture2D" uid="uid://c06qwdre6roql" path="res://sprites/tileset.png" id="1_q63bw"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_kc7mt"]
+atlas = ExtResource("1_q63bw")
+region = Rect2(326, 1, 12, 12)
+
+[node name="Projectile" type="Node2D"]
+z_index = 2
+script = ExtResource("1_5wqlp")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = SubResource("AtlasTexture_kc7mt")

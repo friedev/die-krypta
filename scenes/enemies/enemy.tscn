@@ -1,12 +1,13 @@
-[gd_scene load_steps=8 format=3 uid="uid://bgn76dmrwwjl7"]
+[gd_scene load_steps=9 format=3 uid="uid://bgn76dmrwwjl7"]
 
-[ext_resource type="Script" path="res://scenes/enemy.gd" id="1_awkll"]
+[ext_resource type="Script" path="res://scenes/enemies/enemy.gd" id="1_awkll"]
 [ext_resource type="Texture2D" uid="uid://c06qwdre6roql" path="res://sprites/tileset.png" id="2_6c3vl"]
 [ext_resource type="AudioStream" uid="uid://bsfjwhx6m0iak" path="res://sound/enemy_death.wav" id="3"]
+[ext_resource type="Texture2D" uid="uid://b5ccoolguypy5" path="res://sprites/dashed_line.png" id="4_eb7ki"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_uwcq6"]
 atlas = ExtResource("2_6c3vl")
-region = Rect2(469, 118, 12, 12)
+region = Rect2(326, 1, 12, 12)
 
 [sub_resource type="Curve" id="1"]
 _data = [Vector2(0, 1), 0.0, -1.0, 0, 1, Vector2(1, 0), -1.0, 0.0, 1, 0]
@@ -27,20 +28,19 @@ scale_min = 4.0
 scale_max = 6.0
 scale_curve = SubResource("4")
 
-[node name="Enemy" type="Node2D" node_paths=PackedStringArray("sprite", "hurt_particles", "death_sound")]
+[node name="Enemy" type="Node2D" node_paths=PackedStringArray("sprite", "aim_line", "hurt_particles", "death_sound") groups=["enemies"]]
 script = ExtResource("1_awkll")
 move_speed = 15.0
 sprite = NodePath("Sprite2D")
+aim_line = NodePath("AimLine")
 hurt_particles = NodePath("HurtParticles")
 death_sound = NodePath("DeathSound")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 texture = SubResource("AtlasTexture_uwcq6")
-centered = false
 
 [node name="HurtParticles" type="GPUParticles2D" parent="."]
 z_index = -2
-position = Vector2(6, 6)
 emitting = false
 process_material = SubResource("3")
 lifetime = 0.5
@@ -50,5 +50,12 @@ explosiveness = 1.0
 [node name="DeathSound" type="AudioStreamPlayer2D" parent="."]
 stream = ExtResource("3")
 volume_db = -1.0
+
+[node name="AimLine" type="Line2D" parent="."]
+z_index = 1
+texture_repeat = 2
+width = 4.0
+texture = ExtResource("4_eb7ki")
+texture_mode = 1
 
 [connection signal="finished" from="DeathSound" to="." method="_on_DeathSound_finished"]

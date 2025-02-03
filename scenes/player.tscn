@@ -198,7 +198,6 @@ scale_curve = SubResource("26")
 [node name="Player" type="Node2D" node_paths=PackedStringArray("sprite", "attacks", "side_icons", "camera", "hurt_particles", "move_sound", "hurt_sound", "move_timer")]
 script = ExtResource("1")
 move_speed = 15.0
-max_health = 3
 hit_stress = 0.5
 hurt_stress = 0.5
 sprite = NodePath("Sprite2D")
@@ -209,10 +208,10 @@ hurt_particles = NodePath("HurtParticles")
 move_sound = NodePath("MoveSound")
 hurt_sound = NodePath("HurtSound")
 move_timer = NodePath("MoveTimer")
+max_health = 3
 
 [node name="Sprite2D" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("24")
-centered = false
 
 [node name="Camera2D" type="Camera2D" parent="."]
 offset = Vector2(8, 8)
@@ -228,25 +227,21 @@ shake_reduction = 0.05
 [node name="Left" type="AnimatedSprite2D" parent="SideIcons"]
 sprite_frames = SubResource("SpriteFrames_4v4w7")
 frame = 5
-centered = false
 offset = Vector2(-12, 0)
 
 [node name="Right" type="AnimatedSprite2D" parent="SideIcons"]
 sprite_frames = SubResource("SpriteFrames_4v4w7")
 frame = 5
-centered = false
 offset = Vector2(12, 0)
 
 [node name="Up" type="AnimatedSprite2D" parent="SideIcons"]
 sprite_frames = SubResource("SpriteFrames_4v4w7")
 frame = 5
-centered = false
 offset = Vector2(0, -12)
 
 [node name="Down" type="AnimatedSprite2D" parent="SideIcons"]
 sprite_frames = SubResource("SpriteFrames_4v4w7")
 frame = 5
-centered = false
 offset = Vector2(0, 12)
 
 [node name="Attacks" type="Node2D" parent="."]
@@ -255,7 +250,6 @@ offset = Vector2(0, 12)
 visible = false
 sprite_frames = SubResource("6")
 animation = &"orthogonal"
-centered = false
 offset = Vector2(-12, 0)
 flip_h = true
 
@@ -263,14 +257,12 @@ flip_h = true
 visible = false
 sprite_frames = SubResource("6")
 animation = &"orthogonal"
-centered = false
 
 [node name="Up" type="AnimatedSprite2D" parent="Attacks"]
 visible = false
 rotation = -1.5708
 sprite_frames = SubResource("6")
 animation = &"orthogonal"
-centered = false
 offset = Vector2(-12, 0)
 
 [node name="Down" type="AnimatedSprite2D" parent="Attacks"]
@@ -278,14 +270,12 @@ visible = false
 rotation = 1.5708
 sprite_frames = SubResource("6")
 animation = &"orthogonal"
-centered = false
 offset = Vector2(0, -12)
 
 [node name="LeftUp" type="AnimatedSprite2D" parent="Attacks"]
 visible = false
 sprite_frames = SubResource("6")
 animation = &"diagonal"
-centered = false
 offset = Vector2(-12, -12)
 flip_h = true
 
@@ -293,7 +283,6 @@ flip_h = true
 visible = false
 sprite_frames = SubResource("6")
 animation = &"diagonal"
-centered = false
 offset = Vector2(-12, 0)
 flip_h = true
 flip_v = true
@@ -302,19 +291,16 @@ flip_v = true
 visible = false
 sprite_frames = SubResource("6")
 animation = &"diagonal"
-centered = false
 offset = Vector2(0, -12)
 
 [node name="RightDown" type="AnimatedSprite2D" parent="Attacks"]
 visible = false
 sprite_frames = SubResource("6")
 animation = &"diagonal"
-centered = false
 flip_v = true
 
 [node name="HurtParticles" type="GPUParticles2D" parent="."]
 z_index = -2
-position = Vector2(6, 6)
 emitting = false
 amount = 4
 process_material = SubResource("27")

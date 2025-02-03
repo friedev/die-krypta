@@ -14,7 +14,7 @@ func _on_menu_button_pressed() -> void:
 	self.menu_pressed.emit(self)
 
 
-func _on_player_died() -> void:
+func _on_player_died(entity: Entity) -> void:
 	if self.visible:
 		return
 	self.label.text = "Game Over"

@@ -1,16 +1,10 @@
-class_name Player extends Node2D
+class_name Player extends Entity
 
-signal died
-signal health_changed(health: int)
 signal moved
 
 @export var move_speed: float
-@export var max_health: int
 @export var hit_stress: float
 @export var hurt_stress: float
-
-@export var main: Main
-@export var tile_map: TileMapLayer
 
 @export var sprite: AnimatedSprite2D
 @export var attacks: Node2D
@@ -21,28 +15,30 @@ signal moved
 @export var hurt_sound: AudioStreamPlayer2D
 @export var move_timer: Timer
 
-@onready var attack_animations = [
-	[$Attacks/LeftUp,   $Attacks/Up,   $Attacks/RightUp  ],
-	[$Attacks/Left,     null,          $Attacks/Right    ],
-	[$Attacks/LeftDown, $Attacks/Down, $Attacks/RightDown],
-]
+# TODO typed dictionary Vector2i -> AnimatedSprite2D
+@onready var attack_animations := {
+	Vector2i(-1, -1): $Attacks/LeftUp,
+	Vector2i(-1,  0): $Attacks/Left,
+	Vector2i(-1,  1): $Attacks/LeftDown,
+	Vector2i( 0, -1): $Attacks/Up,
+	Vector2i( 0,  1): $Attacks/Down,
+	Vector2i( 1, -1): $Attacks/RightUp,
+	Vector2i( 1,  0): $Attacks/Right,
+	Vector2i( 1,  1): $Attacks/RightDown,
+}
 
-@onready var side_icon_sprites = [
-	[null,            $SideIcons/Up,   null            ],
-	[$SideIcons/Left, null,            $SideIcons/Right],
-	[null,            $SideIcons/Down, null            ],
-]
+# TODO typed dictionary Vector2i -> AnimatedSprite2D
+@onready var side_icon_sprites := {
+	Vector2i.LEFT: $SideIcons/Left,
+	Vector2i.UP: $SideIcons/Up,
+	Vector2i.DOWN: $SideIcons/Down,
+	Vector2i.RIGHT: $SideIcons/Right,
+}
 
-var coords: Vector2i
 var side := 1
 var side_left := 4
 var side_up := 5
 var last_action: StringName
-
-var health: int:
-	set(value):
-		health = value
-		self.health_changed.emit(self.health)
 
 
 func set_sides(coords: Vector2i) -> void:
@@ -63,7 +59,7 @@ func set_sides(coords: Vector2i) -> void:
 
 func draw_move(coords: Vector2i, move: int) -> void:
 	var abs_coords := self.coords + coords
-	var side_icon := self.side_icon_sprites[coords.y + 1][coords.x + 1] as AnimatedSprite2D
+	var side_icon := self.side_icon_sprites[coords] as AnimatedSprite2D
 	if self.main.is_cell_open(abs_coords):
 		side_icon.show()
 		side_icon.frame = move - 1
@@ -84,15 +80,15 @@ func stop_animations() -> void:
 		animation.visible = false
 
 
-func hitv(hit_coords := Vector2i()) -> bool:
-	var animation := self.attack_animations[hit_coords.y + 1][hit_coords.x + 1] as AnimatedSprite2D
+func hit(hit_coords := Vector2i()) -> bool:
+	var animation := self.attack_animations[hit_coords] as AnimatedSprite2D
 	animation.visible = true
 	animation.frame = 0
 	animation.play()
 
-	var enemy := self.main.enemy_map.get(self.coords + hit_coords) as Enemy
-	if enemy != null:
-		enemy.hurt(1, (enemy.coords - self.coords))
+	var hit_entity: Entity = self.main.entity_map.get(self.coords + hit_coords)
+	if hit_entity != null:
+		hit_entity.hurt(1, (hit_entity.coords - self.coords))
 		self.camera.shake += self.hit_stress
 		return true
 	else:
@@ -109,39 +105,39 @@ func attack(coords: Vector2i) -> bool:
 		2:
 			cells = [
 				Vector2i(-1, -1),
-				Vector2i(1, 1),
+				Vector2i( 1,  1),
 			]
 		3:
 			cells = [
-				Vector2i(-1, 1),
-				Vector2i(1, -1),
+				Vector2i(-1,  1),
+				Vector2i( 1, -1),
 			]
 		4:
 			cells = [
-				Vector2i(0, -1),
-				Vector2i(0, 1),
-				Vector2i(-1, 0),
-				Vector2i(1, 0),
+				Vector2i( 0, -1),
+				Vector2i( 0,  1),
+				Vector2i(-1,  0),
+				Vector2i( 1,  0),
 			]
 		5:
 			cells = [
 				Vector2i(-1, -1),
-				Vector2i(-1, 1),
-				Vector2i(1, -1),
-				Vector2i(1, 1),
+				Vector2i(-1,  1),
+				Vector2i( 1, -1),
+				Vector2i( 1,  1),
 			]
 		6:
 			cells = [
 				Vector2i(-1, -1),
-				Vector2i(-1, 0),
-				Vector2i(-1, 1),
-				Vector2i(1, -1),
-				Vector2i(1, 0),
-				Vector2i(1, 1),
+				Vector2i(-1,  0),
+				Vector2i(-1,  1),
+				Vector2i( 1, -1),
+				Vector2i( 1,  0),
+				Vector2i( 1,  1),
 			]
 
 	for hit_coords in cells:
-		attacked = self.hitv(hit_coords) or attacked
+		attacked = self.hit(hit_coords) or attacked
 
 	return attacked
 
@@ -208,20 +204,17 @@ func die() -> void:
 
 	self.set_process_input(false)
 
-	self.died.emit()
+	super.die()
 
 
 func hurt(amount: int, direction: Vector2i) -> void:
-	self.health -= amount
-
 	self.camera.shake += self.hurt_stress
 	self.hurt_particles.rotation = Vector2(direction).angle()
 	self.hurt_particles.restart()
 	self.hurt_sound.pitch_scale = randf() * 0.5 + 0.75
 	self.hurt_sound.play()
 
-	if self.health <= 0:
-		self.die()
+	super.hurt(amount, direction)
 
 
 func handle_input(action: StringName) -> void:
@@ -242,7 +235,7 @@ func handle_input(action: StringName) -> void:
 			success = self.wait()
 		&"mouse_move":
 			success = self.roll_toward(
-				self.tile_map.local_to_map(self.tile_map.get_local_mouse_position())
+				self.main.tile_map.local_to_map(self.main.tile_map.get_local_mouse_position())
 			)
 		_:
 			push_error("Unknown action %s" % action)
@@ -263,7 +256,8 @@ func _on_move_timer_timeout() -> void:
 
 
 func setup() -> void:
-	self.health = self.max_health
+	super.setup()
+
 	self.side = 1
 	self.side_left = 4
 	self.side_up = 5
@@ -292,7 +286,7 @@ func _input(event: InputEvent) -> void:
 
 func _process(delta: float) -> void:
 	self.position = self.position.lerp(
-		self.tile_map.map_to_local(self.coords),
+		self.main.tile_map.map_to_local(self.coords),
 		delta * self.move_speed
 	)
 

@@ -1,0 +1,16 @@
+[gd_scene load_steps=5 format=3 uid="uid://br6phtouiqto4"]
+
+[ext_resource type="PackedScene" uid="uid://bgn76dmrwwjl7" path="res://scenes/enemies/enemy.tscn" id="1_gdahj"]
+[ext_resource type="Script" path="res://scenes/enemies/melee_enemy.gd" id="2_nlvgg"]
+[ext_resource type="Texture2D" uid="uid://c06qwdre6roql" path="res://sprites/tileset.png" id="3_uwgbq"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_75o5y"]
+atlas = ExtResource("3_uwgbq")
+region = Rect2(339, 118, 12, 12)
+
+[node name="Zombie" instance=ExtResource("1_gdahj")]
+script = ExtResource("2_nlvgg")
+melee_damage = 1
+
+[node name="Sprite2D" parent="." index="0"]
+texture = SubResource("AtlasTexture_75o5y")

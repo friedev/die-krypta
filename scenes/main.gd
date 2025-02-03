@@ -19,57 +19,48 @@ var wall_tiles: Array[Vector2i] = [
 @export var starting_enemies: int
 @export var min_enemy_spawn_distance: int  # in tiles (manhattan distance)
 
-@export var enemy_scene: PackedScene
+@export var enemy_scenes: Array[PackedScene]
 @export var player: Player
 @export var tile_map: TileMapLayer
 @export var health_map: TileMapLayer
 
 var level := 0
 var enemy_count: int
-var enemies: Array[Enemy] = []
-var enemy_map := {}
+# TODO typed dictionary Vector2i -> Entity
+var entity_map := {}
 var animate_enemies := true
+
+
+func _ready() -> void:
+	SignalBus.node_spawned.connect(self._on_node_spawned)
 
 
 func is_cell_open(coords: Vector2i) -> bool:
 	return (
-		not self.enemy_map.has(coords)
+		not self.entity_map.has(coords)
 		and self.tile_map.get_cell_atlas_coords(coords) in self.floor_tiles
-		and self.player.coords != coords
 	)
 
 
 func update() -> void:
-	for enemy in self.enemies:
-		self.enemy_map.erase(enemy.coords)
-		enemy.prev_coords = enemy.coords
-		enemy.update()
-		self.enemy_map[enemy.coords] = enemy
+	self.get_tree().call_group("enemies", "update")
 
 	if self.player.health > 0:
-		self.player.draw_moves()
-
-		if len(self.enemies) == 0:
+		if self.get_tree().get_node_count_in_group("enemies") == 0:
 			self.level += 1
 			self.new_level()
+		else:
+			self.player.draw_moves()
 
 
 func place_enemy(coords: Vector2i) -> Enemy:
-	var enemy := self.enemy_scene.instantiate() as Enemy
+	var enemy := self.enemy_scenes.pick_random().instantiate() as Enemy
 	enemy.main = self
-	enemy.tile_map = self.tile_map
-	enemy.player = self.player
 	enemy.coords = coords
 	enemy.prev_coords = coords
 	enemy.position = self.tile_map.map_to_local(enemy.coords)
-	self.enemies.append(enemy)
-	self.enemy_map[enemy.coords] = enemy
 	self.add_child(enemy)
 	return enemy
-
-
-func manhattan_distance(v1: Vector2i, v2: Vector2i) -> int:
-	return abs(v1.x - v2.x) + abs(v1.y - v2.y)
 
 
 func spawn_enemies(count: int) -> void:
@@ -77,7 +68,7 @@ func spawn_enemies(count: int) -> void:
 	for coords in self.get_open_cells():
 		if (
 			self.is_cell_open(coords)
-			and self.manhattan_distance(self.player.coords, coords) >= self.min_enemy_spawn_distance
+			and Utility.manhattan_distance(self.player.coords, coords) >= self.min_enemy_spawn_distance
 		):
 			spawn_cells.append(coords)
 
@@ -117,8 +108,8 @@ func place_rect(rect: Rect2i) -> void:
 
 
 func generate_map() -> void:
-	var long_dimension := randi_range(6, 9)
-	var short_dimension := randi_range(3, 5)
+	var long_dimension := randi_range(6, 8)
+	var short_dimension := randi_range(4, 6)
 
 	var rect_size: Vector2i
 	var long_x := randi() % 2 == 0
@@ -144,8 +135,8 @@ func generate_map() -> void:
 		rect_size = Vector2i(short_dimension, long_dimension)
 
 	start = Vector2i(
-		randi_range(rect1.position.x - rect_size.x, rect1.end.x - 1),
-		randi_range(rect1.position.y - rect_size.y, rect1.end.y - 1)
+		randi_range(rect1.position.x - rect_size.x + 1, rect1.end.x - 1),
+		randi_range(rect1.position.y - rect_size.y + 1, rect1.end.y - 1)
 	)
 	var rect2 := Rect2i(start, rect_size)
 
@@ -154,15 +145,9 @@ func generate_map() -> void:
 
 
 func new_game() -> void:
-	for enemy in self.enemies:
-		enemy.queue_free()
-	self.enemies.clear()
-	self.enemy_map.clear()
+	self.get_tree().call_group("enemies", "queue_free")
 
 	self.player.setup()
-	self.player.camera.position_smoothing_enabled = false
-	self.player.camera.force_update_scroll()
-	self.player.camera.position_smoothing_enabled = true
 
 	self.animate_enemies = true
 
@@ -174,10 +159,15 @@ func new_game() -> void:
 
 func new_level() -> void:
 	self.tile_map.clear()
+	self.entity_map.clear()
 	self.generate_map()
 
-	self.player.coords = Vector2i(0, 0)
+	self.player.coords = Vector2i.ZERO
 	self.player.position = self.tile_map.map_to_local(self.player.coords)
+
+	self.player.camera.position_smoothing_enabled = false
+	self.player.camera.force_update_scroll()
+	self.player.camera.position_smoothing_enabled = true
 
 	self.spawn_enemies(self.starting_enemies + self.level)
 
@@ -198,3 +188,7 @@ func _on_player_moved() -> void:
 
 func _on_main_menu_play_pressed(previous: Menu) -> void:
 	self.new_game()
+
+
+func _on_node_spawned(node: Node) -> void:
+	self.add_child(node)
