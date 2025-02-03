@@ -64,10 +64,7 @@ func set_sides(coords: Vector2i) -> void:
 func draw_move(coords: Vector2i, move: int) -> void:
 	var abs_coords := self.coords + coords
 	var side_icon := self.side_icon_sprites[coords.y + 1][coords.x + 1] as AnimatedSprite2D
-	if (
-		self.tile_map.get_cell_atlas_coords(abs_coords) == self.main.TILE_FLOOR
-		and not self.main.enemy_map.has(abs_coords)
-	):
+	if self.main.is_cell_open(abs_coords):
 		side_icon.show()
 		side_icon.frame = move - 1
 	else:

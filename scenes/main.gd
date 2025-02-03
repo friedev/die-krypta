@@ -3,9 +3,18 @@ class_name Main extends Node2D
 signal level_started(level: int)
 
 const TILE_EMPTY := Vector2i(-1, -1)
-const TILE_FLOOR := Vector2i(0, 0)
-const TILE_WALL := Vector2i(1, 0)
-const TILE_WIN := Vector2i(2, 0)
+
+var floor_tiles: Array[Vector2i] = [
+	Vector2i(4, 5),
+	Vector2i(5, 5),
+	Vector2i(6, 5),
+	Vector2i(7, 5),
+]
+
+var wall_tiles: Array[Vector2i] = [
+	Vector2i(0, 2),
+	Vector2i(1, 2),
+]
 
 @export var starting_enemies: int
 @export var min_enemy_spawn_distance: int  # in tiles (manhattan distance)
@@ -25,7 +34,7 @@ var animate_enemies := true
 func is_cell_open(coords: Vector2i) -> bool:
 	return (
 		not self.enemy_map.has(coords)
-		and self.tile_map.get_cell_atlas_coords(coords) == self.TILE_FLOOR
+		and self.tile_map.get_cell_atlas_coords(coords) in self.floor_tiles
 		and self.player.coords != coords
 	)
 
@@ -83,7 +92,12 @@ func spawn_enemies(count: int) -> void:
 
 
 func get_open_cells() -> Array[Vector2i]:
-	return self.tile_map.get_used_cells_by_id(0, self.TILE_FLOOR)
+	var used_cells := self.tile_map.get_used_cells()
+	var open_cells: Array[Vector2i] = []
+	for coords in used_cells:
+		if self.is_cell_open(coords):
+			open_cells.append(coords)
+	return open_cells
 
 
 func place_rect(rect: Rect2i) -> void:
@@ -93,9 +107,9 @@ func place_rect(rect: Rect2i) -> void:
 			var p := Vector2i(x, y)
 			var atlas_coords: Vector2i
 			if rect.has_point(p):
-				atlas_coords = self.TILE_FLOOR
+				atlas_coords = self.floor_tiles.pick_random()
 			elif self.tile_map.get_cell_atlas_coords(p) == self.TILE_EMPTY:
-				atlas_coords = self.TILE_WALL
+				atlas_coords = self.wall_tiles.pick_random()
 			else:
 				continue
 			self.tile_map.set_cell(Vector2i(x, y), 0, atlas_coords)
