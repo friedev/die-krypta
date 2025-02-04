@@ -223,6 +223,7 @@ max_offset = 24.0
 shake_reduction = 0.05
 
 [node name="SideIcons" type="Node2D" parent="."]
+z_index = 3
 
 [node name="Left" type="AnimatedSprite2D" parent="SideIcons"]
 sprite_frames = SubResource("SpriteFrames_4v4w7")
@@ -247,54 +248,52 @@ offset = Vector2(0, 12)
 [node name="Attacks" type="Node2D" parent="."]
 
 [node name="Left" type="AnimatedSprite2D" parent="Attacks"]
-visible = false
+position = Vector2(-6, 0)
 sprite_frames = SubResource("6")
 animation = &"orthogonal"
-offset = Vector2(-12, 0)
+frame = 3
+frame_progress = 1.0
 flip_h = true
 
 [node name="Right" type="AnimatedSprite2D" parent="Attacks"]
-visible = false
+position = Vector2(6, 0)
 sprite_frames = SubResource("6")
 animation = &"orthogonal"
 
 [node name="Up" type="AnimatedSprite2D" parent="Attacks"]
-visible = false
+position = Vector2(0, -6)
 rotation = -1.5708
 sprite_frames = SubResource("6")
 animation = &"orthogonal"
-offset = Vector2(-12, 0)
+frame = 3
+frame_progress = 1.0
 
 [node name="Down" type="AnimatedSprite2D" parent="Attacks"]
-visible = false
+position = Vector2(0, 6)
 rotation = 1.5708
 sprite_frames = SubResource("6")
 animation = &"orthogonal"
-offset = Vector2(0, -12)
 
 [node name="LeftUp" type="AnimatedSprite2D" parent="Attacks"]
-visible = false
+position = Vector2(-6, -6)
 sprite_frames = SubResource("6")
 animation = &"diagonal"
-offset = Vector2(-12, -12)
 flip_h = true
 
 [node name="LeftDown" type="AnimatedSprite2D" parent="Attacks"]
-visible = false
+position = Vector2(-6, 6)
 sprite_frames = SubResource("6")
 animation = &"diagonal"
-offset = Vector2(-12, 0)
 flip_h = true
 flip_v = true
 
 [node name="RightUp" type="AnimatedSprite2D" parent="Attacks"]
-visible = false
+position = Vector2(6, -6)
 sprite_frames = SubResource("6")
 animation = &"diagonal"
-offset = Vector2(0, -12)
 
 [node name="RightDown" type="AnimatedSprite2D" parent="Attacks"]
-visible = false
+position = Vector2(6, 6)
 sprite_frames = SubResource("6")
 animation = &"diagonal"
 flip_v = true

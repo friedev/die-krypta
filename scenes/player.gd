@@ -264,6 +264,8 @@ func setup() -> void:
 	self.show()
 	self.sprite.show()
 	self.attacks.show()
+	for attack_animation in self.attack_animations.values():
+		attack_animation.hide()
 	self.side_icons.show()
 	self.set_process_input(true)
 	self.stop_animations()
