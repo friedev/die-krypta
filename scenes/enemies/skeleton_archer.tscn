@@ -19,6 +19,7 @@ can_move_diagonal = false
 can_attack_orthogonal = true
 can_attack_diagonal = false
 projectile_scene = ExtResource("3_etpai")
+difficulty = 15
 
 [node name="Sprite2D" parent="." index="0"]
 texture = SubResource("AtlasTexture_8i0k6")

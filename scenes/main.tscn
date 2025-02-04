@@ -5189,7 +5189,8 @@ sources/0 = SubResource("TileSetAtlasSource_kocre")
 
 [node name="Main" type="Node2D" node_paths=PackedStringArray("player", "tile_map", "health_map")]
 script = ExtResource("1_yugwm")
-starting_enemies = 4
+starting_difficulty = 30
+difficulty_per_level = 10
 min_enemy_spawn_distance = 3
 enemy_scenes = Array[PackedScene]([ExtResource("2_1rcoe"), ExtResource("3_ektfl"), ExtResource("4_2tgh8"), ExtResource("5_wc230")])
 player = NodePath("Player")

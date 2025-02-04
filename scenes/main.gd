@@ -16,7 +16,8 @@ var wall_tiles: Array[Vector2i] = [
 	Vector2i(1, 2),
 ]
 
-@export var starting_enemies: int
+@export var starting_difficulty: int
+@export var difficulty_per_level: int
 @export var min_enemy_spawn_distance: int  # in tiles (manhattan distance)
 
 @export var enemy_scenes: Array[PackedScene]
@@ -25,7 +26,6 @@ var wall_tiles: Array[Vector2i] = [
 @export var health_map: TileMapLayer
 
 var level := 0
-var enemy_count: int
 # TODO typed dictionary Vector2i -> Entity
 var entity_map := {}
 var animate_enemies := true
@@ -53,8 +53,7 @@ func update() -> void:
 			self.player.draw_moves()
 
 
-func place_enemy(coords: Vector2i) -> Enemy:
-	var enemy := self.enemy_scenes.pick_random().instantiate() as Enemy
+func place_enemy(enemy: Enemy, coords: Vector2i) -> Enemy:
 	enemy.main = self
 	enemy.coords = coords
 	enemy.prev_coords = coords
@@ -63,7 +62,7 @@ func place_enemy(coords: Vector2i) -> Enemy:
 	return enemy
 
 
-func spawn_enemies(count: int) -> void:
+func spawn_enemies(max_difficulty: int) -> void:
 	var spawn_cells: Array[Vector2i] = []
 	for coords in self.get_open_cells():
 		if (
@@ -72,14 +71,31 @@ func spawn_enemies(count: int) -> void:
 		):
 			spawn_cells.append(coords)
 
-	for i in range(count):
+	var difficulty := 0
+	while difficulty < max_difficulty:
 		if len(spawn_cells) == 0:
-			push_warning("Not enough space to spawn enemies; stopping with %d spawned out of %d" % [i, count])
+			push_warning("Not enough space to spawn enemies; stopping at %d difficulty out of %d max" % [difficulty, max_difficulty])
 			break
 
 		var spawn_coords: Vector2i = spawn_cells.pick_random()
-		spawn_cells.erase(spawn_coords)
-		self.place_enemy(spawn_coords)
+
+		# TODO more efficient way of choosing enemies with deterministic time
+		# complexity and without churning through bad choices
+		var tries := 0
+		var max_tries := 10
+		var enemy: Enemy = null
+		while (enemy == null or difficulty + enemy.difficulty > max_difficulty) and tries < max_tries:
+			tries += 1
+			if enemy != null:
+				enemy.queue_free()
+			enemy = self.enemy_scenes.pick_random().instantiate() as Enemy
+
+		if difficulty + enemy.difficulty <= max_difficulty:
+			self.place_enemy(enemy, spawn_coords)
+			spawn_cells.erase(spawn_coords)
+			difficulty += enemy.difficulty
+		else:
+			break
 
 
 func get_open_cells() -> Array[Vector2i]:
@@ -151,7 +167,6 @@ func new_game() -> void:
 
 	self.animate_enemies = true
 
-	self.enemy_count = self.starting_enemies
 	self.level = 0
 
 	self.new_level()
@@ -169,7 +184,7 @@ func new_level() -> void:
 	self.player.camera.force_update_scroll()
 	self.player.camera.position_smoothing_enabled = true
 
-	self.spawn_enemies(self.starting_enemies + self.level)
+	self.spawn_enemies(self.starting_difficulty + self.level * self.difficulty_per_level)
 
 	self.player.draw_moves()
 

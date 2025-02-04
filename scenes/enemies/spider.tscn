@@ -18,6 +18,7 @@ can_move_diagonal = true
 can_attack_orthogonal = true
 can_attack_diagonal = true
 projectile_scene = null
+difficulty = 20
 
 [node name="Sprite2D" parent="." index="0"]
 texture = SubResource("AtlasTexture_3ex2i")

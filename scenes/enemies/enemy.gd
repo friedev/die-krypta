@@ -1,5 +1,6 @@
 class_name Enemy extends Entity
 
+@export var difficulty: int
 @export var move_speed: float
 
 @export var sprite: Sprite2D
