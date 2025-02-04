@@ -1,5 +1,7 @@
 class_name Projectile extends Node2D
 
+signal hit_target(projectile: Projectile)
+
 @export var speed: float
 
 var target_position: Vector2
@@ -12,4 +14,5 @@ func _process(delta: float) -> void:
 	self.rotation = self.global_position.angle_to_point(self.target_position)
 	self.global_position = self.global_position.move_toward(self.target_position, self.speed * delta)
 	if self.global_position.is_equal_approx(self.target_position):
+		self.hit_target.emit(self)
 		self.queue_free()

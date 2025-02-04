@@ -25,10 +25,12 @@ var wall_tiles: Array[Vector2i] = [
 @export var tile_map: TileMapLayer
 @export var health_map: TileMapLayer
 
+var ready_for_input := true
 var level := 0
 # TODO typed dictionary Vector2i -> Entity
 var entity_map := {}
-var animate_enemies := true
+var enemy_queue: Array[Node] = []
+var enemy_index := 0
 
 
 func _ready() -> void:
@@ -43,14 +45,39 @@ func is_cell_open(coords: Vector2i) -> bool:
 
 
 func update() -> void:
-	self.get_tree().call_group("enemies", "update")
+	self.enemy_index = 0
+	self.update_next_enemy()
 
+
+func update_next_enemy() -> void:
+	while self.enemy_index < len(self.enemy_queue) and self.enemy_queue[self.enemy_index] == null:
+		self.enemy_index += 1
+	
+	if self.enemy_index < len(self.enemy_queue):
+		var enemy: Enemy = self.enemy_queue[self.enemy_index]
+		self.enemy_index += 1
+		enemy.update()
+	else:
+		self.end_turn()
+
+
+func _on_enemy_died(enemy: Enemy) -> void:
+	self.enemy_queue[self.enemy_queue.find(enemy)] = null
+
+
+func _on_enemy_done() -> void:
+	self.update_next_enemy()
+
+
+func end_turn() -> void:
+	self.ready_for_input = true
 	if self.player.health > 0:
-		if self.get_tree().get_node_count_in_group("enemies") == 0:
-			self.level += 1
-			self.new_level()
-		else:
-			self.player.draw_moves()
+		for enemy in self.enemy_queue:
+			if enemy != null:
+				self.player.draw_moves()
+				return
+		self.level += 1
+		self.new_level()
 
 
 func place_enemy(enemy: Enemy, coords: Vector2i) -> Enemy:
@@ -58,6 +85,9 @@ func place_enemy(enemy: Enemy, coords: Vector2i) -> Enemy:
 	enemy.coords = coords
 	enemy.prev_coords = coords
 	enemy.position = self.tile_map.map_to_local(enemy.coords)
+	enemy.done.connect(self._on_enemy_done)
+	self.enemy_queue.append(enemy)
+	enemy.died.connect(self._on_enemy_died)
 	self.add_child(enemy)
 	return enemy
 
@@ -165,8 +195,6 @@ func new_game() -> void:
 
 	self.player.setup()
 
-	self.animate_enemies = true
-
 	self.level = 0
 
 	self.new_level()
@@ -175,6 +203,7 @@ func new_game() -> void:
 func new_level() -> void:
 	self.tile_map.clear()
 	self.entity_map.clear()
+	self.enemy_queue.clear()
 	self.generate_map()
 
 	self.player.coords = Vector2i.ZERO
@@ -190,6 +219,8 @@ func new_level() -> void:
 
 	self.level_started.emit(self.level)
 
+	self.ready_for_input = true
+
 
 func _on_player_health_changed(health: int) -> void:
 	self.health_map.clear()
@@ -197,7 +228,7 @@ func _on_player_health_changed(health: int) -> void:
 		self.health_map.set_cell(Vector2i(i, 0), 0, Vector2i(0 if i < health else 1, 0))
 
 
-func _on_player_moved() -> void:
+func _on_player_done() -> void:
 	self.update()
 
 
@@ -207,3 +238,4 @@ func _on_main_menu_play_pressed(previous: Menu) -> void:
 
 func _on_node_spawned(node: Node) -> void:
 	self.add_child(node)
+

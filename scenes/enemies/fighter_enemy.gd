@@ -15,7 +15,7 @@ var shoot_direction: Vector2i
 var move_directions: Array[Vector2i]
 var attack_directions: Array[Vector2i]
 var turns_until_action: int
-
+var animation_playing := false
 
 func _ready() -> void:
 	super._ready()
@@ -31,14 +31,15 @@ func _ready() -> void:
 
 
 func update() -> void:
-	super.update()
+	self.prev_coords = self.coords
 	if self.health == 0 or self.main.player.health == 0:
-		return
-	if self.turns_until_action > 0:
+		pass
+	elif self.turns_until_action > 0:
 		self.turns_until_action -= 1
-		return
-	if self.act():
+	elif self.act():
 		self.turns_until_action = self.turns_between_actions
+	if not self.animation_playing:
+		self.done.emit()
 
 
 func act() -> bool:
@@ -123,16 +124,25 @@ func shoot() -> void:
 	var target_coords := self.raycast(self.coords, self.shoot_direction)
 	var target_entity: Entity = self.main.entity_map.get(target_coords)
 	if target_entity != null:
-		target_entity.hurt(self.ranged_damage, target_coords - self.coords)
 		projectile.target_entity = target_entity
 	else:
 		projectile.target_position = self.main.tile_map.map_to_local(target_coords)
 
 	projectile.global_position = self.global_position
+	projectile.hit_target.connect(self._on_projectile_hit_target)
 	SignalBus.node_spawned.emit(projectile)
 
 	self.ready_to_shoot = false
 	self.aim_line.clear_points()
+
+	self.animation_playing = true
+
+
+func _on_projectile_hit_target(projectile: Projectile) -> void:
+	self.animation_playing = false
+	if projectile.target_entity != null:
+		projectile.target_entity.hurt(self.ranged_damage, projectile.target_entity.coords - self.coords)
+	self.done.emit()
 
 
 func line_up_shot() -> bool:

@@ -1,5 +1,7 @@
 class_name Enemy extends Entity
 
+signal done
+
 @export var difficulty: int
 @export var move_speed: float
 
@@ -34,6 +36,7 @@ func move(new_coords: Vector2i) -> bool:
 # To be overridden
 func update() -> void:
 	self.prev_coords = self.coords
+	self.done.emit()
 
 
 func die() -> void:
@@ -63,11 +66,7 @@ func _ready() -> void:
 
 func _process(delta: float) -> void:
 	self.position = self.position.lerp(
-		self.main.tile_map.map_to_local(
-			self.coords
-			if self.main.animate_enemies
-			else self.prev_coords
-		),
+		self.main.tile_map.map_to_local(self.coords),
 		delta * self.move_speed
 	)
 

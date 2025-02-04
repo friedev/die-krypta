@@ -5259,8 +5259,8 @@ autoplay = true
 
 [connection signal="level_started" from="." to="CanvasLayer/MarginContainer/LevelLabel" method="_on_level_started"]
 [connection signal="died" from="Player" to="CanvasLayer/MarginContainer/GameOverMenu" method="_on_player_died"]
+[connection signal="done" from="Player" to="." method="_on_player_done"]
 [connection signal="health_changed" from="Player" to="." method="_on_player_health_changed"]
-[connection signal="moved" from="Player" to="." method="_on_player_moved"]
 [connection signal="credits_pressed" from="CanvasLayer/MarginContainer/MainMenu" to="CanvasLayer/MarginContainer/CreditsMenu" method="open"]
 [connection signal="options_pressed" from="CanvasLayer/MarginContainer/MainMenu" to="CanvasLayer/MarginContainer/OptionsMenu" method="open"]
 [connection signal="play_pressed" from="CanvasLayer/MarginContainer/MainMenu" to="." method="_on_main_menu_play_pressed"]

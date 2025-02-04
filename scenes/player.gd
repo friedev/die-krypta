@@ -1,6 +1,6 @@
 class_name Player extends Entity
 
-signal moved
+signal done
 
 @export var move_speed: float
 @export var hit_stress: float
@@ -39,6 +39,7 @@ var side := 1
 var side_left := 4
 var side_up := 5
 var last_action: StringName
+var animation_playing := false
 
 
 func set_sides(coords: Vector2i) -> void:
@@ -58,6 +59,7 @@ func set_sides(coords: Vector2i) -> void:
 
 
 func draw_move(coords: Vector2i, move: int) -> void:
+	self.side_icons.show()
 	var abs_coords := self.coords + coords
 	var side_icon := self.side_icon_sprites[coords] as AnimatedSprite2D
 	if self.main.is_cell_open(abs_coords):
@@ -78,6 +80,7 @@ func stop_animations() -> void:
 	for animation: AnimatedSprite2D in self.attacks.get_children():
 		animation.stop()
 		animation.visible = false
+	self.animation_playing = false
 
 
 func hit(hit_coords := Vector2i()) -> bool:
@@ -159,9 +162,8 @@ func roll(coords: Vector2i) -> bool:
 	self.sprite.frame = self.side - 1
 
 	if self.attack(coords):
-		self.main.animate_enemies = false
+		self.animation_playing = true
 	else:
-		self.main.animate_enemies = true
 		self.stop_animations()
 
 	self.move_sound.pitch_scale = randf() * 0.5 + 0.75
@@ -171,7 +173,6 @@ func roll(coords: Vector2i) -> bool:
 
 
 func wait() -> bool:
-	self.main.animate_enemies = true
 	return true
 
 
@@ -218,7 +219,7 @@ func hurt(amount: int, direction: Vector2i) -> void:
 
 
 func handle_input(action: StringName) -> void:
-	if Globals.is_menu_open:
+	if Globals.is_menu_open or not self.main.ready_for_input:
 		return
 
 	var success: bool
@@ -242,7 +243,10 @@ func handle_input(action: StringName) -> void:
 			success = false
 
 	if success:
-		self.moved.emit()
+		self.main.ready_for_input = false
+		self.side_icons.hide()
+		if not self.animation_playing:
+			self.done.emit()
 
 	self.last_action = action
 	self.move_timer.start()
@@ -295,4 +299,4 @@ func _process(delta: float) -> void:
 
 func _on_animation_finished() -> void:
 	self.stop_animations()
-	self.main.animate_enemies = true
+	self.done.emit()
