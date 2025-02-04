@@ -1,11 +1,13 @@
-[gd_scene load_steps=19 format=3 uid="uid://c4pnltqkwa20j"]
+[gd_scene load_steps=21 format=3 uid="uid://c4pnltqkwa20j"]
 
 [ext_resource type="Script" path="res://scenes/main.gd" id="1_yugwm"]
 [ext_resource type="PackedScene" uid="uid://br6phtouiqto4" path="res://scenes/enemies/zombie.tscn" id="2_1rcoe"]
 [ext_resource type="Texture2D" uid="uid://c06qwdre6roql" path="res://sprites/tileset.png" id="3_2w245"]
 [ext_resource type="PackedScene" uid="uid://dj4rtj5mok753" path="res://scenes/enemies/skeleton_archer.tscn" id="3_ektfl"]
+[ext_resource type="PackedScene" uid="uid://65aprw2wynxo" path="res://scenes/enemies/spider.tscn" id="4_2tgh8"]
 [ext_resource type="PackedScene" uid="uid://ckkml6my1wkk6" path="res://scenes/player.tscn" id="4_wkwvu"]
 [ext_resource type="Texture2D" uid="uid://dmv2bg7aaam4l" path="res://sprites/health.png" id="5_07ub3"]
+[ext_resource type="PackedScene" uid="uid://b0465awupcjqi" path="res://scenes/enemies/goblin_archer.tscn" id="5_wc230"]
 [ext_resource type="Theme" uid="uid://cp2dw8jh1pmps" path="res://ui/theme.tres" id="6_rupnf"]
 [ext_resource type="AudioStream" uid="uid://c3ebkqbf75lae" path="res://music/die_krypta.ogg" id="7_8djxl"]
 [ext_resource type="PackedScene" uid="uid://dwbkolmyih02g" path="res://scenes/ui/menus/main_menu.tscn" id="7_mr1vb"]
@@ -5189,7 +5191,7 @@ sources/0 = SubResource("TileSetAtlasSource_kocre")
 script = ExtResource("1_yugwm")
 starting_enemies = 4
 min_enemy_spawn_distance = 3
-enemy_scenes = Array[PackedScene]([ExtResource("2_1rcoe"), ExtResource("3_ektfl")])
+enemy_scenes = Array[PackedScene]([ExtResource("2_1rcoe"), ExtResource("3_ektfl"), ExtResource("4_2tgh8"), ExtResource("5_wc230")])
 player = NodePath("Player")
 tile_map = NodePath("TileMap")
 health_map = NodePath("CanvasLayer/HealthMap")

@@ -30,25 +30,6 @@ func move(new_coords: Vector2i) -> bool:
 	return true
 
 
-func chase_player() -> void:
-	var dy := self.main.player.coords.y - self.coords.y
-	var dx := self.main.player.coords.x - self.coords.x
-	var x_dir := int(dx / maxi(1, absi(dx)))
-	var y_dir := int(dy / maxi(1, absi(dy)))
-	var x_target := self.coords + Vector2i(x_dir, 0)
-	var y_target := self.coords + Vector2i(0, y_dir)
-
-	# Try to move along the axis of greater distance toward the target
-	# Failing that, move along the axis of lesser distance
-	var x_first := absi(dx) > absi(dy) or (absi(dx) == absi(dy) and randi() % 2 == 0)
-	if x_first:
-		if not self.move(x_target):
-			self.move(y_target)
-	else:
-		if not self.move(y_target):
-			self.move(x_target)
-
-
 # To be overridden
 func update() -> void:
 	self.prev_coords = self.coords

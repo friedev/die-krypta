@@ -1,0 +1,23 @@
+[gd_scene load_steps=5 format=3 uid="uid://65aprw2wynxo"]
+
+[ext_resource type="PackedScene" uid="uid://bgn76dmrwwjl7" path="res://scenes/enemies/enemy.tscn" id="1_cvehp"]
+[ext_resource type="Script" path="res://scenes/enemies/fighter_enemy.gd" id="2_lhe0y"]
+[ext_resource type="Texture2D" uid="uid://c06qwdre6roql" path="res://sprites/tileset.png" id="2_qxbvi"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_3ex2i"]
+atlas = ExtResource("2_qxbvi")
+region = Rect2(27, 248, 12, 12)
+
+[node name="Spider" instance=ExtResource("1_cvehp")]
+script = ExtResource("2_lhe0y")
+melee_damage = 1
+ranged_damage = 0
+turns_between_actions = 0
+can_move_orthogonal = true
+can_move_diagonal = true
+can_attack_orthogonal = true
+can_attack_diagonal = true
+projectile_scene = null
+
+[node name="Sprite2D" parent="." index="0"]
+texture = SubResource("AtlasTexture_3ex2i")

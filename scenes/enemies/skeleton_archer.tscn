@@ -2,7 +2,7 @@
 
 [ext_resource type="PackedScene" uid="uid://bgn76dmrwwjl7" path="res://scenes/enemies/enemy.tscn" id="1_6wp18"]
 [ext_resource type="Texture2D" uid="uid://c06qwdre6roql" path="res://sprites/tileset.png" id="2_08yyt"]
-[ext_resource type="Script" path="res://scenes/enemies/ranged_enemy.gd" id="2_q4vmx"]
+[ext_resource type="Script" path="res://scenes/enemies/fighter_enemy.gd" id="2_q4vmx"]
 [ext_resource type="PackedScene" uid="uid://bjm0metqbasck" path="res://scenes/projectiles/arrow.tscn" id="3_etpai"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_8i0k6"]
@@ -11,7 +11,13 @@ region = Rect2(586, 118, 12, 12)
 
 [node name="SkeletonArcher" instance=ExtResource("1_6wp18")]
 script = ExtResource("2_q4vmx")
+melee_damage = 0
 ranged_damage = 1
+turns_between_actions = 0
+can_move_orthogonal = true
+can_move_diagonal = false
+can_attack_orthogonal = true
+can_attack_diagonal = false
 projectile_scene = ExtResource("3_etpai")
 
 [node name="Sprite2D" parent="." index="0"]

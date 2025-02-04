@@ -1,0 +1,24 @@
+[gd_scene load_steps=6 format=3 uid="uid://b0465awupcjqi"]
+
+[ext_resource type="PackedScene" uid="uid://bgn76dmrwwjl7" path="res://scenes/enemies/enemy.tscn" id="1_4qdo1"]
+[ext_resource type="Script" path="res://scenes/enemies/fighter_enemy.gd" id="2_lxw0k"]
+[ext_resource type="PackedScene" uid="uid://bjm0metqbasck" path="res://scenes/projectiles/arrow.tscn" id="3_yvwag"]
+[ext_resource type="Texture2D" uid="uid://c06qwdre6roql" path="res://sprites/tileset.png" id="4_adsy5"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_obwyw"]
+atlas = ExtResource("4_adsy5")
+region = Rect2(378, 105, 12, 12)
+
+[node name="GoblinArcher" instance=ExtResource("1_4qdo1")]
+script = ExtResource("2_lxw0k")
+melee_damage = 0
+ranged_damage = 1
+turns_between_actions = 0
+can_move_orthogonal = true
+can_move_diagonal = true
+can_attack_orthogonal = false
+can_attack_diagonal = true
+projectile_scene = ExtResource("3_yvwag")
+
+[node name="Sprite2D" parent="." index="0"]
+texture = SubResource("AtlasTexture_obwyw")
