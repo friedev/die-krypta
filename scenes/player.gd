@@ -177,6 +177,7 @@ func wait() -> bool:
 
 
 func roll_toward(target: Vector2i) -> bool:
+	# Click on yourself to skip your turn
 	if target == self.coords:
 		return self.wait()
 
@@ -195,6 +196,33 @@ func roll_toward(target: Vector2i) -> bool:
 		if direction != Vector2i.ZERO and self.roll(direction):
 			return true
 	return false
+
+
+# WIP
+# Eventually this code will be used to preview a path and auto-move along it
+func path_to(target: Vector2i) -> bool:
+	if not self.main.astar.is_in_boundsv(target) or target == self.coords:
+		return false
+
+	# Configure A* pathfinding
+	self.main.astar.diagonal_mode = AStarGrid2D.DIAGONAL_MODE_NEVER
+	self.main.astar.default_compute_heuristic = AStarGrid2D.HEURISTIC_MANHATTAN
+	self.main.astar.default_estimate_heuristic = AStarGrid2D.HEURISTIC_MANHATTAN
+
+	# Set source and destination as not solid
+	# (AStarGrid2D can't pathfind to/from solid points)
+	self.main.astar.set_point_solid(self.coords, false)
+	self.main.astar.set_point_solid(target, false)
+
+	# Calculate path
+	var path := self.main.astar.get_id_path(self.coords, target, true)
+
+	# Set source and destination as solid again
+	self.main.astar.set_point_solid(self.coords, true)
+	self.main.astar.set_point_solid(self.coords, true)
+
+	# Attempt to move to the first point along the path
+	return len(path) > 1 and self.roll(path[1] - self.coords)
 
 
 func die() -> void:
@@ -275,7 +303,7 @@ func setup() -> void:
 	self.stop_animations()
 
 
-func _input(event: InputEvent) -> void:
+func _unhandled_input(event: InputEvent) -> void:
 	var action_order: Array[StringName] = [
 		&"move_left",
 		&"move_right",

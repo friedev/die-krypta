@@ -63,20 +63,33 @@ func melee_attack() -> bool:
 	return true
 
 
+# Move along the shortest path toward the player
 func chase_player() -> bool:
-	var best_coords := self.coords
-	var best_distance := Utility.manhattan_distance(self.coords, self.main.player.coords)
-	for move_direction in self.move_directions:
-		var new_coords := self.coords + move_direction
-		if self.main.is_cell_open(new_coords):
-			var new_distance := Utility.manhattan_distance(new_coords, self.main.player.coords)
-			if new_distance < best_distance:
-				best_coords = new_coords
-				best_distance = new_distance
-	if best_coords != self.coords:
-		self.move(best_coords)
-		return true
-	return false
+	# Configure A* pathfinding
+	var heuristic: AStarGrid2D.Heuristic
+	if self.can_move_diagonal:
+		self.main.astar.diagonal_mode = AStarGrid2D.DIAGONAL_MODE_ALWAYS
+		heuristic = AStarGrid2D.HEURISTIC_CHEBYSHEV
+	else:
+		self.main.astar.diagonal_mode = AStarGrid2D.DIAGONAL_MODE_NEVER
+		heuristic = AStarGrid2D.HEURISTIC_MANHATTAN
+	self.main.astar.default_compute_heuristic = heuristic
+	self.main.astar.default_estimate_heuristic = heuristic
+
+	# Set source and destination as not solid
+	# (AStarGrid2D can't pathfind to/from solid points)
+	self.main.astar.set_point_solid(self.coords, false)
+	self.main.astar.set_point_solid(self.main.player.coords, false)
+
+	# Calculate path
+	var path := self.main.astar.get_id_path(self.coords, self.main.player.coords, true)
+
+	# Set source and destination as solid again
+	self.main.astar.set_point_solid(self.coords, true)
+	self.main.astar.set_point_solid(self.main.player.coords, true)
+
+	# Attempt to move to the first point along the path
+	return len(path) > 1 and self.move(path[1])
 
 
 func get_direction_to(p1: Vector2i, p2: Vector2i, directions: Array[Vector2i]) -> Vector2i:

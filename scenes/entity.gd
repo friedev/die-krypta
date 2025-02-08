@@ -9,10 +9,12 @@ signal died(entity: Entity)
 var coords: Vector2i:
 	set(value):
 		if self.main.entity_map.get(self.coords) == self:
+			self.main.astar.set_point_solid(self.coords, false)
 			self.main.entity_map.erase(self.coords)
 		coords = value
 		assert(not self.main.entity_map.has(self.coords))
 		self.main.entity_map[self.coords] = self
+		self.main.astar.set_point_solid(self.coords, true)
 
 var health: int:
 	set(value):
@@ -33,6 +35,7 @@ func setup() -> void:
 
 func die() -> void:
 	self.main.entity_map.erase(self.coords)
+	self.main.astar.set_point_solid(self.coords, false)
 	self.died.emit(self)
 
 

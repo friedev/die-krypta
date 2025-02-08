@@ -31,6 +31,7 @@ var level := 0
 var entity_map := {}
 var enemy_queue: Array[Node] = []
 var enemy_index := 0
+var astar := AStarGrid2D.new()
 
 
 func _ready() -> void:
@@ -38,10 +39,7 @@ func _ready() -> void:
 
 
 func is_cell_open(coords: Vector2i) -> bool:
-	return (
-		not self.entity_map.has(coords)
-		and self.tile_map.get_cell_atlas_coords(coords) in self.floor_tiles
-	)
+	return not self.astar.is_point_solid(coords)
 
 
 func update() -> void:
@@ -143,17 +141,26 @@ func place_rect(rect: Rect2i) -> void:
 		for y in range(walled_rect.position.y, walled_rect.end.y):
 			var p := Vector2i(x, y)
 			var atlas_coords: Vector2i
+			var solid: bool
 			if rect.has_point(p):
+				solid = false
 				atlas_coords = self.floor_tiles.pick_random()
 			elif self.tile_map.get_cell_atlas_coords(p) == self.TILE_EMPTY:
+				solid = true
 				atlas_coords = self.wall_tiles.pick_random()
 			else:
 				continue
+			self.astar.set_point_solid(p, solid)
 			self.tile_map.set_cell(Vector2i(x, y), 0, atlas_coords)
 
 
 
 func generate_map() -> void:
+	self.astar.clear()
+	self.astar.region = Rect2i(-16, -16, 32, 32)
+	self.astar.update()
+	self.astar.fill_solid_region(self.astar.region)
+
 	var long_dimension := randi_range(6, 8)
 	var short_dimension := randi_range(4, 6)
 
@@ -171,8 +178,8 @@ func generate_map() -> void:
 	)
 	var rect1 := Rect2i(start, rect_size)
 
-	long_dimension = randi_range(6, 9)
-	short_dimension = randi_range(3, 5)
+	long_dimension = randi_range(6, 8)
+	short_dimension = randi_range(4, 6)
 
 	long_x = not long_x
 	if long_x:
@@ -190,6 +197,20 @@ func generate_map() -> void:
 	self.place_rect(rect2)
 
 
+# Print the current A* grid to the output (for debugging)
+func print_astar() -> void:
+	print()
+	for y in range(self.astar.region.position.y, self.astar.region.end.y):
+		var line := ""
+		for x in range(self.astar.region.position.x, self.astar.region.end.x):
+			if self.astar.is_point_solid(Vector2i(x, y)):
+				line += "# "
+			else:
+				line += ". "
+		print(line)
+	print()
+
+
 func new_game() -> void:
 	self.get_tree().call_group("enemies", "queue_free")
 
@@ -204,6 +225,7 @@ func new_level() -> void:
 	self.tile_map.clear()
 	self.entity_map.clear()
 	self.enemy_queue.clear()
+
 	self.generate_map()
 
 	self.player.coords = Vector2i.ZERO
@@ -238,4 +260,3 @@ func _on_main_menu_play_pressed(previous: Menu) -> void:
 
 func _on_node_spawned(node: Node) -> void:
 	self.add_child(node)
-
