@@ -31,8 +31,13 @@ size_flags_vertical = 3
 [node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/PanelContainer"]
 layout_mode = 2
 
-[node name="RichTextLabel" type="RichTextLabel" parent="VBoxContainer/PanelContainer/MarginContainer"]
-custom_minimum_size = Vector2(732, 0)
+[node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer/PanelContainer/MarginContainer"]
+custom_minimum_size = Vector2(0, 360)
+layout_mode = 2
+horizontal_scroll_mode = 0
+
+[node name="RichTextLabel" type="RichTextLabel" parent="VBoxContainer/PanelContainer/MarginContainer/ScrollContainer"]
+custom_minimum_size = Vector2(740, 0)
 layout_mode = 2
 bbcode_enabled = true
 text = "[center]Die Krypta was created by [url=https://frie.dev]Aaron Friesen[/url].
@@ -47,10 +52,12 @@ Third-party assets:
 [ul]
 [url=https://vurmux.itch.io/urizen-onebit-tileset]Urizen 1Bit Tileset[/url] by [url=https://vurmux.itch.io/]vurmux[/url] licensed under [url=http://creativecommons.org/publicdomain/zero/1.0/]CC0[/url]
 Dungeon Synth Free Samples Pack [url=https://erang.bandcamp.com/album/dungeon-synth-free-samples-pack]Tome I[/url] and [url=https://erang.bandcamp.com/album/dungeon-synth-free-samples-pack-tome-ii]Tome II[/url] by [url=https://erang.bandcamp.com]Erang[/url]
+[url=https://kenney.nl/assets/rpg-audio]RPG Audio[/url] by [url=https://kenney.nl/]Kenney[/url] licensed under [url=https://creativecommons.org/publicdomain/zero/1.0/]CC0[/url]
+[url=https://opengameart.org/content/rpg-sound-pack]RPG Sound Pack[/url] by [url=https://opengameart.org/users/artisticdude]artisticdude[/url] licensed under [url=http://creativecommons.org/publicdomain/zero/1.0/]CC0[/url]
+[url=https://opengameart.org/content/80-cc0-rpg-sfx]80 CC0 RPG SFX[/url] by [url=https://opengameart.org/users/rubberduck]rubberduck[/url] licensed under [url=http://creativecommons.org/publicdomain/zero/1.0/]CC0[/url]
+[url=https://opengameart.org/content/75-cc0-breaking-falling-hit-sfx]75 CC0 breaking / falling / hit sfx[/url] by [url=https://opengameart.org/users/rubberduck]rubberduck[/url] licensed under [url=http://creativecommons.org/publicdomain/zero/1.0/]CC0[/url]
 [url=https://opengameart.org/content/25-spooky-sound-effects]25 spooky sound effects[/url] by [url=https://opengameart.org/users/bart]bart[/url] licensed under [url=http://creativecommons.org/licenses/by/3.0/]CC-BY 3.0[/url]
 [url=https://opengameart.org/content/ghost-breath]Ghost breath[/url] by [url=https://opengameart.org/users/qubodup]qubodup[/url] licensed under [url=http://creativecommons.org/publicdomain/zero/1.0/]CC0[/url]
-[url=https://kenney.nl/assets/rpg-audio]RPG Audio[/url] by [url=https://kenney.nl/]Kenney[/url] licensed under [url=https://creativecommons.org/publicdomain/zero/1.0/]CC0[/url]
-[url=https://opengameart.org/content/75-cc0-breaking-falling-hit-sfx]75 CC0 breaking / falling / hit sfx[/url] by [url=https://opengameart.org/users/rubberduck]rubberduck[/url] licensed under [url=http://creativecommons.org/publicdomain/zero/1.0/]CC0[/url]
 [url=https://freesound.org/people/nettimato/sounds/353974/]rolling dice 2[/url] by [url=https://freesound.org/people/nettimato/]nettimato[/url] licensed under [url=http://creativecommons.org/publicdomain/zero/1.0/]CC0[/url]
 [url=https://www.1001fonts.com/pixelfj8pt1-font.html]pixelFJ8pt[/url] by [url=https://www.1001fonts.com/users/flashjunior/]MBommeli[/url], licensed under the [url=https://www.1001fonts.com/licenses/ffc.html]1001Fonts FFC License[/url]
 [url=https://www.1001fonts.com/bitmgothic-font.html]BitmGothic[/url] by [url=http://www.thenomi.org]Nomi[/url], licensed under the [url=https://www.1001fonts.com/licenses/ffc.html]1001Fonts FFC License[/url]

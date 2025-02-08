@@ -9,6 +9,7 @@ signal done
 @export var aim_line: Line2D
 @export var hurt_particles: GPUParticles2D
 @export var death_sound: AudioStreamPlayer2D
+@export var damage_sound: AudioStreamPlayer2D
 
 var player: Player
 
@@ -56,10 +57,13 @@ func die() -> void:
 
 
 func hurt(amount: int, direction := Vector2i()) -> void:
+	assert(amount > 0)
 	self.hurt_particles.rotation = Vector2(direction).angle()
 	self.hurt_particles.restart()
 
 	super.hurt(amount, direction)
+	if self.health > 0:
+		self.damage_sound.play()
 
 
 func _ready() -> void:
