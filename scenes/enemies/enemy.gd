@@ -18,15 +18,17 @@ var prev_coords: Vector2i
 func face_toward(target: Vector2i) -> void:
 	if target.x > self.coords.x:
 		self.sprite.flip_h = true
+		self.sprite.offset.x = +1
 	elif target.x < self.coords.x:
 		self.sprite.flip_h = false
+		self.sprite.offset.x = 0
 
 
 func move(new_coords: Vector2i) -> bool:
 	if not self.main.is_cell_open(new_coords):
 		return false
 
-	self.face_toward(coords)
+	self.face_toward(new_coords)
 
 	self.coords = new_coords
 
