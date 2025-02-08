@@ -11,8 +11,8 @@ signal done
 @export var side_icons: Node2D
 @export var camera: ShakeCamera
 @export var hurt_particles: GPUParticles2D
-@export var move_sound: AudioStreamPlayer2D
-@export var hurt_sound: AudioStreamPlayer2D
+@export var move_sound: RandomPitchSound
+@export var hurt_sound: RandomPitchSound
 @export var move_timer: Timer
 
 # TODO typed dictionary Vector2i -> AnimatedSprite2D
@@ -166,8 +166,7 @@ func roll(coords: Vector2i) -> bool:
 	else:
 		self.stop_animations()
 
-	self.move_sound.pitch_scale = randf() * 0.5 + 0.75
-	self.move_sound.play()
+	self.move_sound.randomize_and_play()
 
 	return true
 
@@ -240,8 +239,7 @@ func hurt(amount: int, direction: Vector2i) -> void:
 	self.camera.shake += self.hurt_stress
 	self.hurt_particles.rotation = Vector2(direction).angle()
 	self.hurt_particles.restart()
-	self.hurt_sound.pitch_scale = randf() * 0.5 + 0.75
-	self.hurt_sound.play()
+	self.hurt_sound.randomize_and_play()
 
 	super.hurt(amount, direction)
 

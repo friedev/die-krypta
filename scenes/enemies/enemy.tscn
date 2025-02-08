@@ -1,8 +1,9 @@
-[gd_scene load_steps=9 format=3 uid="uid://bgn76dmrwwjl7"]
+[gd_scene load_steps=10 format=3 uid="uid://bgn76dmrwwjl7"]
 
 [ext_resource type="Script" path="res://scenes/enemies/enemy.gd" id="1_awkll"]
 [ext_resource type="Texture2D" uid="uid://c06qwdre6roql" path="res://sprites/tileset.png" id="2_6c3vl"]
 [ext_resource type="AudioStream" uid="uid://bsfjwhx6m0iak" path="res://sound/enemy_death.wav" id="3"]
+[ext_resource type="Script" path="res://scenes/random_pitch_sound.gd" id="3_qhl7p"]
 [ext_resource type="Texture2D" uid="uid://b5ccoolguypy5" path="res://sprites/dashed_line.png" id="4_eb7ki"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_uwcq6"]
@@ -49,10 +50,14 @@ one_shot = true
 explosiveness = 1.0
 
 [node name="DamageSound" type="AudioStreamPlayer2D" parent="."]
+script = ExtResource("3_qhl7p")
 
 [node name="DeathSound" type="AudioStreamPlayer2D" parent="."]
 stream = ExtResource("3")
 volume_db = -1.0
+pitch_scale = 1.25
+script = ExtResource("3_qhl7p")
+pitch_scale_range = 0.5
 
 [node name="AimLine" type="Line2D" parent="."]
 z_index = 1

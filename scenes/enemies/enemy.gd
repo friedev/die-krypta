@@ -8,8 +8,8 @@ signal done
 @export var sprite: Sprite2D
 @export var aim_line: Line2D
 @export var hurt_particles: GPUParticles2D
-@export var death_sound: AudioStreamPlayer2D
-@export var damage_sound: AudioStreamPlayer2D
+@export var death_sound: RandomPitchSound
+@export var damage_sound: RandomPitchSound
 
 var player: Player
 
@@ -50,8 +50,7 @@ func die() -> void:
 	self.prev_coords = self.coords
 	self.aim_line.hide()
 
-	self.death_sound.pitch_scale = randf() + 0.75
-	self.death_sound.play()
+	self.death_sound.randomize_and_play()
 
 	super.die()
 
