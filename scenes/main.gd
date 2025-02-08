@@ -184,12 +184,6 @@ func setup() -> void:
 	self.animate_enemies = true
 
 
-func _on_player_health_changed(health: int) -> void:
-	self.health_map.clear()
-	for i in range(self.player.max_health):
-		self.health_map.set_cell(0, Vector2i(i, 0), 0 if i < health else 1, Vector2i.ZERO)
-
-
 func _on_player_moved() -> void:
 	self.update()
 

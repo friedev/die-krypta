@@ -2,7 +2,7 @@ class_name Player extends Node2D
 
 signal won
 signal died
-signal health_changed(health: int)
+signal health_changed(health: int, max_health: int)
 signal moved
 
 @export var move_speed: float
@@ -44,7 +44,7 @@ var last_action: StringName
 var health: int:
 	set(value):
 		health = value
-		self.health_changed.emit(self.health)
+		self.health_changed.emit(self.health, self.max_health)
 
 
 func set_sides(cellv: Vector2i) -> void:
