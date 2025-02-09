@@ -29,7 +29,7 @@ const ASTAR_LAYER := Layer.MAIN
 @export var tile_map: TileMapLayer
 @export var health_map: TileMapLayer
 
-var ready_for_input := true
+var ready_for_input := false
 var level := 0
 # TODO typed dictionary Vector2i -> Entity
 var entity_maps: Array[Dictionary] = []
