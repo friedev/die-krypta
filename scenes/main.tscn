@@ -13,7 +13,7 @@
 [ext_resource type="Script" path="res://scenes/ui/menu_darken.gd" id="6_vet5x"]
 [ext_resource type="AudioStream" uid="uid://c3ebkqbf75lae" path="res://music/die_krypta.ogg" id="7_8djxl"]
 [ext_resource type="PackedScene" uid="uid://dwbkolmyih02g" path="res://scenes/ui/menus/main_menu.tscn" id="7_mr1vb"]
-[ext_resource type="Script" path="res://scenes/level_label.gd" id="7_x22ue"]
+[ext_resource type="Script" path="res://scenes/ui/level_label.gd" id="7_x22ue"]
 [ext_resource type="PackedScene" uid="uid://b8aue815rv5va" path="res://scenes/ui/menus/options_menu.tscn" id="8_c260w"]
 [ext_resource type="PackedScene" uid="uid://btptdcsf7o1lc" path="res://scenes/ui/menus/credits_menu.tscn" id="9_iidar"]
 [ext_resource type="PackedScene" uid="uid://cpgmxhix5jqaa" path="res://scenes/ui/menus/game_over_menu.tscn" id="10_odyjr"]
