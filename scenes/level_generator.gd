@@ -176,6 +176,8 @@ func spawn_enemies(max_difficulty: int) -> void:
 func place_traps(trap_count: int) -> void:
 	var exposed_walls := Globals.main.get_exposed_walls()
 	var floors := Globals.main.get_floors()
+	# Don't place traps under the player
+	floors.erase(Globals.main.player.coords)
 	var tries := 0
 	var traps_placed := 0
 	while traps_placed < trap_count and tries < self.max_trap_tries:
