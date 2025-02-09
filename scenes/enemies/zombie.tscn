@@ -10,15 +10,16 @@ region = Rect2(339, 118, 12, 12)
 
 [node name="Zombie" instance=ExtResource("1_gdahj")]
 script = ExtResource("2_l28an")
-melee_damage = 1
-ranged_damage = 0
-turns_between_actions = 0
-can_move_orthogonal = true
-can_move_diagonal = false
-can_attack_orthogonal = true
-can_attack_diagonal = false
-projectile_scene = null
 difficulty = 10
+max_health = null
+destructible = null
+melee_damage = 1
+ranged_damage = null
+turns_between_actions = null
+can_move_orthogonal = true
+can_move_diagonal = null
+can_attack_orthogonal = true
+can_attack_diagonal = null
 
 [node name="Sprite2D" parent="." index="0"]
 texture = SubResource("AtlasTexture_75o5y")

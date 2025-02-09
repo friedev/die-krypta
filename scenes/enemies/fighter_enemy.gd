@@ -7,7 +7,7 @@ class_name FighterEnemy extends Enemy
 @export var can_move_diagonal: bool
 @export var can_attack_orthogonal: bool
 @export var can_attack_diagonal: bool
-@export var projectile_scene: PackedScene
+@export var projectile_launcher: ProjectileLauncher
 
 var ready_to_shoot := false
 var shoot_direction: Vector2i
@@ -19,6 +19,8 @@ var animation_playing := false
 
 func _ready() -> void:
 	super._ready()
+	if self.projectile_launcher != null:
+		self.projectile_launcher.projectile_hit_target.connect(self._on_projectile_hit_target)
 	self.turns_until_action = self.turns_between_actions
 	if self.can_move_diagonal:
 		self.move_directions += Utility.diagonal_directions
@@ -32,7 +34,7 @@ func _ready() -> void:
 
 func update() -> void:
 	self.prev_coords = self.coords
-	if self.health == 0 or self.main.player.health == 0:
+	if self.health == 0 or Globals.main.player.health == 0:
 		pass
 	elif self.turns_until_action > 0:
 		self.turns_until_action -= 1
@@ -46,9 +48,15 @@ func act() -> bool:
 	if self.ready_to_shoot:
 		self.shoot()
 		return true
-	if self.melee_damage > self.ranged_damage and self.melee_attack():
+	if (
+		self.projectile_launcher == null
+		or self.melee_damage > self.ranged_damage
+	) and self.melee_attack():
 		return true
-	if self.ranged_damage > 0 and self.line_up_shot():
+	if (
+		self.projectile_launcher != null
+		and self.ranged_damage > 0
+	) and self.line_up_shot():
 		return true
 	if self.chase_player():
 		return true
@@ -56,10 +64,10 @@ func act() -> bool:
 
 
 func melee_attack() -> bool:
-	if not self.main.player.coords - self.coords in self.attack_directions:
+	if not Globals.main.player.coords - self.coords in self.attack_directions:
 		return false
-	self.face_toward(self.main.player.coords)
-	self.main.player.hurt(self.melee_damage, self.main.player.coords - self.coords)
+	self.face_toward(Globals.main.player.coords)
+	Globals.main.player.hurt(self.melee_damage, Globals.main.player.coords - self.coords)
 	return true
 
 
@@ -68,25 +76,25 @@ func chase_player() -> bool:
 	# Configure A* pathfinding
 	var heuristic: AStarGrid2D.Heuristic
 	if self.can_move_diagonal:
-		self.main.astar.diagonal_mode = AStarGrid2D.DIAGONAL_MODE_ALWAYS
+		Globals.main.astar.diagonal_mode = AStarGrid2D.DIAGONAL_MODE_ALWAYS
 		heuristic = AStarGrid2D.HEURISTIC_CHEBYSHEV
 	else:
-		self.main.astar.diagonal_mode = AStarGrid2D.DIAGONAL_MODE_NEVER
+		Globals.main.astar.diagonal_mode = AStarGrid2D.DIAGONAL_MODE_NEVER
 		heuristic = AStarGrid2D.HEURISTIC_MANHATTAN
-	self.main.astar.default_compute_heuristic = heuristic
-	self.main.astar.default_estimate_heuristic = heuristic
+	Globals.main.astar.default_compute_heuristic = heuristic
+	Globals.main.astar.default_estimate_heuristic = heuristic
 
 	# Set source and destination as not solid
 	# (AStarGrid2D can't pathfind to/from solid points)
-	self.main.astar.set_point_solid(self.coords, false)
-	self.main.astar.set_point_solid(self.main.player.coords, false)
+	Globals.main.astar.set_point_solid(self.coords, false)
+	Globals.main.astar.set_point_solid(Globals.main.player.coords, false)
 
 	# Calculate path
-	var path := self.main.astar.get_id_path(self.coords, self.main.player.coords, true)
+	var path := Globals.main.astar.get_id_path(self.coords, Globals.main.player.coords, true)
 
 	# Set source and destination as solid again
-	self.main.astar.set_point_solid(self.coords, true)
-	self.main.astar.set_point_solid(self.main.player.coords, true)
+	Globals.main.astar.set_point_solid(self.coords, true)
+	Globals.main.astar.set_point_solid(Globals.main.player.coords, true)
 
 	# Attempt to move to the first point along the path
 	return len(path) > 1 and self.move(path[1])
@@ -99,16 +107,9 @@ func get_direction_to(p1: Vector2i, p2: Vector2i, directions: Array[Vector2i]) -
 	return Vector2i.ZERO
 
 
-func raycast(start: Vector2i, direction: Vector2i) -> Vector2i:
-	var p := start + direction
-	while self.main.is_cell_open(p):
-		p += direction
-	return p
-
-
 func has_line_of_sight(start: Vector2i, end: Vector2i, direction: Vector2i) -> bool:
 	# p2 is assumed to be an occupied cell
-	return self.raycast(start, direction) == end
+	return Globals.main.raycast(start, direction) == end
 
 
 func find_line_of_sight(start: Vector2i, end: Vector2i, directions: Array[Vector2i]) -> Vector2i:
@@ -120,48 +121,28 @@ func find_line_of_sight(start: Vector2i, end: Vector2i, directions: Array[Vector
 	
 
 func prepare_shot() -> void:
-	self.face_toward(self.main.player.coords)
-	self.shoot_direction = self.get_direction_to(self.coords, self.main.player.coords, self.attack_directions)
+	self.face_toward(Globals.main.player.coords)
+	self.shoot_direction = self.get_direction_to(self.coords, Globals.main.player.coords, self.attack_directions)
 	assert(self.shoot_direction != Vector2i.ZERO)
 	self.ready_to_shoot = true
-	self.aim_line.add_point(Vector2.ZERO)
-	self.aim_line.add_point(
-		self.main.tile_map.map_to_local(self.main.player.coords - self.coords)
-		- Vector2(self.main.tile_map.tile_set.tile_size) * 0.5
-	)
+	self.projectile_launcher.prepare_shot(self.coords, self.shoot_direction)
 
 
 func shoot() -> void:
-	var projectile := self.projectile_scene.instantiate() as Projectile
-
-	var target_coords := self.raycast(self.coords, self.shoot_direction)
-	var target_entity: Entity = self.main.entity_map.get(target_coords)
-	if target_entity != null:
-		projectile.target_entity = target_entity
-	else:
-		projectile.target_position = self.main.tile_map.map_to_local(target_coords)
-
-	projectile.global_position = self.global_position
-	projectile.hit_target.connect(self._on_projectile_hit_target)
-	SignalBus.node_spawned.emit(projectile)
-
 	self.ready_to_shoot = false
-	self.aim_line.clear_points()
-
+	self.projectile_launcher.shoot(self.coords, self.shoot_direction, self.ranged_damage)
 	self.animation_playing = true
 
 
-func _on_projectile_hit_target(projectile: Projectile) -> void:
+func _on_projectile_hit_target() -> void:
 	self.animation_playing = false
-	if projectile.target_entity != null:
-		projectile.target_entity.hurt(self.ranged_damage, projectile.target_entity.coords - self.coords)
 	self.done.emit()
 
 
 func line_up_shot() -> bool:
 	if self.find_line_of_sight(
 		self.coords,
-		self.main.player.coords,
+		Globals.main.player.coords,
 		self.attack_directions
 	) != Vector2i.ZERO:
 		self.prepare_shot()
@@ -169,10 +150,16 @@ func line_up_shot() -> bool:
 
 	for move_direction in self.move_directions:
 		var p := self.coords + move_direction
-		if self.main.is_cell_open(p):
-			var attack_direction := self.find_line_of_sight(p, self.main.player.coords, self.attack_directions)
+		if Globals.main.is_cell_open(p):
+			var attack_direction := self.find_line_of_sight(p, Globals.main.player.coords, self.attack_directions)
 			if attack_direction != Vector2i.ZERO and self.move(p):
 				self.prepare_shot()
 				return true
 
 	return false
+
+
+func die() -> void:
+	if self.projectile_launcher != null:
+		self.projectile_launcher.hide()
+	super.die()

@@ -1,10 +1,9 @@
-[gd_scene load_steps=10 format=3 uid="uid://bgn76dmrwwjl7"]
+[gd_scene load_steps=9 format=3 uid="uid://bgn76dmrwwjl7"]
 
 [ext_resource type="Script" path="res://scenes/enemies/enemy.gd" id="1_awkll"]
 [ext_resource type="Texture2D" uid="uid://c06qwdre6roql" path="res://sprites/tileset.png" id="2_6c3vl"]
 [ext_resource type="AudioStream" uid="uid://bsfjwhx6m0iak" path="res://sound/enemy_death.wav" id="3"]
 [ext_resource type="Script" path="res://scenes/random_pitch_sound.gd" id="3_qhl7p"]
-[ext_resource type="Texture2D" uid="uid://b5ccoolguypy5" path="res://sprites/dashed_line.png" id="4_eb7ki"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_uwcq6"]
 atlas = ExtResource("2_6c3vl")
@@ -29,11 +28,10 @@ scale_min = 4.0
 scale_max = 6.0
 scale_curve = SubResource("4")
 
-[node name="Enemy" type="Node2D" node_paths=PackedStringArray("sprite", "aim_line", "hurt_particles", "death_sound", "damage_sound") groups=["enemies"]]
+[node name="Enemy" type="Node2D" node_paths=PackedStringArray("sprite", "hurt_particles", "death_sound", "damage_sound") groups=["enemies"]]
 script = ExtResource("1_awkll")
 move_speed = 15.0
 sprite = NodePath("Sprite2D")
-aim_line = NodePath("AimLine")
 hurt_particles = NodePath("HurtParticles")
 death_sound = NodePath("DeathSound")
 damage_sound = NodePath("DamageSound")
@@ -58,12 +56,5 @@ volume_db = -1.0
 pitch_scale = 1.25
 script = ExtResource("3_qhl7p")
 pitch_scale_range = 0.5
-
-[node name="AimLine" type="Line2D" parent="."]
-z_index = 1
-texture_repeat = 2
-width = 4.0
-texture = ExtResource("4_eb7ki")
-texture_mode = 1
 
 [connection signal="finished" from="DeathSound" to="." method="_on_DeathSound_finished"]

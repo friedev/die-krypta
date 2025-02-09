@@ -1,0 +1,15 @@
+[gd_scene load_steps=3 format=3 uid="uid://b5y0qrkr8hvxf"]
+
+[ext_resource type="Script" path="res://scenes/projectile_launcher.gd" id="1_artbx"]
+[ext_resource type="Texture2D" uid="uid://b5ccoolguypy5" path="res://sprites/dashed_line.png" id="1_bvnwv"]
+
+[node name="ProjectileLauncher" type="Node2D" node_paths=PackedStringArray("aim_line")]
+script = ExtResource("1_artbx")
+aim_line = NodePath("AimLine")
+
+[node name="AimLine" type="Line2D" parent="."]
+z_index = 1
+texture_repeat = 2
+width = 4.0
+texture = ExtResource("1_bvnwv")
+texture_mode = 1

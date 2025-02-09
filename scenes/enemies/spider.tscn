@@ -11,14 +11,15 @@ region = Rect2(27, 248, 12, 12)
 [node name="Spider" instance=ExtResource("1_cvehp")]
 script = ExtResource("2_lhe0y")
 melee_damage = 1
-ranged_damage = 0
-turns_between_actions = 0
+ranged_damage = null
+turns_between_actions = null
 can_move_orthogonal = true
 can_move_diagonal = true
 can_attack_orthogonal = true
 can_attack_diagonal = true
-projectile_scene = null
 difficulty = 20
+max_health = null
+destructible = null
 
 [node name="Sprite2D" parent="." index="0"]
 texture = SubResource("AtlasTexture_3ex2i")

@@ -2,19 +2,19 @@ class_name Entity extends Node2D
 
 signal health_changed(health: int)
 signal died(entity: Entity)
+signal done
 
 @export var max_health := 1
-@export var main: Main
 
 var coords: Vector2i:
 	set(value):
-		if self.main.entity_map.get(self.coords) == self:
-			self.main.astar.set_point_solid(self.coords, false)
-			self.main.entity_map.erase(self.coords)
+		if Globals.main.entity_map.get(self.coords) == self:
+			Globals.main.astar.set_point_solid(self.coords, false)
+			Globals.main.entity_map.erase(self.coords)
 		coords = value
-		assert(not self.main.entity_map.has(self.coords))
-		self.main.entity_map[self.coords] = self
-		self.main.astar.set_point_solid(self.coords, true)
+		assert(not Globals.main.entity_map.has(self.coords))
+		Globals.main.entity_map[self.coords] = self
+		Globals.main.astar.set_point_solid(self.coords, true)
 
 var health: int:
 	set(value):
@@ -25,7 +25,7 @@ var health: int:
 
 
 func _ready() -> void:
-	assert(self.main != null)
+	assert(Globals.main != null)
 
 
 func setup() -> void:
@@ -33,9 +33,13 @@ func setup() -> void:
 	self.health = self.max_health
 
 
+func update() -> void:
+	self.done.emit()
+
+
 func die() -> void:
-	self.main.entity_map.erase(self.coords)
-	self.main.astar.set_point_solid(self.coords, false)
+	Globals.main.entity_map.erase(self.coords)
+	Globals.main.astar.set_point_solid(self.coords, false)
 	self.died.emit(self)
 
 

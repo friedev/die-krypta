@@ -21,6 +21,7 @@ var wall_tiles: Array[Vector2i] = [
 @export var min_enemy_spawn_distance: int  # in tiles (manhattan distance)
 
 @export var enemy_scenes: Array[PackedScene]
+@export var trap_scenes: Array[PackedScene]
 @export var player: Player
 @export var tile_map: TileMapLayer
 @export var health_map: TileMapLayer
@@ -29,9 +30,13 @@ var ready_for_input := true
 var level := 0
 # TODO typed dictionary Vector2i -> Entity
 var entity_map := {}
-var enemy_queue: Array[Node] = []
-var enemy_index := 0
+var entity_queue: Array[Entity] = []
+var entity_index := 0
 var astar := AStarGrid2D.new()
+
+
+func _enter_tree() -> void:
+	Globals.main = self
 
 
 func _ready() -> void:
@@ -43,51 +48,55 @@ func is_cell_open(coords: Vector2i) -> bool:
 
 
 func update() -> void:
-	self.enemy_index = 0
-	self.update_next_enemy()
+	self.entity_index = 0
+	self.update_next_entity()
 
 
-func update_next_enemy() -> void:
-	while self.enemy_index < len(self.enemy_queue) and self.enemy_queue[self.enemy_index] == null:
-		self.enemy_index += 1
+func update_next_entity() -> void:
+	while self.entity_index < len(self.entity_queue) and self.entity_queue[self.entity_index] == null:
+		self.entity_index += 1
 	
-	if self.enemy_index < len(self.enemy_queue):
-		var enemy: Enemy = self.enemy_queue[self.enemy_index]
-		self.enemy_index += 1
+	if self.entity_index < len(self.entity_queue):
+		var enemy := self.entity_queue[self.entity_index]
+		self.entity_index += 1
 		enemy.update()
 	else:
 		self.end_turn()
 
 
-func _on_enemy_died(enemy: Enemy) -> void:
-	self.enemy_queue[self.enemy_queue.find(enemy)] = null
+func _on_entity_died(entity: Entity) -> void:
+	self.entity_queue[self.entity_queue.find(entity)] = null
 
 
-func _on_enemy_done() -> void:
-	self.update_next_enemy()
+func _on_entity_done() -> void:
+	self.update_next_entity()
 
 
 func end_turn() -> void:
 	self.ready_for_input = true
 	if self.player.health > 0:
-		for enemy in self.enemy_queue:
-			if enemy != null:
+		for entity in self.entity_queue:
+			if entity != null and entity is Enemy:
 				self.player.draw_moves()
 				return
 		self.level += 1
 		self.new_level()
 
 
-func place_enemy(enemy: Enemy, coords: Vector2i) -> Enemy:
-	enemy.main = self
-	enemy.coords = coords
-	enemy.prev_coords = coords
-	enemy.position = self.tile_map.map_to_local(enemy.coords)
-	enemy.done.connect(self._on_enemy_done)
-	self.enemy_queue.append(enemy)
-	enemy.died.connect(self._on_enemy_died)
-	self.add_child(enemy)
-	return enemy
+func raycast(start: Vector2i, direction: Vector2i) -> Vector2i:
+	var p := start + direction
+	while self.is_cell_open(p):
+		p += direction
+	return p
+
+
+func place_entity(entity: Entity, coords: Vector2i) -> void:
+	entity.coords = coords
+	entity.position = self.tile_map.map_to_local(entity.coords)
+	entity.done.connect(self._on_entity_done)
+	self.entity_queue.append(entity)
+	entity.died.connect(self._on_entity_died)
+	self.add_child(entity)
 
 
 func spawn_enemies(max_difficulty: int) -> void:
@@ -105,7 +114,7 @@ func spawn_enemies(max_difficulty: int) -> void:
 			push_warning("Not enough space to spawn enemies; stopping at %d difficulty out of %d max" % [difficulty, max_difficulty])
 			break
 
-		var spawn_coords: Vector2i = spawn_cells.pick_random()
+		var spawn_coords := spawn_cells[randi() % len(spawn_cells)]
 
 		# TODO more efficient way of choosing enemies with deterministic time
 		# complexity and without churning through bad choices
@@ -116,14 +125,41 @@ func spawn_enemies(max_difficulty: int) -> void:
 			tries += 1
 			if enemy != null:
 				enemy.queue_free()
-			enemy = self.enemy_scenes.pick_random().instantiate() as Enemy
+			var enemy_scene := self.enemy_scenes[randi() % len(self.enemy_scenes)]
+			enemy = enemy_scene.instantiate()
 
 		if difficulty + enemy.difficulty <= max_difficulty:
-			self.place_enemy(enemy, spawn_coords)
+			self.place_entity(enemy, spawn_coords)
 			spawn_cells.erase(spawn_coords)
 			difficulty += enemy.difficulty
 		else:
 			break
+
+
+func place_traps(trap_count: int) -> void:
+	var exposed_walls := self.get_exposed_walls()
+	for i in range(trap_count):
+		var coords := exposed_walls[randi() % len(exposed_walls)]
+		self.set_wall(coords, false)
+
+		var adjacent_floor_directions: Array[Vector2i] = []
+		for direction in Utility.orthogonal_directions:
+			if self.is_floor(coords + direction):
+				adjacent_floor_directions.append(direction)
+		var direction := adjacent_floor_directions[randi() % len(adjacent_floor_directions)]
+
+		var trap: ProjectileTrap = self.trap_scenes[randi() % len(self.trap_scenes)].instantiate()
+		trap.direction = direction
+		self.place_entity(trap, coords)
+		exposed_walls.erase(coords)
+
+
+func is_wall(coords: Vector2i) -> bool:
+	return self.tile_map.get_cell_atlas_coords(coords) in self.wall_tiles
+
+
+func is_floor(coords: Vector2i) -> bool:
+	return self.tile_map.get_cell_atlas_coords(coords) in self.floor_tiles
 
 
 func get_open_cells() -> Array[Vector2i]:
@@ -135,24 +171,35 @@ func get_open_cells() -> Array[Vector2i]:
 	return open_cells
 
 
+func get_exposed_walls() -> Array[Vector2i]:
+	var used_cells := self.tile_map.get_used_cells()
+	var exposed_walls: Array[Vector2i] = []
+	for coords in used_cells:
+		if self.is_wall(coords):
+			for direction in Utility.orthogonal_directions:
+				if self.is_floor(coords + direction):
+					exposed_walls.append(coords)
+					break
+	return exposed_walls
+
+
+func set_wall(coords: Vector2i, wall: bool) -> void:
+	var tiles := self.wall_tiles if wall else self.floor_tiles
+	self.astar.set_point_solid(coords, wall)
+	self.tile_map.set_cell(coords, 0, tiles.pick_random())
+
+
 func place_rect(rect: Rect2i) -> void:
 	var walled_rect := rect.grow(1)
 	for x in range(walled_rect.position.x, walled_rect.end.x):
 		for y in range(walled_rect.position.y, walled_rect.end.y):
-			var p := Vector2i(x, y)
-			var atlas_coords: Vector2i
-			var solid: bool
-			if rect.has_point(p):
-				solid = false
-				atlas_coords = self.floor_tiles.pick_random()
-			elif self.tile_map.get_cell_atlas_coords(p) == self.TILE_EMPTY:
-				solid = true
-				atlas_coords = self.wall_tiles.pick_random()
+			var coords := Vector2i(x, y)
+			if rect.has_point(coords):
+				self.set_wall(coords, false)
+			elif self.tile_map.get_cell_atlas_coords(coords) == self.TILE_EMPTY:
+				self.set_wall(coords, true)
 			else:
 				continue
-			self.astar.set_point_solid(p, solid)
-			self.tile_map.set_cell(Vector2i(x, y), 0, atlas_coords)
-
 
 
 func generate_map() -> void:
@@ -212,19 +259,18 @@ func print_astar() -> void:
 
 
 func new_game() -> void:
-	self.get_tree().call_group("enemies", "queue_free")
-
 	self.player.setup()
-
 	self.level = 0
-
 	self.new_level()
 
 
 func new_level() -> void:
+	self.get_tree().call_group("enemies", "queue_free")
+	self.get_tree().call_group("traps", "queue_free")
+
 	self.tile_map.clear()
 	self.entity_map.clear()
-	self.enemy_queue.clear()
+	self.entity_queue.clear()
 
 	self.generate_map()
 
@@ -236,6 +282,7 @@ func new_level() -> void:
 	self.player.camera.position_smoothing_enabled = true
 
 	self.spawn_enemies(self.starting_difficulty + self.level * self.difficulty_per_level)
+	self.place_traps(randi_range(0, 4))
 
 	self.player.draw_moves()
 

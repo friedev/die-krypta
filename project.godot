@@ -24,6 +24,7 @@ SignalBus="*res://scenes/signal_bus.gd"
 [global_group]
 
 enemies=""
+traps=""
 
 [input]
 

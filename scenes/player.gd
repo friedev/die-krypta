@@ -1,7 +1,5 @@
 class_name Player extends Entity
 
-signal done
-
 @export var move_speed: float
 @export var hit_stress: float
 @export var hurt_stress: float
@@ -62,7 +60,7 @@ func draw_move(coords: Vector2i, move: int) -> void:
 	self.side_icons.show()
 	var abs_coords := self.coords + coords
 	var side_icon := self.side_icon_sprites[coords] as AnimatedSprite2D
-	if self.main.is_cell_open(abs_coords):
+	if Globals.main.is_cell_open(abs_coords):
 		side_icon.show()
 		side_icon.frame = move - 1
 	else:
@@ -89,8 +87,8 @@ func hit(hit_coords := Vector2i()) -> bool:
 	animation.frame = 0
 	animation.play()
 
-	var hit_entity: Entity = self.main.entity_map.get(self.coords + hit_coords)
-	if hit_entity != null:
+	var hit_entity: Entity = Globals.main.entity_map.get(self.coords + hit_coords)
+	if hit_entity != null and hit_entity is Enemy:
 		hit_entity.hurt(1, (hit_entity.coords - self.coords))
 		self.camera.shake += self.hit_stress
 		return true
@@ -151,7 +149,7 @@ func roll(coords: Vector2i) -> bool:
 
 	var new_coords := self.coords + coords
 
-	if not self.main.is_cell_open(new_coords):
+	if not Globals.main.is_cell_open(new_coords):
 		return false
 
 	self.stop_animations()
@@ -200,25 +198,25 @@ func roll_toward(target: Vector2i) -> bool:
 # WIP
 # Eventually this code will be used to preview a path and auto-move along it
 func path_to(target: Vector2i) -> bool:
-	if not self.main.astar.is_in_boundsv(target) or target == self.coords:
+	if not Globals.main.astar.is_in_boundsv(target) or target == self.coords:
 		return false
 
 	# Configure A* pathfinding
-	self.main.astar.diagonal_mode = AStarGrid2D.DIAGONAL_MODE_NEVER
-	self.main.astar.default_compute_heuristic = AStarGrid2D.HEURISTIC_MANHATTAN
-	self.main.astar.default_estimate_heuristic = AStarGrid2D.HEURISTIC_MANHATTAN
+	Globals.main.astar.diagonal_mode = AStarGrid2D.DIAGONAL_MODE_NEVER
+	Globals.main.astar.default_compute_heuristic = AStarGrid2D.HEURISTIC_MANHATTAN
+	Globals.main.astar.default_estimate_heuristic = AStarGrid2D.HEURISTIC_MANHATTAN
 
 	# Set source and destination as not solid
 	# (AStarGrid2D can't pathfind to/from solid points)
-	self.main.astar.set_point_solid(self.coords, false)
-	self.main.astar.set_point_solid(target, false)
+	Globals.main.astar.set_point_solid(self.coords, false)
+	Globals.main.astar.set_point_solid(target, false)
 
 	# Calculate path
-	var path := self.main.astar.get_id_path(self.coords, target, true)
+	var path := Globals.main.astar.get_id_path(self.coords, target, true)
 
 	# Set source and destination as solid again
-	self.main.astar.set_point_solid(self.coords, true)
-	self.main.astar.set_point_solid(self.coords, true)
+	Globals.main.astar.set_point_solid(self.coords, true)
+	Globals.main.astar.set_point_solid(self.coords, true)
 
 	# Attempt to move to the first point along the path
 	return len(path) > 1 and self.roll(path[1] - self.coords)
@@ -245,7 +243,7 @@ func hurt(amount: int, direction: Vector2i) -> void:
 
 
 func handle_input(action: StringName) -> void:
-	if Globals.is_menu_open or not self.main.ready_for_input:
+	if Globals.is_menu_open or not Globals.main.ready_for_input:
 		return
 
 	var success: bool
@@ -262,14 +260,14 @@ func handle_input(action: StringName) -> void:
 			success = self.wait()
 		&"mouse_move":
 			success = self.roll_toward(
-				self.main.tile_map.local_to_map(self.main.tile_map.get_local_mouse_position())
+				Globals.main.tile_map.local_to_map(Globals.main.tile_map.get_local_mouse_position())
 			)
 		_:
 			push_error("Unknown action %s" % action)
 			success = false
 
 	if success:
-		self.main.ready_for_input = false
+		Globals.main.ready_for_input = false
 		self.side_icons.hide()
 		if not self.animation_playing:
 			self.done.emit()
@@ -318,7 +316,7 @@ func _unhandled_input(event: InputEvent) -> void:
 
 func _process(delta: float) -> void:
 	self.position = self.position.lerp(
-		self.main.tile_map.map_to_local(self.coords),
+		Globals.main.tile_map.map_to_local(self.coords),
 		delta * self.move_speed
 	)
 

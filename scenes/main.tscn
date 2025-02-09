@@ -1,4 +1,4 @@
-[gd_scene load_steps=23 format=3 uid="uid://c4pnltqkwa20j"]
+[gd_scene load_steps=24 format=3 uid="uid://c4pnltqkwa20j"]
 
 [ext_resource type="Script" path="res://scenes/main.gd" id="1_yugwm"]
 [ext_resource type="PackedScene" uid="uid://br6phtouiqto4" path="res://scenes/enemies/zombie.tscn" id="2_1rcoe"]
@@ -11,6 +11,7 @@
 [ext_resource type="PackedScene" uid="uid://bhcw2dhqddsf8" path="res://scenes/enemies/dark_knight.tscn" id="6_4uo4w"]
 [ext_resource type="Theme" uid="uid://cp2dw8jh1pmps" path="res://ui/theme.tres" id="6_rupnf"]
 [ext_resource type="Script" path="res://scenes/ui/menu_darken.gd" id="6_vet5x"]
+[ext_resource type="PackedScene" uid="uid://bjr24x2nfhau0" path="res://scenes/traps/arrow_trap.tscn" id="7_2f5sa"]
 [ext_resource type="AudioStream" uid="uid://c3ebkqbf75lae" path="res://music/die_krypta.ogg" id="7_8djxl"]
 [ext_resource type="PackedScene" uid="uid://dwbkolmyih02g" path="res://scenes/ui/menus/main_menu.tscn" id="7_mr1vb"]
 [ext_resource type="Script" path="res://scenes/ui/level_label.gd" id="7_x22ue"]
@@ -5195,11 +5196,13 @@ starting_difficulty = 30
 difficulty_per_level = 10
 min_enemy_spawn_distance = 3
 enemy_scenes = Array[PackedScene]([ExtResource("2_1rcoe"), ExtResource("3_ektfl"), ExtResource("4_2tgh8"), ExtResource("5_wc230"), ExtResource("6_4uo4w")])
+trap_scenes = Array[PackedScene]([ExtResource("7_2f5sa")])
 player = NodePath("Player")
 tile_map = NodePath("TileMap")
 health_map = NodePath("CanvasLayer/HealthMap")
 
 [node name="MenuDarken" type="CanvasModulate" parent="."]
+visible = false
 color = Color(0.5, 0.5, 0.5, 1)
 script = ExtResource("6_vet5x")
 
@@ -5208,9 +5211,8 @@ z_index = -3
 use_parent_material = true
 tile_set = SubResource("4")
 
-[node name="Player" parent="." node_paths=PackedStringArray("main") instance=ExtResource("4_wkwvu")]
+[node name="Player" parent="." instance=ExtResource("4_wkwvu")]
 visible = false
-main = NodePath("..")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
