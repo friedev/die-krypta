@@ -7,7 +7,6 @@ class_name FighterEnemy extends Enemy
 @export var can_move_diagonal: bool
 @export var can_attack_orthogonal: bool
 @export var can_attack_diagonal: bool
-@export var projectile_launcher: ProjectileLauncher
 
 var ready_to_shoot := false
 var shoot_direction: Vector2i
@@ -19,9 +18,10 @@ var animation_playing := false
 
 func _ready() -> void:
 	super._ready()
-	if self.projectile_launcher != null:
-		self.projectile_launcher.projectile_hit_target.connect(self._on_projectile_hit_target)
-		self.projectile_launcher.layer = self.layer
+	self.projectile_launcher.projectile_hit_target.connect(self._on_projectile_hit_target)
+	self.orthogonal_attack.animation_finished.connect(self._on_melee_attack_animation_finished)
+	self.diagonal_attack.animation_finished.connect(self._on_melee_attack_animation_finished)
+	self.projectile_launcher.layer = self.layer
 	self.turns_until_action = self.turns_between_actions
 	if self.can_move_diagonal:
 		self.move_directions += Utility.diagonal_directions
@@ -49,15 +49,9 @@ func act() -> bool:
 	if self.ready_to_shoot:
 		self.shoot()
 		return true
-	if (
-		self.projectile_launcher == null
-		or self.melee_damage > self.ranged_damage
-	) and self.melee_attack():
+	if self.melee_damage > self.ranged_damage and self.melee_attack():
 		return true
-	if (
-		self.projectile_launcher != null
-		and self.ranged_damage > 0
-	) and self.line_up_shot():
+	if self.ranged_damage > 0 and self.line_up_shot():
 		return true
 	if self.chase_player():
 		return true
@@ -65,11 +59,29 @@ func act() -> bool:
 
 
 func melee_attack() -> bool:
-	if not Globals.main.player.coords - self.coords in self.attack_directions:
+	var attack_direction := Globals.main.player.coords - self.coords
+	if not attack_direction in self.attack_directions:
 		return false
 	self.face_toward(Globals.main.player.coords)
-	Globals.main.player.hurt(self.melee_damage, Globals.main.player.coords - self.coords)
+	var attack_animation: AnimatedSprite2D
+	if attack_direction in Utility.orthogonal_directions:
+		attack_animation = self.orthogonal_attack
+		attack_animation.rotation = Vector2(attack_direction).angle()
+	elif attack_direction in Utility.diagonal_directions:
+		attack_animation = self.diagonal_attack
+		attack_animation.rotation = Vector2(1, -1).angle_to(Vector2(attack_direction))
+	else:
+		assert(false, "Unexpected attack direction: %s" % str(attack_direction))
+	attack_animation.position = Vector2(attack_direction * Globals.main.tile_map.tile_set.tile_size)
+	attack_animation.play()
+	self.animation_playing = true
 	return true
+
+
+func _on_melee_attack_animation_finished() -> void:
+	self.animation_playing = false
+	Globals.main.player.hurt(self.melee_damage, Globals.main.player.coords - self.coords)
+	self.done.emit()
 
 
 # Move along the shortest path toward the player

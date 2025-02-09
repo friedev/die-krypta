@@ -7,6 +7,9 @@ class_name Enemy extends Entity
 @export var hurt_particles: GPUParticles2D
 @export var death_sound: RandomPitchSound
 @export var damage_sound: RandomPitchSound
+@export var projectile_launcher: ProjectileLauncher
+@export var orthogonal_attack: AnimatedSprite2D
+@export var diagonal_attack: AnimatedSprite2D
 
 var player: Player
 

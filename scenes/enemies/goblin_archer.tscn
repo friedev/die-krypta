@@ -1,31 +1,27 @@
-[gd_scene load_steps=7 format=3 uid="uid://b0465awupcjqi"]
+[gd_scene load_steps=6 format=3 uid="uid://b0465awupcjqi"]
 
 [ext_resource type="PackedScene" uid="uid://bgn76dmrwwjl7" path="res://scenes/enemies/enemy.tscn" id="1_4qdo1"]
 [ext_resource type="Script" path="res://scenes/enemies/fighter_enemy.gd" id="2_lxw0k"]
 [ext_resource type="PackedScene" uid="uid://bjm0metqbasck" path="res://scenes/projectiles/arrow.tscn" id="3_yvwag"]
 [ext_resource type="Texture2D" uid="uid://c06qwdre6roql" path="res://sprites/tileset.png" id="4_adsy5"]
-[ext_resource type="PackedScene" uid="uid://b5y0qrkr8hvxf" path="res://scenes/projectile_launcher.tscn" id="4_fm38u"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_obwyw"]
 atlas = ExtResource("4_adsy5")
 region = Rect2(378, 105, 12, 12)
 
-[node name="GoblinArcher" node_paths=PackedStringArray("projectile_launcher") instance=ExtResource("1_4qdo1")]
+[node name="GoblinArcher" instance=ExtResource("1_4qdo1")]
 script = ExtResource("2_lxw0k")
-melee_damage = null
+melee_damage = 0
 ranged_damage = 1
-turns_between_actions = null
+turns_between_actions = 0
 can_move_orthogonal = true
 can_move_diagonal = true
 can_attack_orthogonal = true
-can_attack_diagonal = null
-projectile_launcher = NodePath("ProjectileLauncher")
+can_attack_diagonal = false
 difficulty = 20
-max_health = null
-destructible = null
 
 [node name="Sprite2D" parent="." index="0"]
 texture = SubResource("AtlasTexture_obwyw")
 
-[node name="ProjectileLauncher" parent="." index="4" instance=ExtResource("4_fm38u")]
+[node name="ProjectileLauncher" parent="." index="4"]
 projectile_scene = ExtResource("3_yvwag")
