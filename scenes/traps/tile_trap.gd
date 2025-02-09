@@ -1,9 +1,11 @@
 class_name SpikeTrap extends Entity
 
 @export var damage := 1
+@export var target_layer := Main.Layer.MAIN
+
 @export var inactive_sprite: Sprite2D
 @export var active_sprite: Sprite2D
-@export var target_layer := Main.Layer.MAIN
+@export var activate_sound: RandomPitchSound
 
 ## If true, will activate the turn after an entity enters its line of sight.
 ## If false, will activate and deactive repeatedly, waiting turns_between_activations
@@ -65,6 +67,7 @@ func activate() -> void:
 	var target_entity := self.get_target_entity()
 	if target_entity != null:
 		target_entity.hurt(self.damage, Vector2i.ZERO)
+	self.activate_sound.randomize_and_play()
 	self.ready_to_activate = false
 
 

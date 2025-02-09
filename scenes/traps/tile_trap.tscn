@@ -1,7 +1,8 @@
-[gd_scene load_steps=5 format=3 uid="uid://1whunp3vbyuf"]
+[gd_scene load_steps=6 format=3 uid="uid://1whunp3vbyuf"]
 
 [ext_resource type="Script" path="res://scenes/traps/tile_trap.gd" id="1_pa52h"]
 [ext_resource type="Texture2D" uid="uid://c06qwdre6roql" path="res://sprites/tileset.png" id="2_bdd51"]
+[ext_resource type="PackedScene" uid="uid://dmuy2jxt5lckf" path="res://scenes/default_sound.tscn" id="3_2cmna"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_vpq82"]
 atlas = ExtResource("2_bdd51")
@@ -11,11 +12,12 @@ region = Rect2(326, 1, 12, 12)
 atlas = ExtResource("2_bdd51")
 region = Rect2(326, 1, 12, 12)
 
-[node name="TileTrap" type="Node2D" node_paths=PackedStringArray("inactive_sprite", "active_sprite") groups=["traps"]]
+[node name="TileTrap" type="Node2D" node_paths=PackedStringArray("inactive_sprite", "active_sprite", "activate_sound") groups=["traps"]]
 z_index = -1
 script = ExtResource("1_pa52h")
 inactive_sprite = NodePath("InactiveSprite")
 active_sprite = NodePath("ActiveSprite")
+activate_sound = NodePath("ActivateSound")
 detect_targets = false
 layer = 1
 
@@ -25,3 +27,5 @@ texture = SubResource("AtlasTexture_vpq82")
 [node name="ActiveSprite" type="Sprite2D" parent="."]
 visible = false
 texture = SubResource("AtlasTexture_ib1ht")
+
+[node name="ActivateSound" parent="." instance=ExtResource("3_2cmna")]

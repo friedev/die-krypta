@@ -5280,6 +5280,7 @@ can_go_back = null
 [node name="Music" type="AudioStreamPlayer" parent="."]
 process_mode = 3
 stream = ExtResource("7_8djxl")
+volume_db = -2.0
 autoplay = true
 
 [connection signal="level_started" from="." to="CanvasLayer/MarginContainer/LevelLabel" method="_on_level_started"]

@@ -75,5 +75,5 @@ func _process(delta: float) -> void:
 	)
 
 
-func _on_DeathSound_finished() -> void:
+func _on_death_sound_finished() -> void:
 	self.queue_free()

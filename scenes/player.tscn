@@ -6,7 +6,7 @@
 [ext_resource type="Script" path="res://scenes/shake_camera.gd" id="4"]
 [ext_resource type="AudioStream" uid="uid://c50way2nmvqdx" path="res://sound/player_move.ogg" id="5"]
 [ext_resource type="AudioStream" uid="uid://b552magwrsv7j" path="res://sound/player_hurt.wav" id="6"]
-[ext_resource type="Script" path="res://scenes/random_pitch_sound.gd" id="8_wdo3f"]
+[ext_resource type="PackedScene" uid="uid://dmuy2jxt5lckf" path="res://scenes/default_sound.tscn" id="7_ksdxd"]
 [ext_resource type="Texture2D" uid="uid://cjeyx6xpagtfo" path="res://sprites/attack_orthogonal.png" id="9"]
 [ext_resource type="Texture2D" uid="uid://dj0bowdcup5op" path="res://sprites/attack_diagonal.png" id="10"]
 
@@ -308,13 +308,11 @@ lifetime = 0.5
 one_shot = true
 explosiveness = 1.0
 
-[node name="MoveSound" type="AudioStreamPlayer2D" parent="."]
+[node name="MoveSound" parent="." instance=ExtResource("7_ksdxd")]
 stream = ExtResource("5")
-script = ExtResource("8_wdo3f")
 
-[node name="HurtSound" type="AudioStreamPlayer2D" parent="."]
+[node name="HurtSound" parent="." instance=ExtResource("7_ksdxd")]
 stream = ExtResource("6")
-script = ExtResource("8_wdo3f")
 
 [node name="MoveTimer" type="Timer" parent="."]
 wait_time = 0.25

@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3 uid="uid://dmuy2jxt5lckf"]
+
+[ext_resource type="Script" path="res://scenes/random_pitch_sound.gd" id="1_om480"]
+
+[node name="DefaultSound" type="AudioStreamPlayer2D"]
+max_distance = 192.0
+attenuation = 1.5
+script = ExtResource("1_om480")

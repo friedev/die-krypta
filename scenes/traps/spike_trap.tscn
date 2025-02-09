@@ -1,7 +1,8 @@
-[gd_scene load_steps=5 format=3 uid="uid://c0dxs45saly2t"]
+[gd_scene load_steps=6 format=3 uid="uid://c0dxs45saly2t"]
 
 [ext_resource type="PackedScene" uid="uid://1whunp3vbyuf" path="res://scenes/traps/tile_trap.tscn" id="1_nt0iv"]
 [ext_resource type="Texture2D" uid="uid://c06qwdre6roql" path="res://sprites/tileset.png" id="2_i5y3f"]
+[ext_resource type="AudioStream" uid="uid://b6gfmontbi7qx" path="res://sound/spike.wav" id="3_kprd8"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_mgiby"]
 atlas = ExtResource("2_i5y3f")
@@ -18,3 +19,6 @@ texture = SubResource("AtlasTexture_mgiby")
 
 [node name="ActiveSprite" parent="." index="1"]
 texture = SubResource("AtlasTexture_xqqnu")
+
+[node name="ActivateSound" parent="." index="2"]
+stream = ExtResource("3_kprd8")

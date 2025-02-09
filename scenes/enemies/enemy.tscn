@@ -4,7 +4,7 @@
 [ext_resource type="Texture2D" uid="uid://c06qwdre6roql" path="res://sprites/tileset.png" id="2_6c3vl"]
 [ext_resource type="AudioStream" uid="uid://bsfjwhx6m0iak" path="res://sound/enemy_death.wav" id="3"]
 [ext_resource type="AudioStream" uid="uid://co0d6afiynylb" path="res://sound/clank.wav" id="3_jtwl7"]
-[ext_resource type="Script" path="res://scenes/random_pitch_sound.gd" id="3_qhl7p"]
+[ext_resource type="PackedScene" uid="uid://dmuy2jxt5lckf" path="res://scenes/default_sound.tscn" id="3_u2f83"]
 [ext_resource type="PackedScene" uid="uid://b5y0qrkr8hvxf" path="res://scenes/projectile_launcher.tscn" id="5_ypl3p"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_uwcq6"]
@@ -116,15 +116,13 @@ lifetime = 0.5
 one_shot = true
 explosiveness = 1.0
 
-[node name="DamageSound" type="AudioStreamPlayer2D" parent="."]
+[node name="DamageSound" parent="." instance=ExtResource("3_u2f83")]
 stream = ExtResource("3_jtwl7")
-script = ExtResource("3_qhl7p")
 
-[node name="DeathSound" type="AudioStreamPlayer2D" parent="."]
+[node name="DeathSound" parent="." instance=ExtResource("3_u2f83")]
 stream = ExtResource("3")
 volume_db = -1.0
 pitch_scale = 1.25
-script = ExtResource("3_qhl7p")
 pitch_scale_range = 0.5
 
 [node name="ProjectileLauncher" parent="." instance=ExtResource("5_ypl3p")]
@@ -139,4 +137,4 @@ sprite_frames = SubResource("SpriteFrames_fysuu")
 frame = 3
 frame_progress = 1.0
 
-[connection signal="finished" from="DeathSound" to="." method="_on_DeathSound_finished"]
+[connection signal="finished" from="DeathSound" to="." method="_on_death_sound_finished"]
