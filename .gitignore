@@ -1,3 +1,6 @@
+# Editor-specific ignores
+.vscode/
+
 # Godot-specific ignores
 .godot/
 export.cfg
