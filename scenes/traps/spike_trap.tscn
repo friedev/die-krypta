@@ -1,0 +1,20 @@
+[gd_scene load_steps=5 format=3 uid="uid://c0dxs45saly2t"]
+
+[ext_resource type="PackedScene" uid="uid://1whunp3vbyuf" path="res://scenes/traps/tile_trap.tscn" id="1_nt0iv"]
+[ext_resource type="Texture2D" uid="uid://c06qwdre6roql" path="res://sprites/tileset.png" id="2_i5y3f"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_mgiby"]
+atlas = ExtResource("2_i5y3f")
+region = Rect2(404, 469, 12, 12)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_xqqnu"]
+atlas = ExtResource("2_i5y3f")
+region = Rect2(339, 469, 12, 12)
+
+[node name="SpikeTrap" instance=ExtResource("1_nt0iv")]
+
+[node name="InactiveSprite" parent="." index="0"]
+texture = SubResource("AtlasTexture_mgiby")
+
+[node name="ActiveSprite" parent="." index="1"]
+texture = SubResource("AtlasTexture_xqqnu")

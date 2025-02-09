@@ -87,7 +87,7 @@ func hit(hit_coords := Vector2i()) -> bool:
 	animation.frame = 0
 	animation.play()
 
-	var hit_entity: Entity = Globals.main.entity_map.get(self.coords + hit_coords)
+	var hit_entity: Entity = Globals.main.entity_maps[self.layer].get(self.coords + hit_coords)
 	if hit_entity != null and hit_entity is Enemy:
 		hit_entity.hurt(1, (hit_entity.coords - self.coords))
 		self.camera.shake += self.hit_stress
@@ -202,6 +202,7 @@ func path_to(target: Vector2i) -> bool:
 		return false
 
 	# Configure A* pathfinding
+	assert(self.layer == Main.ASTAR_LAYER)
 	Globals.main.astar.diagonal_mode = AStarGrid2D.DIAGONAL_MODE_NEVER
 	Globals.main.astar.default_compute_heuristic = AStarGrid2D.HEURISTIC_MANHATTAN
 	Globals.main.astar.default_estimate_heuristic = AStarGrid2D.HEURISTIC_MANHATTAN

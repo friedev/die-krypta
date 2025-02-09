@@ -5,6 +5,8 @@ signal projectile_hit_target
 @export var projectile_scene: PackedScene
 @export var aim_line: Line2D
 
+var layer: Main.Layer
+
 
 func prepare_shot(from_coords: Vector2i, direction: Vector2i) -> void:
 	var target_coords := Globals.main.raycast(from_coords, direction)
@@ -19,7 +21,7 @@ func shoot(from_coords: Vector2i, direction: Vector2i, damage: int) -> void:
 	var projectile := self.projectile_scene.instantiate() as Projectile
 
 	var target_coords := Globals.main.raycast(from_coords, direction)
-	var target_entity: Entity = Globals.main.entity_map.get(target_coords)
+	var target_entity: Entity = Globals.main.entity_maps[self.layer].get(target_coords)
 	if target_entity != null:
 		projectile.target_entity = target_entity
 	else:

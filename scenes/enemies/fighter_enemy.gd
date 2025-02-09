@@ -21,6 +21,7 @@ func _ready() -> void:
 	super._ready()
 	if self.projectile_launcher != null:
 		self.projectile_launcher.projectile_hit_target.connect(self._on_projectile_hit_target)
+		self.projectile_launcher.layer = self.layer
 	self.turns_until_action = self.turns_between_actions
 	if self.can_move_diagonal:
 		self.move_directions += Utility.diagonal_directions
@@ -74,6 +75,7 @@ func melee_attack() -> bool:
 # Move along the shortest path toward the player
 func chase_player() -> bool:
 	# Configure A* pathfinding
+	assert(self.layer == Main.ASTAR_LAYER)
 	var heuristic: AStarGrid2D.Heuristic
 	if self.can_move_diagonal:
 		Globals.main.astar.diagonal_mode = AStarGrid2D.DIAGONAL_MODE_ALWAYS

@@ -1,0 +1,27 @@
+[gd_scene load_steps=5 format=3 uid="uid://1whunp3vbyuf"]
+
+[ext_resource type="Script" path="res://scenes/traps/tile_trap.gd" id="1_pa52h"]
+[ext_resource type="Texture2D" uid="uid://c06qwdre6roql" path="res://sprites/tileset.png" id="2_bdd51"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_vpq82"]
+atlas = ExtResource("2_bdd51")
+region = Rect2(326, 1, 12, 12)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ib1ht"]
+atlas = ExtResource("2_bdd51")
+region = Rect2(326, 1, 12, 12)
+
+[node name="TileTrap" type="Node2D" node_paths=PackedStringArray("inactive_sprite", "active_sprite") groups=["traps"]]
+z_index = -1
+script = ExtResource("1_pa52h")
+inactive_sprite = NodePath("InactiveSprite")
+active_sprite = NodePath("ActiveSprite")
+detect_targets = false
+layer = 1
+
+[node name="InactiveSprite" type="Sprite2D" parent="."]
+texture = SubResource("AtlasTexture_vpq82")
+
+[node name="ActiveSprite" type="Sprite2D" parent="."]
+visible = false
+texture = SubResource("AtlasTexture_ib1ht")

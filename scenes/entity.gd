@@ -5,16 +5,19 @@ signal died(entity: Entity)
 signal done
 
 @export var max_health := 1
+@export var layer := Main.Layer.MAIN
 
 var coords: Vector2i:
 	set(value):
-		if Globals.main.entity_map.get(self.coords) == self:
-			Globals.main.astar.set_point_solid(self.coords, false)
-			Globals.main.entity_map.erase(self.coords)
+		if Globals.main.entity_maps[self.layer].get(self.coords) == self:
+			if self.layer == Main.ASTAR_LAYER:
+				Globals.main.astar.set_point_solid(self.coords, false)
+			Globals.main.entity_maps[self.layer].erase(self.coords)
 		coords = value
-		assert(not Globals.main.entity_map.has(self.coords))
-		Globals.main.entity_map[self.coords] = self
-		Globals.main.astar.set_point_solid(self.coords, true)
+		assert(not Globals.main.entity_maps[self.layer].has(self.coords))
+		Globals.main.entity_maps[self.layer][self.coords] = self
+		if self.layer == Main.ASTAR_LAYER:
+			Globals.main.astar.set_point_solid(self.coords, true)
 
 var health: int:
 	set(value):
@@ -38,8 +41,9 @@ func update() -> void:
 
 
 func die() -> void:
-	Globals.main.entity_map.erase(self.coords)
-	Globals.main.astar.set_point_solid(self.coords, false)
+	Globals.main.entity_maps[self.layer].erase(self.coords)
+	if self.layer == Main.ASTAR_LAYER:
+		Globals.main.astar.set_point_solid(self.coords, false)
 	self.died.emit(self)
 
 

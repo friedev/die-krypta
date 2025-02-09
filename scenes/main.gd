@@ -16,6 +16,13 @@ var wall_tiles: Array[Vector2i] = [
 	Vector2i(1, 2),
 ]
 
+enum Layer {
+	MAIN,
+	FLOOR,
+}
+
+const ASTAR_LAYER := Layer.MAIN
+
 @export var starting_difficulty: int
 @export var difficulty_per_level: int
 @export var min_enemy_spawn_distance: int  # in tiles (manhattan distance)
@@ -29,7 +36,7 @@ var wall_tiles: Array[Vector2i] = [
 var ready_for_input := true
 var level := 0
 # TODO typed dictionary Vector2i -> Entity
-var entity_map := {}
+var entity_maps: Array[Dictionary] = []
 var entity_queue: Array[Entity] = []
 var entity_index := 0
 var astar := AStarGrid2D.new()
@@ -37,6 +44,8 @@ var astar := AStarGrid2D.new()
 
 func _enter_tree() -> void:
 	Globals.main = self
+	for layer in Layer:
+		self.entity_maps.append({})
 
 
 func _ready() -> void:
@@ -119,7 +128,7 @@ func spawn_enemies(max_difficulty: int) -> void:
 		# TODO more efficient way of choosing enemies with deterministic time
 		# complexity and without churning through bad choices
 		var tries := 0
-		var max_tries := 10
+		var max_tries := 10  # TODO export
 		var enemy: Enemy = null
 		while (enemy == null or difficulty + enemy.difficulty > max_difficulty) and tries < max_tries:
 			tries += 1
@@ -138,20 +147,39 @@ func spawn_enemies(max_difficulty: int) -> void:
 
 func place_traps(trap_count: int) -> void:
 	var exposed_walls := self.get_exposed_walls()
-	for i in range(trap_count):
-		var coords := exposed_walls[randi() % len(exposed_walls)]
-		self.set_wall(coords, false)
+	var floors := self.get_floors()
+	var tries := 0
+	var max_tries := 10  # TODO export
+	var traps_placed := 0
+	while traps_placed < trap_count and tries < max_tries:
+		tries += 1
+		var trap: Entity = self.trap_scenes[randi() % len(self.trap_scenes)].instantiate()
 
-		var adjacent_floor_directions: Array[Vector2i] = []
-		for direction in Utility.orthogonal_directions:
-			if self.is_floor(coords + direction):
-				adjacent_floor_directions.append(direction)
-		var direction := adjacent_floor_directions[randi() % len(adjacent_floor_directions)]
+		if trap is ProjectileTrap:
+			var projectile_trap: ProjectileTrap = trap
+			if len(exposed_walls) == 0:
+				continue
+			var coords := exposed_walls[randi() % len(exposed_walls)]
+			self.set_wall(coords, false)
 
-		var trap: ProjectileTrap = self.trap_scenes[randi() % len(self.trap_scenes)].instantiate()
-		trap.direction = direction
-		self.place_entity(trap, coords)
-		exposed_walls.erase(coords)
+			var adjacent_floor_directions: Array[Vector2i] = []
+			for direction in Utility.orthogonal_directions:
+				if self.is_floor(coords + direction):
+					adjacent_floor_directions.append(direction)
+			var direction := adjacent_floor_directions[randi() % len(adjacent_floor_directions)]
+
+			projectile_trap.direction = direction
+			self.place_entity(projectile_trap, coords)
+			exposed_walls.erase(coords)
+		elif trap is SpikeTrap:
+			if len(floors) == 0:
+				continue
+			var coords := floors[randi() % len(floors)]
+			self.place_entity(trap, coords)
+			floors.erase(coords)
+		else:
+			assert(false)
+		traps_placed += 1
 
 
 func is_wall(coords: Vector2i) -> bool:
@@ -160,6 +188,15 @@ func is_wall(coords: Vector2i) -> bool:
 
 func is_floor(coords: Vector2i) -> bool:
 	return self.tile_map.get_cell_atlas_coords(coords) in self.floor_tiles
+
+
+func get_floors() -> Array[Vector2i]:
+	var used_cells := self.tile_map.get_used_cells()
+	var floors: Array[Vector2i] = []
+	for coords in used_cells:
+		if self.is_floor(coords):
+			floors.append(coords)
+	return floors
 
 
 func get_open_cells() -> Array[Vector2i]:
@@ -269,7 +306,8 @@ func new_level() -> void:
 	self.get_tree().call_group("traps", "queue_free")
 
 	self.tile_map.clear()
-	self.entity_map.clear()
+	for entity_map in self.entity_maps:
+		entity_map.clear()
 	self.entity_queue.clear()
 
 	self.generate_map()

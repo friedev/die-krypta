@@ -12,7 +12,6 @@ region = Rect2(326, 1, 12, 12)
 script = ExtResource("1_yx3dj")
 sprite = NodePath("Sprite2D")
 projectile_launcher = NodePath("ProjectileLauncher")
-destructible = false
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 texture = SubResource("AtlasTexture_cikqj")

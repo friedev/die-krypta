@@ -24,17 +24,25 @@ func _ready() -> void:
 	elif self.direction == Vector2i.DOWN:
 		self.sprite.position += Vector2.ONE
 
+	self.projectile_launcher.layer = self.layer
 	self.projectile_launcher.projectile_hit_target.connect(self._on_projectile_hit_target)
 
 
+func get_target_entity() -> Entity:
+	var target_coords := Globals.main.raycast(self.coords, self.direction)
+	var target_entity: Entity = Globals.main.entity_maps[self.layer].get(target_coords)
+	if target_entity is Player or target_entity is Enemy:
+		return target_entity
+	return null
+
+
 func update() -> void:
+	# TODO merge logic with TileTrap
 	if self.detect_targets:
 		if self.ready_to_shoot:
 			self.shoot()
 		else:
-			var target_coords := Globals.main.raycast(self.coords, self.direction)
-			var target_entity: Entity = Globals.main.entity_map.get(target_coords)
-			if target_entity is Player or target_entity is Enemy:
+			if self.get_target_entity() != null:
 				self.prepare_shot()
 			self.done.emit()
 	else:

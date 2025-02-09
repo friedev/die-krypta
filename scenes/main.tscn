@@ -1,4 +1,4 @@
-[gd_scene load_steps=24 format=3 uid="uid://c4pnltqkwa20j"]
+[gd_scene load_steps=25 format=3 uid="uid://c4pnltqkwa20j"]
 
 [ext_resource type="Script" path="res://scenes/main.gd" id="1_yugwm"]
 [ext_resource type="PackedScene" uid="uid://br6phtouiqto4" path="res://scenes/enemies/zombie.tscn" id="2_1rcoe"]
@@ -15,6 +15,7 @@
 [ext_resource type="AudioStream" uid="uid://c3ebkqbf75lae" path="res://music/die_krypta.ogg" id="7_8djxl"]
 [ext_resource type="PackedScene" uid="uid://dwbkolmyih02g" path="res://scenes/ui/menus/main_menu.tscn" id="7_mr1vb"]
 [ext_resource type="Script" path="res://scenes/ui/level_label.gd" id="7_x22ue"]
+[ext_resource type="PackedScene" uid="uid://c0dxs45saly2t" path="res://scenes/traps/spike_trap.tscn" id="8_20gku"]
 [ext_resource type="PackedScene" uid="uid://b8aue815rv5va" path="res://scenes/ui/menus/options_menu.tscn" id="8_c260w"]
 [ext_resource type="PackedScene" uid="uid://btptdcsf7o1lc" path="res://scenes/ui/menus/credits_menu.tscn" id="9_iidar"]
 [ext_resource type="PackedScene" uid="uid://cpgmxhix5jqaa" path="res://scenes/ui/menus/game_over_menu.tscn" id="10_odyjr"]
@@ -5196,7 +5197,7 @@ starting_difficulty = 30
 difficulty_per_level = 10
 min_enemy_spawn_distance = 3
 enemy_scenes = Array[PackedScene]([ExtResource("2_1rcoe"), ExtResource("3_ektfl"), ExtResource("4_2tgh8"), ExtResource("5_wc230"), ExtResource("6_4uo4w")])
-trap_scenes = Array[PackedScene]([ExtResource("7_2f5sa")])
+trap_scenes = Array[PackedScene]([ExtResource("7_2f5sa"), ExtResource("8_20gku")])
 player = NodePath("Player")
 tile_map = NodePath("TileMap")
 health_map = NodePath("CanvasLayer/HealthMap")
