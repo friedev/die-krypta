@@ -16,6 +16,9 @@ var wall_tiles: Array[Vector2i] = [
 	Vector2i(1, 2),
 ]
 
+var full_heart := Vector2i(78, 37)
+var broken_heart := Vector2i(80, 37)
+
 enum Layer {
 	MAIN,
 	FLOOR,
@@ -228,7 +231,11 @@ func new_level() -> void:
 func _on_player_health_changed(health: int) -> void:
 	self.health_map.clear()
 	for i in range(self.player.max_health):
-		self.health_map.set_cell(Vector2i(i, 0), 0, Vector2i(0 if i < health else 1, 0))
+		self.health_map.set_cell(
+			Vector2i(i, 0),
+			0,
+			self.full_heart if i < health else self.broken_heart
+		)
 
 
 func _on_player_done() -> void:
