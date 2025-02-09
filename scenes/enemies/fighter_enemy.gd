@@ -63,6 +63,7 @@ func melee_attack() -> bool:
 	if not attack_direction in self.attack_directions:
 		return false
 	self.face_toward(Globals.main.player.coords)
+
 	var attack_animation: AnimatedSprite2D
 	if attack_direction in Utility.orthogonal_directions:
 		attack_animation = self.orthogonal_attack
@@ -75,12 +76,14 @@ func melee_attack() -> bool:
 	attack_animation.position = Vector2(attack_direction * Globals.main.tile_map.tile_set.tile_size)
 	attack_animation.play()
 	self.animation_playing = true
+
+	Globals.main.player.hurt(self.melee_damage, Globals.main.player.coords - self.coords)
+
 	return true
 
 
 func _on_melee_attack_animation_finished() -> void:
 	self.animation_playing = false
-	Globals.main.player.hurt(self.melee_damage, Globals.main.player.coords - self.coords)
 	self.done.emit()
 
 

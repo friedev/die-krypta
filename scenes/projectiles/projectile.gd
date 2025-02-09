@@ -15,7 +15,9 @@ func _process(delta: float) -> void:
 	self.rotation = self.global_position.angle_to_point(self.target_position)
 	self.global_position = self.global_position.move_toward(self.target_position, self.speed * delta)
 	if self.global_position.is_equal_approx(self.target_position):
-		if self.target_entity != null:
+		if self.target_entity != null and (
+			target_entity is Player or target_entity is Enemy
+		):
 			self.target_entity.hurt(
 				self.damage, 
 				Vector2.RIGHT.rotated(self.rotation)
