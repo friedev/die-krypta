@@ -64,6 +64,7 @@ func hurt(amount: int, direction := Vector2i()) -> void:
 
 
 func _ready() -> void:
+	super._ready()
 	self.prev_coords = coords
 	self.setup()
 

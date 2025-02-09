@@ -14,6 +14,7 @@ var ready_to_shoot := false
 var turns_until_shot: int
 
 func _ready() -> void:
+	super._ready()
 	self.sprite.rotation += Vector2(self.direction).angle()
 
 	# Hack: ensure there is always a border along the top left edge of the sprite

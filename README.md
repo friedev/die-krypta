@@ -22,9 +22,10 @@ Each face has a different attack, highlighted in red after you move.
 
 ### Controls
 
-- Arrows/WASD/HJKL: Roll
-- Space/Period: Wait
-- Escape: Pause
+- Arrows/WASD/HJKL/Numpad: roll
+- Space/Period: wait
+- Alt: show order of actions
+- Escape: pause
 
 ### Attacks
 

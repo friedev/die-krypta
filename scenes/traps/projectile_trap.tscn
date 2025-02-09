@@ -1,19 +1,23 @@
-[gd_scene load_steps=5 format=3 uid="uid://cjo0opjykjap3"]
+[gd_scene load_steps=6 format=3 uid="uid://cjo0opjykjap3"]
 
 [ext_resource type="Texture2D" uid="uid://c06qwdre6roql" path="res://sprites/tileset.png" id="1_mxegs"]
 [ext_resource type="Script" path="res://scenes/traps/projectile_trap.gd" id="1_yx3dj"]
 [ext_resource type="PackedScene" uid="uid://b5y0qrkr8hvxf" path="res://scenes/projectile_launcher.tscn" id="3_n5f3x"]
+[ext_resource type="PackedScene" uid="uid://bx7mlxje210gu" path="res://scenes/order_label.tscn" id="4_l8sxj"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_cikqj"]
 atlas = ExtResource("1_mxegs")
 region = Rect2(326, 1, 12, 12)
 
-[node name="ProjectileTrap" type="Node2D" node_paths=PackedStringArray("sprite", "projectile_launcher") groups=["traps"]]
+[node name="ProjectileTrap" type="Node2D" node_paths=PackedStringArray("sprite", "projectile_launcher", "order_label") groups=["traps"]]
 script = ExtResource("1_yx3dj")
 sprite = NodePath("Sprite2D")
 projectile_launcher = NodePath("ProjectileLauncher")
+order_label = NodePath("OrderLabel")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 texture = SubResource("AtlasTexture_cikqj")
 
 [node name="ProjectileLauncher" parent="." instance=ExtResource("3_n5f3x")]
+
+[node name="OrderLabel" parent="." instance=ExtResource("4_l8sxj")]

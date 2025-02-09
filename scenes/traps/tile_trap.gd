@@ -25,6 +25,7 @@ var turns_until_activation: int
 
 
 func _ready() -> void:
+	super._ready()
 	if not self.detect_targets:
 		if self.turns_between_activations == 0:
 			self.active = true

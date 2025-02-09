@@ -80,7 +80,17 @@ func _on_entity_done() -> void:
 	self.update_next_entity()
 
 
+func update_entity_order() -> void:
+	var order := 0
+	for entity in self.entity_queue:
+		if entity != null:
+			entity.order = order
+			order += 1
+
+
+
 func end_turn() -> void:
+	self.update_entity_order()
 	self.ready_for_input = true
 	if self.player.health > 0:
 		for entity in self.entity_queue:
@@ -216,6 +226,8 @@ func new_level() -> void:
 	self.entity_queue.clear()
 
 	self.level_generator.generate_level()
+
+	self.update_entity_order()
 
 	self.player.position = self.tile_map.map_to_local(self.player.coords)
 	self.player.camera.position_smoothing_enabled = false

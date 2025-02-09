@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=3 uid="uid://bgn76dmrwwjl7"]
+[gd_scene load_steps=20 format=3 uid="uid://bgn76dmrwwjl7"]
 
 [ext_resource type="Script" path="res://scenes/enemies/enemy.gd" id="1_awkll"]
 [ext_resource type="Texture2D" uid="uid://c06qwdre6roql" path="res://sprites/tileset.png" id="2_6c3vl"]
@@ -6,6 +6,7 @@
 [ext_resource type="AudioStream" uid="uid://co0d6afiynylb" path="res://sound/clank.wav" id="3_jtwl7"]
 [ext_resource type="PackedScene" uid="uid://dmuy2jxt5lckf" path="res://scenes/default_sound.tscn" id="3_u2f83"]
 [ext_resource type="PackedScene" uid="uid://b5y0qrkr8hvxf" path="res://scenes/projectile_launcher.tscn" id="5_ypl3p"]
+[ext_resource type="PackedScene" uid="uid://bx7mlxje210gu" path="res://scenes/order_label.tscn" id="7_ovc6t"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_uwcq6"]
 atlas = ExtResource("2_6c3vl")
@@ -94,7 +95,7 @@ animations = [{
 "speed": 15.0
 }]
 
-[node name="Enemy" type="Node2D" node_paths=PackedStringArray("sprite", "hurt_particles", "death_sound", "damage_sound", "projectile_launcher", "orthogonal_attack", "diagonal_attack") groups=["enemies"]]
+[node name="Enemy" type="Node2D" node_paths=PackedStringArray("sprite", "hurt_particles", "death_sound", "damage_sound", "projectile_launcher", "orthogonal_attack", "diagonal_attack", "order_label") groups=["enemies"]]
 script = ExtResource("1_awkll")
 move_speed = 15.0
 sprite = NodePath("Sprite2D")
@@ -104,6 +105,7 @@ damage_sound = NodePath("DamageSound")
 projectile_launcher = NodePath("ProjectileLauncher")
 orthogonal_attack = NodePath("OrthogonalAttack")
 diagonal_attack = NodePath("DiagonalAttack")
+order_label = NodePath("OrderLabel")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 texture = SubResource("AtlasTexture_uwcq6")
@@ -136,5 +138,7 @@ frame_progress = 1.0
 sprite_frames = SubResource("SpriteFrames_fysuu")
 frame = 3
 frame_progress = 1.0
+
+[node name="OrderLabel" parent="." instance=ExtResource("7_ovc6t")]
 
 [connection signal="finished" from="DeathSound" to="." method="_on_death_sound_finished"]

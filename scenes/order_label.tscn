@@ -1,0 +1,15 @@
+[gd_scene load_steps=2 format=3 uid="uid://bx7mlxje210gu"]
+
+[ext_resource type="Theme" uid="uid://cp2dw8jh1pmps" path="res://ui/theme.tres" id="1_4geqm"]
+
+[node name="OrderLabel" type="Label"]
+z_index = 4
+offset_left = -5.0
+offset_top = -3.0
+offset_right = 6.0
+offset_bottom = 6.0
+theme = ExtResource("1_4geqm")
+theme_override_constants/outline_size = 2
+theme_override_font_sizes/font_size = 8
+text = "8"
+horizontal_alignment = 1
