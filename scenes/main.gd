@@ -2,7 +2,7 @@ class_name Main extends Node2D
 
 signal level_started(level: int)
 
-const TILE_EMPTY := Vector2i(-1, -1)
+const TILE_UNDEFINED := Vector2i(-1, -1)
 
 var floor_tiles: Array[Vector2i] = [
 	Vector2i(4, 5),
@@ -23,12 +23,8 @@ enum Layer {
 
 const ASTAR_LAYER := Layer.MAIN
 
-@export var starting_difficulty: int
-@export var difficulty_per_level: int
-@export var min_enemy_spawn_distance: int  # in tiles (manhattan distance)
+@export var level_generator: LevelGenerator
 
-@export var enemy_scenes: Array[PackedScene]
-@export var trap_scenes: Array[PackedScene]
 @export var player: Player
 @export var tile_map: TileMapLayer
 @export var health_map: TileMapLayer
@@ -108,86 +104,16 @@ func place_entity(entity: Entity, coords: Vector2i) -> void:
 	self.add_child(entity)
 
 
-func spawn_enemies(max_difficulty: int) -> void:
-	var spawn_cells: Array[Vector2i] = []
-	for coords in self.get_open_cells():
-		if (
-			self.is_cell_open(coords)
-			and Utility.manhattan_distance(self.player.coords, coords) >= self.min_enemy_spawn_distance
-		):
-			spawn_cells.append(coords)
-
-	var difficulty := 0
-	while difficulty < max_difficulty:
-		if len(spawn_cells) == 0:
-			push_warning("Not enough space to spawn enemies; stopping at %d difficulty out of %d max" % [difficulty, max_difficulty])
-			break
-
-		var spawn_coords := spawn_cells[randi() % len(spawn_cells)]
-
-		# TODO more efficient way of choosing enemies with deterministic time
-		# complexity and without churning through bad choices
-		var tries := 0
-		var max_tries := 10  # TODO export
-		var enemy: Enemy = null
-		while (enemy == null or difficulty + enemy.difficulty > max_difficulty) and tries < max_tries:
-			tries += 1
-			if enemy != null:
-				enemy.queue_free()
-			var enemy_scene := self.enemy_scenes[randi() % len(self.enemy_scenes)]
-			enemy = enemy_scene.instantiate()
-
-		if difficulty + enemy.difficulty <= max_difficulty:
-			self.place_entity(enemy, spawn_coords)
-			spawn_cells.erase(spawn_coords)
-			difficulty += enemy.difficulty
-		else:
-			break
-
-
-func place_traps(trap_count: int) -> void:
-	var exposed_walls := self.get_exposed_walls()
-	var floors := self.get_floors()
-	var tries := 0
-	var max_tries := 10  # TODO export
-	var traps_placed := 0
-	while traps_placed < trap_count and tries < max_tries:
-		tries += 1
-		var trap: Entity = self.trap_scenes[randi() % len(self.trap_scenes)].instantiate()
-
-		if trap is ProjectileTrap:
-			var projectile_trap: ProjectileTrap = trap
-			if len(exposed_walls) == 0:
-				continue
-			var coords := exposed_walls[randi() % len(exposed_walls)]
-			self.set_wall(coords, false)
-
-			var adjacent_floor_directions: Array[Vector2i] = []
-			for direction in Utility.orthogonal_directions:
-				if self.is_floor(coords + direction):
-					adjacent_floor_directions.append(direction)
-			var direction := adjacent_floor_directions[randi() % len(adjacent_floor_directions)]
-
-			projectile_trap.direction = direction
-			self.place_entity(projectile_trap, coords)
-			exposed_walls.erase(coords)
-		elif trap is SpikeTrap:
-			if len(floors) == 0:
-				continue
-			var coords := floors[randi() % len(floors)]
-			self.place_entity(trap, coords)
-			floors.erase(coords)
-		else:
-			assert(false)
-		traps_placed += 1
-
-
 func is_wall(coords: Vector2i) -> bool:
 	return self.tile_map.get_cell_atlas_coords(coords) in self.wall_tiles
 
 
 func is_floor(coords: Vector2i) -> bool:
 	return self.tile_map.get_cell_atlas_coords(coords) in self.floor_tiles
+
+
+func is_undefined(coords: Vector2i) -> bool:
+	return self.tile_map.get_cell_atlas_coords(coords) == self.TILE_UNDEFINED
 
 
 func get_floors() -> Array[Vector2i]:
@@ -208,16 +134,30 @@ func get_open_cells() -> Array[Vector2i]:
 	return open_cells
 
 
-func get_exposed_walls() -> Array[Vector2i]:
+## Get each wall that is adjacent to a floor
+func get_exposed_walls(directions := Utility.orthogonal_directions) -> Array[Vector2i]:
 	var used_cells := self.tile_map.get_used_cells()
 	var exposed_walls: Array[Vector2i] = []
 	for coords in used_cells:
 		if self.is_wall(coords):
-			for direction in Utility.orthogonal_directions:
+			for direction in directions:
 				if self.is_floor(coords + direction):
 					exposed_walls.append(coords)
 					break
 	return exposed_walls
+
+
+## Get floors that aren't adjacent to any walls
+func get_center_floors(directions := Utility.orthogonal_directions) -> Array[Vector2i]:
+	var used_cells := self.tile_map.get_used_cells()
+	var center_floors: Array[Vector2i] = []
+	for coords in used_cells:
+		if self.is_floor(coords):
+			for direction in directions:
+				if self.is_wall(coords + direction):
+					continue
+			center_floors.append(coords)
+	return center_floors
 
 
 func set_wall(coords: Vector2i, wall: bool) -> void:
@@ -226,59 +166,21 @@ func set_wall(coords: Vector2i, wall: bool) -> void:
 	self.tile_map.set_cell(coords, 0, tiles.pick_random())
 
 
-func place_rect(rect: Rect2i) -> void:
+func place_rect(rect: Rect2i) -> int:
+	var floor_count := 0
 	var walled_rect := rect.grow(1)
 	for x in range(walled_rect.position.x, walled_rect.end.x):
 		for y in range(walled_rect.position.y, walled_rect.end.y):
 			var coords := Vector2i(x, y)
 			if rect.has_point(coords):
-				self.set_wall(coords, false)
-			elif self.tile_map.get_cell_atlas_coords(coords) == self.TILE_EMPTY:
+				if not self.is_floor(coords):
+					self.set_wall(coords, false)
+					floor_count += 1
+			elif self.is_undefined(coords):
 				self.set_wall(coords, true)
 			else:
 				continue
-
-
-func generate_map() -> void:
-	self.astar.clear()
-	self.astar.region = Rect2i(-16, -16, 32, 32)
-	self.astar.update()
-	self.astar.fill_solid_region(self.astar.region)
-
-	var long_dimension := randi_range(6, 8)
-	var short_dimension := randi_range(4, 6)
-
-	var rect_size: Vector2i
-	var long_x := randi() % 2 == 0
-
-	if long_x:
-		rect_size = Vector2i(long_dimension, short_dimension)
-	else:
-		rect_size = Vector2i(short_dimension, long_dimension)
-
-	var start := Vector2i(
-		randi_range(-rect_size.x + 1, -1),
-		randi_range(-rect_size.y + 1, -1)
-	)
-	var rect1 := Rect2i(start, rect_size)
-
-	long_dimension = randi_range(6, 8)
-	short_dimension = randi_range(4, 6)
-
-	long_x = not long_x
-	if long_x:
-		rect_size = Vector2i(long_dimension, short_dimension)
-	else:
-		rect_size = Vector2i(short_dimension, long_dimension)
-
-	start = Vector2i(
-		randi_range(rect1.position.x - rect_size.x + 1, rect1.end.x - 1),
-		randi_range(rect1.position.y - rect_size.y + 1, rect1.end.y - 1)
-	)
-	var rect2 := Rect2i(start, rect_size)
-
-	self.place_rect(rect1)
-	self.place_rect(rect2)
+	return floor_count
 
 
 # Print the current A* grid to the output (for debugging)
@@ -310,18 +212,12 @@ func new_level() -> void:
 		entity_map.clear()
 	self.entity_queue.clear()
 
-	self.generate_map()
+	self.level_generator.generate_level()
 
-	self.player.coords = Vector2i.ZERO
 	self.player.position = self.tile_map.map_to_local(self.player.coords)
-
 	self.player.camera.position_smoothing_enabled = false
 	self.player.camera.force_update_scroll()
 	self.player.camera.position_smoothing_enabled = true
-
-	self.spawn_enemies(self.starting_difficulty + self.level * self.difficulty_per_level)
-	self.place_traps(randi_range(0, 4))
-
 	self.player.draw_moves()
 
 	self.level_started.emit(self.level)
