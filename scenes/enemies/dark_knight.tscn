@@ -1,9 +1,8 @@
-[gd_scene load_steps=6 format=3 uid="uid://bhcw2dhqddsf8"]
+[gd_scene load_steps=5 format=3 uid="uid://bhcw2dhqddsf8"]
 
 [ext_resource type="PackedScene" uid="uid://bgn76dmrwwjl7" path="res://scenes/enemies/enemy.tscn" id="1_n57fg"]
 [ext_resource type="Script" path="res://scenes/enemies/fighter_enemy.gd" id="2_0oyft"]
 [ext_resource type="Texture2D" uid="uid://c06qwdre6roql" path="res://sprites/tileset.png" id="2_hqons"]
-[ext_resource type="AudioStream" uid="uid://co0d6afiynylb" path="res://sound/clank.wav" id="4_ouj1y"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_b5v74"]
 atlas = ExtResource("2_hqons")
@@ -20,10 +19,6 @@ can_attack_orthogonal = true
 can_attack_diagonal = null
 difficulty = 15
 max_health = 2
-destructible = null
 
 [node name="Sprite2D" parent="." index="0"]
 texture = SubResource("AtlasTexture_b5v74")
-
-[node name="DamageSound" parent="." index="2"]
-stream = ExtResource("4_ouj1y")

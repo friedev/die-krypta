@@ -1,9 +1,8 @@
-[gd_scene load_steps=6 format=3 uid="uid://dj4rtj5mok753"]
+[gd_scene load_steps=5 format=3 uid="uid://dj4rtj5mok753"]
 
 [ext_resource type="PackedScene" uid="uid://bgn76dmrwwjl7" path="res://scenes/enemies/enemy.tscn" id="1_6wp18"]
 [ext_resource type="Texture2D" uid="uid://c06qwdre6roql" path="res://sprites/tileset.png" id="2_08yyt"]
 [ext_resource type="Script" path="res://scenes/enemies/fighter_enemy.gd" id="2_q4vmx"]
-[ext_resource type="PackedScene" uid="uid://bjm0metqbasck" path="res://scenes/projectiles/arrow.tscn" id="3_etpai"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_8i0k6"]
 atlas = ExtResource("2_08yyt")
@@ -22,6 +21,3 @@ difficulty = 15
 
 [node name="Sprite2D" parent="." index="0"]
 texture = SubResource("AtlasTexture_8i0k6")
-
-[node name="ProjectileLauncher" parent="." index="4"]
-projectile_scene = ExtResource("3_etpai")

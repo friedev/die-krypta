@@ -4,6 +4,7 @@ signal projectile_hit_target
 
 @export var projectile_scene: PackedScene
 @export var aim_line: Line2D
+@export var shoot_sound: RandomPitchSound
 
 var layer: Main.Layer
 
@@ -31,6 +32,8 @@ func shoot(from_coords: Vector2i, direction: Vector2i, damage: int) -> void:
 	projectile.global_position = self.global_position
 	projectile.hit_target.connect(self._on_projectile_hit_target)
 	SignalBus.node_spawned.emit(projectile)
+
+	self.shoot_sound.randomize_and_play()
 
 	self.aim_line.clear_points()
 

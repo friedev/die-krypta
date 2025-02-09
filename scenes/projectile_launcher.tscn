@@ -1,11 +1,16 @@
-[gd_scene load_steps=3 format=3 uid="uid://b5y0qrkr8hvxf"]
+[gd_scene load_steps=6 format=3 uid="uid://b5y0qrkr8hvxf"]
 
 [ext_resource type="Script" path="res://scenes/projectile_launcher.gd" id="1_artbx"]
 [ext_resource type="Texture2D" uid="uid://b5ccoolguypy5" path="res://sprites/dashed_line.png" id="1_bvnwv"]
+[ext_resource type="PackedScene" uid="uid://bjm0metqbasck" path="res://scenes/projectiles/arrow.tscn" id="2_qos3a"]
+[ext_resource type="AudioStream" uid="uid://cgj2fi1xbwvrm" path="res://sound/swish.wav" id="3_pla4p"]
+[ext_resource type="Script" path="res://scenes/random_pitch_sound.gd" id="4_7et3y"]
 
-[node name="ProjectileLauncher" type="Node2D" node_paths=PackedStringArray("aim_line")]
+[node name="ProjectileLauncher" type="Node2D" node_paths=PackedStringArray("aim_line", "shoot_sound")]
 script = ExtResource("1_artbx")
+projectile_scene = ExtResource("2_qos3a")
 aim_line = NodePath("AimLine")
+shoot_sound = NodePath("ShootSound")
 
 [node name="AimLine" type="Line2D" parent="."]
 z_index = 1
@@ -13,3 +18,7 @@ texture_repeat = 2
 width = 4.0
 texture = ExtResource("1_bvnwv")
 texture_mode = 1
+
+[node name="ShootSound" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("3_pla4p")
+script = ExtResource("4_7et3y")
