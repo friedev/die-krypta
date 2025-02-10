@@ -1,9 +1,10 @@
-[gd_scene load_steps=36 format=3 uid="uid://ckkml6my1wkk6"]
+[gd_scene load_steps=30 format=3 uid="uid://ckkml6my1wkk6"]
 
 [ext_resource type="Script" path="res://scenes/player.gd" id="1"]
-[ext_resource type="Texture2D" uid="uid://hhog17hdqo2j" path="res://sprites/moves.png" id="2"]
 [ext_resource type="Texture2D" uid="uid://b08y3gsghwd2a" path="res://sprites/dice.png" id="3"]
 [ext_resource type="Script" path="res://scenes/shake_camera.gd" id="4"]
+[ext_resource type="PackedScene" uid="uid://cpunpwrpfsrg5" path="res://scenes/face_preview.tscn" id="4_ep6fl"]
+[ext_resource type="Script" path="res://scenes/dice_preview.gd" id="4_p6uqk"]
 [ext_resource type="AudioStream" uid="uid://c50way2nmvqdx" path="res://sound/player_move.ogg" id="5"]
 [ext_resource type="AudioStream" uid="uid://b552magwrsv7j" path="res://sound/player_hurt.wav" id="6"]
 [ext_resource type="PackedScene" uid="uid://dmuy2jxt5lckf" path="res://scenes/default_sound.tscn" id="7_ksdxd"]
@@ -54,56 +55,6 @@ animations = [{
 }, {
 "duration": 1.0,
 "texture": SubResource("23")
-}],
-"loop": true,
-"name": &"default",
-"speed": 5.0
-}]
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_4tmww"]
-atlas = ExtResource("2")
-region = Rect2(0, 0, 12, 12)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_pm7fs"]
-atlas = ExtResource("2")
-region = Rect2(12, 0, 12, 12)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_kwixd"]
-atlas = ExtResource("2")
-region = Rect2(24, 0, 12, 12)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_wppsu"]
-atlas = ExtResource("2")
-region = Rect2(36, 0, 12, 12)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_4kmay"]
-atlas = ExtResource("2")
-region = Rect2(48, 0, 12, 12)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_w0sev"]
-atlas = ExtResource("2")
-region = Rect2(60, 0, 12, 12)
-
-[sub_resource type="SpriteFrames" id="SpriteFrames_4v4w7"]
-animations = [{
-"frames": [{
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_4tmww")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_pm7fs")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_kwixd")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_wppsu")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_4kmay")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_w0sev")
 }],
 "loop": true,
 "name": &"default",
@@ -196,14 +147,14 @@ scale_min = 4.0
 scale_max = 6.0
 scale_curve = SubResource("26")
 
-[node name="Player" type="Node2D" node_paths=PackedStringArray("sprite", "attacks", "side_icons", "camera", "hurt_particles", "move_sound", "hurt_sound", "move_timer")]
+[node name="Player" type="Node2D" node_paths=PackedStringArray("sprite", "attacks", "dice_preview", "camera", "hurt_particles", "move_sound", "hurt_sound", "move_timer")]
 script = ExtResource("1")
 move_speed = 15.0
 hit_stress = 0.5
 hurt_stress = 0.5
-sprite = NodePath("Sprite2D")
+sprite = NodePath("AnimatedSprite2D")
 attacks = NodePath("Attacks")
-side_icons = NodePath("SideIcons")
+dice_preview = NodePath("DicePreview")
 camera = NodePath("Camera2D")
 hurt_particles = NodePath("HurtParticles")
 move_sound = NodePath("MoveSound")
@@ -212,7 +163,7 @@ move_timer = NodePath("MoveTimer")
 display_name = "Player"
 max_health = 5
 
-[node name="Sprite2D" type="AnimatedSprite2D" parent="."]
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("24")
 
 [node name="Camera2D" type="Camera2D" parent="."]
@@ -224,28 +175,23 @@ shake_rate = 1.0
 max_offset = 24.0
 shake_reduction = 0.05
 
-[node name="SideIcons" type="Node2D" parent="."]
+[node name="DicePreview" type="Node2D" parent="."]
 z_index = 3
+position = Vector2(0, 1)
+script = ExtResource("4_p6uqk")
+face_preview_scene = ExtResource("4_ep6fl")
 
-[node name="Left" type="AnimatedSprite2D" parent="SideIcons"]
-sprite_frames = SubResource("SpriteFrames_4v4w7")
-frame = 5
-offset = Vector2(-12, 0)
+[node name="Left" parent="DicePreview" instance=ExtResource("4_ep6fl")]
+position = Vector2(-12, 0)
 
-[node name="Right" type="AnimatedSprite2D" parent="SideIcons"]
-sprite_frames = SubResource("SpriteFrames_4v4w7")
-frame = 5
-offset = Vector2(12, 0)
+[node name="Right" parent="DicePreview" instance=ExtResource("4_ep6fl")]
+position = Vector2(12, 0)
 
-[node name="Up" type="AnimatedSprite2D" parent="SideIcons"]
-sprite_frames = SubResource("SpriteFrames_4v4w7")
-frame = 5
-offset = Vector2(0, -12)
+[node name="Up" parent="DicePreview" instance=ExtResource("4_ep6fl")]
+position = Vector2(0, -12)
 
-[node name="Down" type="AnimatedSprite2D" parent="SideIcons"]
-sprite_frames = SubResource("SpriteFrames_4v4w7")
-frame = 5
-offset = Vector2(0, 12)
+[node name="Down" parent="DicePreview" instance=ExtResource("4_ep6fl")]
+position = Vector2(0, 12)
 
 [node name="Attacks" type="Node2D" parent="."]
 
@@ -319,6 +265,7 @@ stream = ExtResource("6")
 wait_time = 0.25
 one_shot = true
 
+[connection signal="move_requested" from="DicePreview" to="." method="_on_dice_preview_move_requested"]
 [connection signal="animation_finished" from="Attacks/Left" to="." method="_on_animation_finished"]
 [connection signal="animation_finished" from="Attacks/Right" to="." method="_on_animation_finished"]
 [connection signal="animation_finished" from="Attacks/Up" to="." method="_on_animation_finished"]

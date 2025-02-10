@@ -15,9 +15,7 @@ func _ready() -> void:
 
 func _input(event: InputEvent) -> void:
 	if event is InputEventMouseMotion:
-		var coords := Globals.main.tile_map.local_to_map(
-			Globals.main.tile_map.get_local_mouse_position()
-		)
+		var coords := Globals.main.get_mouse_coords()
 		var i := 0
 		for layer in Main.Layer.values():
 			var entity: Entity = Globals.main.entity_maps[layer].get(coords)

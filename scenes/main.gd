@@ -1,5 +1,6 @@
 class_name Main extends Node2D
 
+signal turn_started
 signal level_started(level: int)
 
 const TILE_UNDEFINED := Vector2i(-1, -1)
@@ -52,7 +53,7 @@ func _ready() -> void:
 
 
 func is_cell_open(coords: Vector2i) -> bool:
-	return not self.astar.is_point_solid(coords)
+	return self.astar.region.has_point(coords) and not self.astar.is_point_solid(coords)
 
 
 func update() -> void:
@@ -88,14 +89,13 @@ func update_entity_order() -> void:
 			order += 1
 
 
-
 func end_turn() -> void:
 	self.update_entity_order()
 	self.ready_for_input = true
 	if self.player.health > 0:
 		for entity in self.entity_queue:
 			if entity != null and entity is Enemy:
-				self.player.draw_moves()
+				self.turn_started.emit()
 				return
 		self.level += 1
 		self.new_level()
@@ -229,16 +229,13 @@ func new_level() -> void:
 
 	self.update_entity_order()
 
-	self.player.health += 1
-	self.player.position = self.tile_map.map_to_local(self.player.coords)
-	self.player.camera.position_smoothing_enabled = false
-	self.player.camera.force_update_scroll()
-	self.player.camera.position_smoothing_enabled = true
-	self.player.draw_moves()
-
 	self.level_started.emit(self.level)
 
 	self.ready_for_input = true
+
+
+func get_mouse_coords() -> Vector2i:
+	return self.tile_map.local_to_map(self.tile_map.get_local_mouse_position())
 
 
 func _on_player_health_changed(health: int) -> void:

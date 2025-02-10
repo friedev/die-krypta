@@ -146,8 +146,10 @@ stream = ExtResource("7_8djxl")
 volume_db = -2.0
 autoplay = true
 
+[connection signal="level_started" from="." to="Player" method="_on_level_started"]
 [connection signal="level_started" from="." to="CanvasLayer/MarginContainer/VBoxContainer/LevelLabel" method="_on_level_started"]
 [connection signal="level_started" from="." to="CanvasLayer/MarginContainer/VBoxContainer/HighScoreLabel" method="_on_main_level_started"]
+[connection signal="turn_started" from="." to="Player" method="_on_turn_started"]
 [connection signal="died" from="Player" to="CanvasLayer/MarginContainer/GameOverMenu" method="_on_player_died"]
 [connection signal="died" from="Player" to="CanvasLayer/MarginContainer/VBoxContainer/HighScoreLabel" method="_on_player_died"]
 [connection signal="done" from="Player" to="." method="_on_player_done"]
