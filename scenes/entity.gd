@@ -4,6 +4,7 @@ signal health_changed(health: int)
 signal died(entity: Entity)
 signal done
 
+@export var display_name: String
 @export var max_health := 1
 @export var layer := Main.Layer.MAIN
 @export var order_label: Label
@@ -66,3 +67,7 @@ func _input(event: InputEvent) -> void:
 			self.order_label.show()
 		elif event.is_action_released("show_order"):
 			self.order_label.hide()
+
+
+func get_texture() -> Texture2D:
+	return null

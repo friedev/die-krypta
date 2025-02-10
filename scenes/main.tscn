@@ -1,4 +1,4 @@
-[gd_scene load_steps=23 format=3 uid="uid://c4pnltqkwa20j"]
+[gd_scene load_steps=25 format=3 uid="uid://c4pnltqkwa20j"]
 
 [ext_resource type="Script" path="res://scenes/main.gd" id="1_yugwm"]
 [ext_resource type="PackedScene" uid="uid://br6phtouiqto4" path="res://scenes/enemies/zombie.tscn" id="2_1rcoe"]
@@ -21,6 +21,8 @@
 [ext_resource type="TileSet" uid="uid://cpwll24iegc1l" path="res://tileset.tres" id="11_6q1iv"]
 [ext_resource type="PackedScene" uid="uid://cswjis18hols6" path="res://scenes/ui/menus/pause_menu.tscn" id="11_d13m3"]
 [ext_resource type="Script" path="res://scenes/high_score_label.gd" id="20_iw1x2"]
+[ext_resource type="Script" path="res://scenes/ui/info_box/info_box.gd" id="21_f2r0u"]
+[ext_resource type="PackedScene" uid="uid://rteh1cbvnhiu" path="res://scenes/ui/info_box/entity_info.tscn" id="21_nvhl2"]
 
 [sub_resource type="Resource" id="Resource_6k1ft"]
 script = ExtResource("7_cgss5")
@@ -119,6 +121,25 @@ text = "Best: X"
 horizontal_alignment = 2
 script = ExtResource("20_iw1x2")
 
+[node name="InfoBox" type="PanelContainer" parent="CanvasLayer/MarginContainer" node_paths=PackedStringArray("info_container")]
+visible = false
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 8
+script = ExtResource("21_f2r0u")
+info_container = NodePath("MarginContainer/VBoxContainer")
+entity_info_scene = ExtResource("21_nvhl2")
+
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/MarginContainer/InfoBox"]
+layout_mode = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/MarginContainer/InfoBox/MarginContainer"]
+layout_mode = 2
+
 [node name="Music" type="AudioStreamPlayer" parent="."]
 process_mode = 3
 stream = ExtResource("7_8djxl")
@@ -130,6 +151,7 @@ autoplay = true
 [connection signal="died" from="Player" to="CanvasLayer/MarginContainer/GameOverMenu" method="_on_player_died"]
 [connection signal="died" from="Player" to="CanvasLayer/MarginContainer/VBoxContainer/HighScoreLabel" method="_on_player_died"]
 [connection signal="done" from="Player" to="." method="_on_player_done"]
+[connection signal="done" from="Player" to="CanvasLayer/MarginContainer/InfoBox" method="_on_player_done"]
 [connection signal="health_changed" from="Player" to="." method="_on_player_health_changed"]
 [connection signal="credits_pressed" from="CanvasLayer/MarginContainer/MainMenu" to="CanvasLayer/MarginContainer/CreditsMenu" method="open"]
 [connection signal="options_pressed" from="CanvasLayer/MarginContainer/MainMenu" to="CanvasLayer/MarginContainer/OptionsMenu" method="open"]

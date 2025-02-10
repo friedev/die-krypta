@@ -325,3 +325,9 @@ func _process(delta: float) -> void:
 func _on_animation_finished() -> void:
 	self.stop_animations()
 	self.done.emit()
+
+
+func get_texture() -> Texture2D:
+	return self.sprite.sprite_frames.get_frame_texture(
+		self.sprite.animation, self.sprite.frame
+	)

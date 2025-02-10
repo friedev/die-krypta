@@ -1,0 +1,168 @@
+[gd_scene load_steps=16 format=3 uid="uid://rteh1cbvnhiu"]
+
+[ext_resource type="Texture2D" uid="uid://c06qwdre6roql" path="res://sprites/tileset.png" id="1_kyapl"]
+[ext_resource type="Theme" uid="uid://cp2dw8jh1pmps" path="res://ui/theme.tres" id="1_vv4cj"]
+[ext_resource type="Script" path="res://scenes/ui/info_box/entity_info.gd" id="2_e4831"]
+[ext_resource type="PackedScene" uid="uid://h7dvf5taj330" path="res://scenes/ui/info_box/attack_info.tscn" id="4_x23pj"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_sqitg"]
+atlas = ExtResource("1_kyapl")
+region = Rect2(1041, 534, 12, 12)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_jfjuy"]
+atlas = ExtResource("1_kyapl")
+region = Rect2(1028, 534, 12, 12)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_hkg41"]
+atlas = ExtResource("1_kyapl")
+region = Rect2(1015, 534, 12, 12)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_eqmy4"]
+atlas = ExtResource("1_kyapl")
+region = Rect2(1054, 534, 12, 12)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_f46fn"]
+atlas = ExtResource("1_kyapl")
+region = Rect2(326, 1, 12, 12)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_2kgey"]
+atlas = ExtResource("1_kyapl")
+region = Rect2(1015, 482, 12, 12)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_fx0ve"]
+atlas = ExtResource("1_kyapl")
+region = Rect2(144, 391, 12, 12)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_biyk8"]
+atlas = ExtResource("1_kyapl")
+region = Rect2(1041, 534, 12, 12)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_fqoae"]
+atlas = ExtResource("1_kyapl")
+region = Rect2(1184, 495, 12, 12)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_0phbe"]
+atlas = ExtResource("1_kyapl")
+region = Rect2(1067, 495, 12, 12)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_7mkkd"]
+atlas = ExtResource("1_kyapl")
+region = Rect2(391, 391, 12, 12)
+
+[node name="EntityInfo" type="VBoxContainer" node_paths=PackedStringArray("name_label", "entity_icon", "health_container", "health_label", "melee_attack_info", "ranged_attack_info", "turns_until_action_container", "turns_until_action_label", "move_direction_icon", "separator")]
+theme = ExtResource("1_vv4cj")
+script = ExtResource("2_e4831")
+name_label = NodePath("HBoxContainer/VBoxContainer/NameLabel")
+entity_icon = NodePath("HBoxContainer/EntityIcon")
+health_container = NodePath("HBoxContainer/VBoxContainer/HBoxContainer/HealthContainer")
+health_label = NodePath("HBoxContainer/VBoxContainer/HBoxContainer/HealthContainer/HealthLabel")
+melee_attack_info = NodePath("HBoxContainer/VBoxContainer/HBoxContainer/MeleeAttackInfo")
+ranged_attack_info = NodePath("HBoxContainer/VBoxContainer/HBoxContainer/RangedAttackInfo")
+turns_until_action_container = NodePath("HBoxContainer/VBoxContainer/HBoxContainer/TurnsUntilActionContainer")
+turns_until_action_label = NodePath("HBoxContainer/VBoxContainer/HBoxContainer/TurnsUntilActionContainer/TurnsUntilActionLabel")
+move_direction_icon = NodePath("HBoxContainer/VBoxContainer/HBoxContainer/MoveDirectionsContainer/DirectionsIcon")
+separator = NodePath("HSeparator")
+all_directions_texture = SubResource("AtlasTexture_sqitg")
+orthogonal_directions_texture = SubResource("AtlasTexture_jfjuy")
+diagonal_directions_texture = SubResource("AtlasTexture_hkg41")
+no_directions_texture = SubResource("AtlasTexture_eqmy4")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="EntityIcon" type="TextureRect" parent="HBoxContainer"]
+custom_minimum_size = Vector2(72, 72)
+layout_mode = 2
+texture = SubResource("AtlasTexture_f46fn")
+stretch_mode = 4
+
+[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer"]
+custom_minimum_size = Vector2(256, 0)
+layout_mode = 2
+
+[node name="NameLabel" type="Label" parent="HBoxContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "Test Entity"
+
+[node name="HBoxContainer" type="GridContainer" parent="HBoxContainer/VBoxContainer"]
+layout_mode = 2
+columns = 3
+
+[node name="HealthContainer" type="HBoxContainer" parent="HBoxContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+tooltip_text = "Health"
+
+[node name="HealthIcon" type="TextureRect" parent="HBoxContainer/VBoxContainer/HBoxContainer/HealthContainer"]
+custom_minimum_size = Vector2(24, 24)
+layout_mode = 2
+texture = SubResource("AtlasTexture_2kgey")
+
+[node name="HealthLabel" type="Label" parent="HBoxContainer/VBoxContainer/HBoxContainer/HealthContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0, 0, 1)
+text = "X/X"
+
+[node name="MoveDirectionsContainer" type="HBoxContainer" parent="HBoxContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+tooltip_text = "Move Directions"
+
+[node name="MoveIcon" type="TextureRect" parent="HBoxContainer/VBoxContainer/HBoxContainer/MoveDirectionsContainer"]
+custom_minimum_size = Vector2(24, 24)
+layout_mode = 2
+texture = SubResource("AtlasTexture_fx0ve")
+
+[node name="DirectionsIcon" type="TextureRect" parent="HBoxContainer/VBoxContainer/HBoxContainer/MoveDirectionsContainer"]
+modulate = Color(0.666667, 0.380392, 0.12549, 1)
+custom_minimum_size = Vector2(24, 24)
+layout_mode = 2
+texture = SubResource("AtlasTexture_biyk8")
+
+[node name="TurnsUntilActionContainer" type="HBoxContainer" parent="HBoxContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+tooltip_text = "Turns Until Action"
+
+[node name="TurnsUntilActionIcon" type="TextureRect" parent="HBoxContainer/VBoxContainer/HBoxContainer/TurnsUntilActionContainer"]
+custom_minimum_size = Vector2(24, 24)
+layout_mode = 2
+texture = SubResource("AtlasTexture_fqoae")
+
+[node name="TurnsUntilActionLabel" type="Label" parent="HBoxContainer/VBoxContainer/HBoxContainer/TurnsUntilActionContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.870588, 0.827451, 0.764706, 1)
+text = "X/X"
+
+[node name="MeleeAttackInfo" parent="HBoxContainer/VBoxContainer/HBoxContainer" instance=ExtResource("4_x23pj")]
+layout_mode = 2
+tooltip_text = "Melee Attack Damage and Directions"
+
+[node name="Icon" parent="HBoxContainer/VBoxContainer/HBoxContainer/MeleeAttackInfo" index="0"]
+texture = SubResource("AtlasTexture_0phbe")
+
+[node name="DamageLabel" parent="HBoxContainer/VBoxContainer/HBoxContainer/MeleeAttackInfo" index="1"]
+theme_override_colors/font_color = Color(0.643137, 0.647059, 0.647059, 1)
+
+[node name="DirectionIcon" parent="HBoxContainer/VBoxContainer/HBoxContainer/MeleeAttackInfo" index="2"]
+modulate = Color(0.643137, 0.647059, 0.647059, 1)
+
+[node name="RangedAttackInfo" parent="HBoxContainer/VBoxContainer/HBoxContainer" instance=ExtResource("4_x23pj")]
+layout_mode = 2
+tooltip_text = "Ranged Attack Damage and Directions"
+
+[node name="Icon" parent="HBoxContainer/VBoxContainer/HBoxContainer/RangedAttackInfo" index="0"]
+texture = SubResource("AtlasTexture_7mkkd")
+
+[node name="DamageLabel" parent="HBoxContainer/VBoxContainer/HBoxContainer/RangedAttackInfo" index="1"]
+theme_override_colors/font_color = Color(0.537255, 0.345098, 0.14902, 1)
+
+[node name="DirectionIcon" parent="HBoxContainer/VBoxContainer/HBoxContainer/RangedAttackInfo" index="2"]
+modulate = Color(0.537255, 0.345098, 0.14902, 1)
+
+[node name="HSeparator" type="HSeparator" parent="."]
+layout_mode = 2
+
+[editable path="HBoxContainer/VBoxContainer/HBoxContainer/MeleeAttackInfo"]
+[editable path="HBoxContainer/VBoxContainer/HBoxContainer/RangedAttackInfo"]

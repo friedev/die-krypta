@@ -13,11 +13,10 @@ script = ExtResource("2_lxw0k")
 melee_damage = 0
 ranged_damage = 1
 turns_between_actions = 0
-can_move_orthogonal = true
-can_move_diagonal = true
-can_attack_orthogonal = true
-can_attack_diagonal = false
+move_directions = 3
+attack_directions = 1
 difficulty = 20
+display_name = "Goblin Archer"
 
 [node name="Sprite2D" parent="." index="0"]
 texture = SubResource("AtlasTexture_obwyw")

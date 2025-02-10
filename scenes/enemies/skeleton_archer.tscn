@@ -13,11 +13,10 @@ script = ExtResource("2_q4vmx")
 melee_damage = 0
 ranged_damage = 1
 turns_between_actions = 0
-can_move_orthogonal = true
-can_move_diagonal = false
-can_attack_orthogonal = true
-can_attack_diagonal = false
+move_directions = 1
+attack_directions = 1
 difficulty = 15
+display_name = "Skeleton Archer"
 
 [node name="Sprite2D" parent="." index="0"]
 texture = SubResource("AtlasTexture_8i0k6")

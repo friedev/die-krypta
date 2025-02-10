@@ -1,18 +1,15 @@
-[gd_scene load_steps=5 format=3 uid="uid://bjr24x2nfhau0"]
+[gd_scene load_steps=4 format=3 uid="uid://bjr24x2nfhau0"]
 
 [ext_resource type="Texture2D" uid="uid://c06qwdre6roql" path="res://sprites/tileset.png" id="1_mxegs"]
 [ext_resource type="PackedScene" uid="uid://cjo0opjykjap3" path="res://scenes/traps/projectile_trap.tscn" id="1_qddvs"]
-[ext_resource type="PackedScene" uid="uid://bjm0metqbasck" path="res://scenes/projectiles/arrow.tscn" id="3_r85l5"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_eol2a"]
 atlas = ExtResource("1_mxegs")
 region = Rect2(378, 469, 12, 12)
 
 [node name="ArrowTrap" instance=ExtResource("1_qddvs")]
+display_name = "Arrow Trap"
 
 [node name="Sprite2D" parent="." index="0"]
 rotation = 1.5708
 texture = SubResource("AtlasTexture_eol2a")
-
-[node name="ProjectileLauncher" parent="." index="1"]
-projectile_scene = ExtResource("3_r85l5")

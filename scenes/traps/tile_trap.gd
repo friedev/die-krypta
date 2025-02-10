@@ -74,3 +74,10 @@ func activate() -> void:
 
 func prepare() -> void:
 	self.ready_to_activate = true
+
+
+func get_texture() -> Texture2D:
+	if self.active:
+		return self.active_sprite.texture
+	else:
+		return self.inactive_sprite.texture

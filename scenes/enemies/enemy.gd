@@ -78,3 +78,7 @@ func _process(delta: float) -> void:
 
 func _on_death_sound_finished() -> void:
 	self.queue_free()
+
+
+func get_texture() -> Texture2D:
+	return self.sprite.texture

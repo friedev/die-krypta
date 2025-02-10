@@ -2,35 +2,27 @@ class_name FighterEnemy extends Enemy
 
 @export var melee_damage: int
 @export var ranged_damage: int
-@export var turns_between_actions: int
-@export var can_move_orthogonal: bool
-@export var can_move_diagonal: bool
-@export var can_attack_orthogonal: bool
-@export var can_attack_diagonal: bool
+@export var turns_between_actions := 0
+@export var move_directions := Utility.Directions.ORTHOGONAL
+@export var attack_directions := Utility.Directions.ORTHOGONAL
 
 var ready_to_shoot := false
 var shoot_direction: Vector2i
 
-var move_directions: Array[Vector2i]
-var attack_directions: Array[Vector2i]
 var turns_until_action: int
 var animation_playing := false
 
 func _ready() -> void:
 	super._ready()
+	assert(
+		self.move_directions != Utility.Directions.DIAGONAL,
+		"AStarGrid2D heuristics don't support diagonal-only movement"
+	)
 	self.projectile_launcher.projectile_hit_target.connect(self._on_projectile_hit_target)
 	self.orthogonal_attack.animation_finished.connect(self._on_melee_attack_animation_finished)
 	self.diagonal_attack.animation_finished.connect(self._on_melee_attack_animation_finished)
 	self.projectile_launcher.layer = self.layer
 	self.turns_until_action = self.turns_between_actions
-	if self.can_move_diagonal:
-		self.move_directions += Utility.diagonal_directions
-	if self.can_move_orthogonal:
-		self.move_directions += Utility.orthogonal_directions
-	if self.can_attack_diagonal:
-		self.attack_directions += Utility.diagonal_directions
-	if self.can_attack_orthogonal:
-		self.attack_directions += Utility.orthogonal_directions
 
 
 func update() -> void:
@@ -60,7 +52,7 @@ func act() -> bool:
 
 func melee_attack() -> bool:
 	var attack_direction := Globals.main.player.coords - self.coords
-	if not attack_direction in self.attack_directions:
+	if not attack_direction in Utility.directions_to_vectors(self.attack_directions):
 		return false
 	self.face_toward(Globals.main.player.coords)
 
@@ -92,12 +84,14 @@ func chase_player() -> bool:
 	# Configure A* pathfinding
 	assert(self.layer == Main.ASTAR_LAYER)
 	var heuristic: AStarGrid2D.Heuristic
-	if self.can_move_diagonal:
+	if self.move_directions == Utility.Directions.ALL:
 		Globals.main.astar.diagonal_mode = AStarGrid2D.DIAGONAL_MODE_ALWAYS
 		heuristic = AStarGrid2D.HEURISTIC_CHEBYSHEV
-	else:
+	elif self.move_directions == Utility.Directions.ORTHOGONAL:
 		Globals.main.astar.diagonal_mode = AStarGrid2D.DIAGONAL_MODE_NEVER
 		heuristic = AStarGrid2D.HEURISTIC_MANHATTAN
+	else:
+		assert(false, "Unsupported movement directions to chase player")
 	Globals.main.astar.default_compute_heuristic = heuristic
 	Globals.main.astar.default_estimate_heuristic = heuristic
 
@@ -139,7 +133,11 @@ func find_line_of_sight(start: Vector2i, end: Vector2i, directions: Array[Vector
 
 func prepare_shot() -> void:
 	self.face_toward(Globals.main.player.coords)
-	self.shoot_direction = self.get_direction_to(self.coords, Globals.main.player.coords, self.attack_directions)
+	self.shoot_direction = self.get_direction_to(
+		self.coords,
+		Globals.main.player.coords,
+		Utility.directions_to_vectors(self.attack_directions)
+	)
 	assert(self.shoot_direction != Vector2i.ZERO)
 	self.ready_to_shoot = true
 	self.projectile_launcher.prepare_shot(self.coords, self.shoot_direction)
@@ -160,15 +158,19 @@ func line_up_shot() -> bool:
 	if self.find_line_of_sight(
 		self.coords,
 		Globals.main.player.coords,
-		self.attack_directions
+		Utility.directions_to_vectors(self.attack_directions)
 	) != Vector2i.ZERO:
 		self.prepare_shot()
 		return true
 
-	for move_direction in self.move_directions:
+	for move_direction in Utility.directions_to_vectors(self.attack_directions):
 		var p := self.coords + move_direction
 		if Globals.main.is_cell_open(p):
-			var attack_direction := self.find_line_of_sight(p, Globals.main.player.coords, self.attack_directions)
+			var attack_direction := self.find_line_of_sight(
+				p,
+				Globals.main.player.coords,
+				Utility.directions_to_vectors(self.attack_directions)
+			)
 			if attack_direction != Vector2i.ZERO and self.move(p):
 				self.prepare_shot()
 				return true

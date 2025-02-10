@@ -11,13 +11,12 @@ region = Rect2(456, 157, 12, 12)
 [node name="DarkKnight" instance=ExtResource("1_n57fg")]
 script = ExtResource("2_0oyft")
 melee_damage = 1
-ranged_damage = null
-turns_between_actions = null
-can_move_orthogonal = true
-can_move_diagonal = null
-can_attack_orthogonal = true
-can_attack_diagonal = null
+ranged_damage = 0
+turns_between_actions = 0
+move_directions = 1
+attack_directions = 1
 difficulty = 15
+display_name = "Undead Knight"
 max_health = 2
 
 [node name="Sprite2D" parent="." index="0"]

@@ -1,5 +1,11 @@
 class_name Utility extends Object
 
+enum Directions {
+	NONE,
+	ORTHOGONAL,
+	DIAGONAL,
+	ALL,
+}
 
 const orthogonal_directions: Array[Vector2i] = [
 	Vector2i.LEFT,
@@ -14,6 +20,30 @@ const diagonal_directions: Array[Vector2i] = [
 	Vector2i(+1, -1),
 	Vector2i(+1, +1),
 ]
+
+const all_directions := orthogonal_directions + diagonal_directions
+
+
+static func directions_to_vectors(directions: Directions) -> Array[Vector2i]:
+	match directions:
+		Directions.NONE:
+			return []
+		Directions.ORTHOGONAL:
+			return orthogonal_directions
+		Directions.DIAGONAL:
+			return diagonal_directions
+		Directions.ALL:
+			return all_directions
+	assert(false, "Unexpected directions: %s" % str(directions))
+	return []
+
+
+static func has_orthogonal(directions: Directions) -> bool:
+	return directions in [Directions.ORTHOGONAL, Directions.ALL]
+
+
+static func has_diagonal(directions: Directions) -> bool:
+	return directions in [Directions.DIAGONAL, Directions.ALL]
 
 
 static func manhattan_distance(v1: Vector2i, v2: Vector2i) -> int:

@@ -144,9 +144,9 @@ func spawn_enemies(max_difficulty: int) -> void:
 	while difficulty < max_difficulty:
 		if len(spawn_cells) == 0:
 			push_warning(
-                "Not enough space to spawn enemies; stopping at %d difficulty out of %d max"
-                % [difficulty, max_difficulty]
-            )
+				"Not enough space to spawn enemies; stopping at %d difficulty out of %d max"
+				% [difficulty, max_difficulty]
+			)
 			break
 
 		var spawn_coords := spawn_cells[randi() % len(spawn_cells)]
@@ -156,9 +156,9 @@ func spawn_enemies(max_difficulty: int) -> void:
 		var tries := 0
 		var enemy: Enemy = null
 		while (
-            (enemy == null or difficulty + enemy.difficulty > max_difficulty)
-            and tries < self.max_enemy_tries
-        ):
+			(enemy == null or difficulty + enemy.difficulty > max_difficulty)
+			and tries < self.max_enemy_tries
+		):
 			tries += 1
 			if enemy != null:
 				enemy.queue_free()
@@ -209,4 +209,3 @@ func place_traps(trap_count: int) -> void:
 		else:
 			assert(false, "Unknown trap type")
 		traps_placed += 1
-

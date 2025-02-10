@@ -1,0 +1,36 @@
+[gd_scene load_steps=6 format=3 uid="uid://h7dvf5taj330"]
+
+[ext_resource type="Theme" uid="uid://cp2dw8jh1pmps" path="res://ui/theme.tres" id="1_dhbqx"]
+[ext_resource type="Texture2D" uid="uid://c06qwdre6roql" path="res://sprites/tileset.png" id="1_l84mv"]
+[ext_resource type="Script" path="res://scenes/ui/info_box/attack_info.gd" id="2_fbas1"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_v27x7"]
+atlas = ExtResource("1_l84mv")
+region = Rect2(326, 1, 12, 12)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_3bn57"]
+atlas = ExtResource("1_l84mv")
+region = Rect2(1041, 534, 12, 12)
+
+[node name="AttackInfo" type="HBoxContainer" node_paths=PackedStringArray("damage_label", "direction_icon")]
+size_flags_horizontal = 3
+theme = ExtResource("1_dhbqx")
+script = ExtResource("2_fbas1")
+damage_label = NodePath("DamageLabel")
+direction_icon = NodePath("DirectionIcon")
+
+[node name="Icon" type="TextureRect" parent="."]
+custom_minimum_size = Vector2(24, 24)
+layout_mode = 2
+texture = SubResource("AtlasTexture_v27x7")
+
+[node name="DamageLabel" type="Label" parent="."]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0, 1, 1)
+text = "X"
+
+[node name="DirectionIcon" type="TextureRect" parent="."]
+modulate = Color(1, 0, 1, 1)
+custom_minimum_size = Vector2(24, 24)
+layout_mode = 2
+texture = SubResource("AtlasTexture_3bn57")

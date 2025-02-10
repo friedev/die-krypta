@@ -13,13 +13,11 @@ script = ExtResource("2_lhe0y")
 melee_damage = 1
 ranged_damage = null
 turns_between_actions = null
-can_move_orthogonal = true
-can_move_diagonal = true
-can_attack_orthogonal = true
-can_attack_diagonal = true
+move_directions = 3
+attack_directions = 3
 difficulty = 20
+display_name = "Giant Spider"
 max_health = null
-destructible = null
 
 [node name="Sprite2D" parent="." index="0"]
 texture = SubResource("AtlasTexture_3ex2i")

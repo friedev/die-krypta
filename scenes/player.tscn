@@ -209,6 +209,7 @@ hurt_particles = NodePath("HurtParticles")
 move_sound = NodePath("MoveSound")
 hurt_sound = NodePath("HurtSound")
 move_timer = NodePath("MoveTimer")
+display_name = "Player"
 max_health = 3
 
 [node name="Sprite2D" type="AnimatedSprite2D" parent="."]

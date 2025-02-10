@@ -69,3 +69,7 @@ func shoot() -> void:
 
 func _on_projectile_hit_target() -> void:
 	self.done.emit()
+
+
+func get_texture() -> Texture2D:
+	return self.sprite.texture
