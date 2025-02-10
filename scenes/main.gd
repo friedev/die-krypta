@@ -229,6 +229,7 @@ func new_level() -> void:
 
 	self.update_entity_order()
 
+	self.player.health += 1
 	self.player.position = self.tile_map.map_to_local(self.player.coords)
 	self.player.camera.position_smoothing_enabled = false
 	self.player.camera.force_update_scroll()

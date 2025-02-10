@@ -210,7 +210,7 @@ move_sound = NodePath("MoveSound")
 hurt_sound = NodePath("HurtSound")
 move_timer = NodePath("MoveTimer")
 display_name = "Player"
-max_health = 3
+max_health = 5
 
 [node name="Sprite2D" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("24")
