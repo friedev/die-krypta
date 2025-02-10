@@ -200,7 +200,7 @@ func place_traps(trap_count: int) -> void:
 			projectile_trap.direction = direction
 			Globals.main.place_entity(projectile_trap, coords)
 			exposed_walls.erase(coords)
-		elif trap is SpikeTrap:
+		elif trap is TileTrap:
 			if len(floors) == 0:
 				continue
 			var coords := floors[randi() % len(floors)]

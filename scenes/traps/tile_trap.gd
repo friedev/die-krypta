@@ -1,4 +1,4 @@
-class_name SpikeTrap extends Entity
+class_name TileTrap extends Entity
 
 @export var damage := 1
 @export var target_layer := Main.Layer.MAIN
