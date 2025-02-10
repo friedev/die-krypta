@@ -28,7 +28,6 @@ func _ready() -> void:
 
 func _on_player_died(_entity: Entity) -> void:
 	self.high_score = maxi(self.high_score, Globals.main.level + 1)
-	print(self.high_score)
 	self.config.save(self.CONFIG_PATH)
 
 
