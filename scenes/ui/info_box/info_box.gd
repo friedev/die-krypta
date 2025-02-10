@@ -7,6 +7,7 @@ var entity_info_nodes: Array[EntityInfo]
 
 func _ready() -> void:
 	self.hide()
+	SignalBus.menu_opened.connect(self._on_menu_opened)
 	for layer in Main.Layer:
 		var entity_info: EntityInfo = self.entity_info_scene.instantiate()
 		self.info_container.add_child(entity_info)
@@ -14,7 +15,7 @@ func _ready() -> void:
 
 
 func _input(event: InputEvent) -> void:
-	if event is InputEventMouseMotion:
+	if event is InputEventMouseMotion and not Globals.is_menu_open:
 		var coords := Globals.main.get_mouse_coords()
 		var i := 0
 		for layer in Main.Layer.values():
@@ -48,3 +49,8 @@ func _gui_input(event: InputEvent) -> void:
 
 func _on_player_done() -> void:
 	self.hide()
+
+
+func _on_menu_opened(open: bool) -> void:
+	if open:
+		self.hide()
