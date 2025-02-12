@@ -20,7 +20,7 @@
 [ext_resource type="PackedScene" uid="uid://cpgmxhix5jqaa" path="res://scenes/ui/menus/game_over_menu.tscn" id="10_odyjr"]
 [ext_resource type="TileSet" uid="uid://cpwll24iegc1l" path="res://tileset.tres" id="11_6q1iv"]
 [ext_resource type="PackedScene" uid="uid://cswjis18hols6" path="res://scenes/ui/menus/pause_menu.tscn" id="11_d13m3"]
-[ext_resource type="Script" path="res://scenes/high_score_label.gd" id="20_iw1x2"]
+[ext_resource type="Script" path="res://scenes/ui/high_score_label.gd" id="20_iw1x2"]
 [ext_resource type="Script" path="res://scenes/ui/info_box/info_box.gd" id="21_f2r0u"]
 [ext_resource type="PackedScene" uid="uid://rteh1cbvnhiu" path="res://scenes/ui/info_box/entity_info.tscn" id="21_nvhl2"]
 
