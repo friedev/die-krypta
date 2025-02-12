@@ -1,7 +1,6 @@
 # Die Krypta
 
-Roll yourself through the crypt and attack with each of your faces.
-Made in under 12 hours for the [2022 GMTK Game Jam](https://itch.io/jam/gmtk-jam-2022).
+A turn-based dungeon puzzler where you play as a die.
 
 > In a life long past, you were cursed by Die Hexe, a malevolent conjurer of geometric transformation.
 > With your spirit imprisoned within a crystalline prism, you were left to wander the earth forever in silence...
@@ -14,30 +13,27 @@ Made in under 12 hours for the [2022 GMTK Game Jam](https://itch.io/jam/gmtk-jam
 > So roll forth, brave cubic wanderer, and enter...
 > Die Krypta!
 
+(Originally a submission to the [2022 GMTK Game Jam](https://itch.io/jam/gmtk-jam-2022), with the theme "Roll of the Dice".)
+
 ## How to Play
 
-With each move, you roll to a new face of the die.
-The face you will turn up is displayed in each direction.
-Each face has a different attack, highlighted in red after you move.
+Each move you make rolls you to a new face of the die.
+Each pip on that face represents an attack in the corresponding direction.
+The central pip is special in that it attacks in the same direction that you move.
+
+Currently, your goal is to delve as deep into the crypt as you can.
+To clear a floor, you'll need to defeat every enemy on it.
+Hover your cursor over enemies and traps for more information about them.
 
 ### Controls
 
-- Arrows/WASD/HJKL/Numpad: roll
-- Space/Period: wait
-- Alt: show order of actions
-- Escape: pause
-
-### Attacks
-
-Most attacks resemble the arrangement of pips on the die.
-Below, the specific cells you attack when the given face is turned up are marked with X's.
-1 is special in that it attacks forward in the direction you just moved.
-
-```
-. . .   X . .   . . X   . X .   X . X   X . X
-> 1 X   . 2 .   . 3 .   X 4 X   . 5 .   X 6 X
-. . .   . . X   X . .   . X .   X . X   X . X
-```
+- **Roll**: arrows, WASD, HJKL, numpad, or right-click
+- **Pass your turn**: space, period, or numpad 5
+- **Preview a path**: shift+roll, or left-click and drag
+- **Follow path**: enter, or left-click the end of the path
+- **Clear path**: shift+wait, or left-click the die
+- **Show order of actions**: hold alt
+- **Pause**: escape
 
 ## Credits
 
