@@ -1,24 +1,14 @@
-class_name FacePreview extends Node2D
+class_name FacePreview extends Face
 
-const INVALID_FACE := -1
+var previous_faces: Array[FaceData] = []
 
-@export var sprite: AnimatedSprite2D
-
-var face := self.INVALID_FACE:
-	set(value):
-		face = value
-		sprite.frame = self.face - 1
-
-var previous_faces: Array[int] = []
-
-
-func push_face(number: int) -> void:
-	self.previous_faces.push_back(self.face)
-	self.face = number
+func push_face(new_face_data: FaceData) -> void:
+	self.previous_faces.push_back(self.face_data)
+	self.face_data = new_face_data
 
 
 func pop_face() -> bool:
 	if len(self.previous_faces) > 0:
-		self.face = self.previous_faces.pop_back()
+		self.face_data = self.previous_faces.pop_back()
 		return true
 	return false

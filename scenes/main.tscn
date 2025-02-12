@@ -62,6 +62,7 @@ tile_set = ExtResource("11_6q1iv")
 
 [node name="Player" parent="." instance=ExtResource("4_wkwvu")]
 visible = false
+attack_animations = {}
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 

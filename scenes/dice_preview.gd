@@ -32,6 +32,10 @@ var dragging := false
 var dragged := false
 
 
+func get_face_data(face_index: int) -> FaceData:
+	return Globals.main.player.get_face_data(face_index)
+
+
 func update_position() -> void:
 	self.position = Vector2(
 		Globals.main.tile_map.tile_set.tile_size
@@ -55,7 +59,7 @@ func reset_to_base_state() -> void:
 	self.draw_faces()
 
 
-func draw_face(direction: Vector2i, face: int) -> void:
+func draw_face(direction: Vector2i, face_index: int) -> void:
 	var face_preview: FacePreview = self.face_previews[direction]
 
 	# Don't draw on top of the previous cell in the path, since it'll be the
@@ -66,7 +70,7 @@ func draw_face(direction: Vector2i, face: int) -> void:
 		return
 
 	face_preview.show()
-	face_preview.face = face
+	face_preview.face_data = self.get_face_data(face_index)
 
 	# When previewing a path, preview faces on all floor cells, even if they are
 	# *currently* occupied by other entities
@@ -114,17 +118,18 @@ func roll(direction: Vector2i) -> bool:
 			self.face_preview_path.erase(old_coords)
 	else:
 		self.path.append(new_coords)
+		var new_face_data := self.get_face_data(self.dice.face_center)
 
 		# If you plot out a path that crosses itself, show only the most recent
 		# face on the overlapping spot, but keep track of the replaced face
 		face_preview = self.face_preview_path.get(new_coords)
 		if face_preview != null:
-			face_preview.push_face(self.dice.face_center)
+			face_preview.push_face(new_face_data)
 		else:
 			face_preview = self.face_preview_scene.instantiate()
 			face_preview.modulate = self.path_modulate
 			face_preview.global_position = self.global_position
-			face_preview.face = self.dice.face_center
+			face_preview.face_data = new_face_data
 			self.face_preview_path[new_coords] = face_preview
 			SignalBus.node_spawned.emit(face_preview)
 

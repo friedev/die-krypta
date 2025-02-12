@@ -1,6 +1,6 @@
 class_name Dice extends RefCounted
 
-var face_center: int
+var face_center: int  ## The face pointing "outward", towards the camera.
 var face_left: int
 var face_up: int
 

@@ -9,11 +9,14 @@ const action_order: Array[StringName] = [
 	&"mouse_move"
 ]
 
+@export var faces: Array[FaceData]
+
 @export var move_speed: float
 @export var hit_stress: float
 @export var hurt_stress: float
+@export var display_texture: Texture2D
 
-@export var sprite: AnimatedSprite2D
+@export var face: Face
 @export var attacks: Node2D
 @export var dice_preview: DicePreview
 @export var camera: ShakeCamera
@@ -24,19 +27,27 @@ const action_order: Array[StringName] = [
 
 # TODO typed dictionary Vector2i -> AnimatedSprite2D
 @onready var attack_animations := {
-	Vector2i(-1, -1): $Attacks/LeftUp,
-	Vector2i(-1,  0): $Attacks/Left,
-	Vector2i(-1,  1): $Attacks/LeftDown,
-	Vector2i( 0, -1): $Attacks/Up,
-	Vector2i( 0,  1): $Attacks/Down,
-	Vector2i( 1, -1): $Attacks/RightUp,
-	Vector2i( 1,  0): $Attacks/Right,
-	Vector2i( 1,  1): $Attacks/RightDown,
+       Vector2i(-1, -1): $Attacks/LeftUp,
+       Vector2i(-1,  0): $Attacks/Left,
+       Vector2i(-1, +1): $Attacks/LeftDown,
+       Vector2i( 0, -1): $Attacks/Up,
+       Vector2i( 0, +1): $Attacks/Down,
+       Vector2i(+1, -1): $Attacks/RightUp,
+       Vector2i(+1,  0): $Attacks/Right,
+       Vector2i(+1, +1): $Attacks/RightDown,
 }
 
 var dice := Dice.new()
 var last_action: StringName
 var animation_playing := false
+
+
+func get_face_data(face_index: int) -> FaceData:
+	return self.faces[face_index - 1]
+
+
+func get_current_face_data() -> FaceData:
+	return self.get_face_data(self.dice.face_center)
 
 
 func stop_animations() -> void:
@@ -46,68 +57,40 @@ func stop_animations() -> void:
 	self.animation_playing = false
 
 
-func hit(hit_coords := Vector2i()) -> bool:
-	var animation := self.attack_animations[hit_coords] as AnimatedSprite2D
+## Attack in the given direction with the given type of pip. Returns true if
+## we hit something.
+func hit(pip_direction: Vector2i, pip_type: PipType) -> bool:
+	var animation: AnimatedSprite2D = self.attack_animations[pip_direction]
 	animation.visible = true
 	animation.frame = 0
 	animation.play()
 
-	var hit_entity: Entity = Globals.main.entity_maps[self.layer].get(self.coords + hit_coords)
+	var hit_entity: Entity = Globals.main.entity_maps[self.layer].get(self.coords + pip_direction)
 	if hit_entity != null and hit_entity is Enemy:
-		hit_entity.hurt(1, (hit_entity.coords - self.coords))
+		hit_entity.hurt(pip_type.damage, (hit_entity.coords - self.coords))
 		self.camera.shake += self.hit_stress
 		return true
 	else:
 		return false
 
 
-func attack(direction: Vector2i) -> bool:
+## Attack with all pips on the current face. Does not move the player, but needs
+## to know what direction they moved in to handle the attack of the central pip.
+## Returns true if any pip hit anything.
+func attack(move_direction: Vector2i) -> bool:
 	var attacked := false
-	var cells: Array[Vector2i] = []
-
-	match self.dice.face_center:
-		1:
-			cells = [direction]
-		2:
-			cells = [
-				Vector2i(-1, -1),
-				Vector2i( 1,  1),
-			]
-		3:
-			cells = [
-				Vector2i(-1,  1),
-				Vector2i( 1, -1),
-			]
-		4:
-			cells = [
-				Vector2i( 0, -1),
-				Vector2i( 0,  1),
-				Vector2i(-1,  0),
-				Vector2i( 1,  0),
-			]
-		5:
-			cells = [
-				Vector2i(-1, -1),
-				Vector2i(-1,  1),
-				Vector2i( 1, -1),
-				Vector2i( 1,  1),
-			]
-		6:
-			cells = [
-				Vector2i(-1, -1),
-				Vector2i(-1,  0),
-				Vector2i(-1,  1),
-				Vector2i( 1, -1),
-				Vector2i( 1,  0),
-				Vector2i( 1,  1),
-			]
-
-	for hit_coords in cells:
-		attacked = self.hit(hit_coords) or attacked
-
+	var face_data := self.get_current_face_data()
+	for pip_direction in face_data.pip_types:
+		var pip_type: PipType = face_data.pip_types[pip_direction]
+		if pip_type != null:
+			if pip_direction == Vector2i.ZERO:
+				pip_direction = move_direction
+			attacked = self.hit(pip_direction, pip_type) or attacked
 	return attacked
 
 
+## Roll in the given orthogonal direction, if possible, changing the player's
+## coords and the central face of the dice. Triggers an attack from all pips on the new face.
 func roll(direction: Vector2i) -> bool:
 	assert(direction in Utility.orthogonal_directions, "Direction must be orthogonal")
 
@@ -121,8 +104,12 @@ func roll(direction: Vector2i) -> bool:
 	self.coords = new_coords
 
 	self.dice.roll(direction)
-	self.sprite.frame = self.dice.face_center - 1
+	self.face.face_data = self.get_current_face_data()
 
+	# attack() will always play all directional attack animations for the
+	# current face's pips. However, we only want to play attack animations if
+	# the player actually attacked something. If they didn't, immediately cancel
+	# the animations that were started.
 	if self.attack(direction):
 		self.animation_playing = true
 	else:
@@ -186,7 +173,7 @@ func find_path_to(target: Vector2i) -> Array[Vector2i]:
 
 
 func die() -> void:
-	self.sprite.hide()
+	self.face.hide()
 	self.attacks.hide()
 	self.dice_preview.hide()
 	self.stop_animations()
@@ -261,9 +248,10 @@ func setup() -> void:
 	self.dice.face_center = 1
 	self.dice.face_left = 4
 	self.dice.face_up = 5
+	self.face.face_data = self.get_current_face_data()
 
 	self.show()
-	self.sprite.show()
+	self.face.show()
 	self.attacks.show()
 	for attack_animation in self.attack_animations.values():
 		attack_animation.hide()
@@ -291,9 +279,7 @@ func _on_animation_finished() -> void:
 
 
 func get_texture() -> Texture2D:
-	return self.sprite.sprite_frames.get_frame_texture(
-		self.sprite.animation, self.sprite.frame
-	)
+	return self.display_texture
 
 
 func _on_level_started(level: int) -> void:

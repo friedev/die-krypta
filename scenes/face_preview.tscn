@@ -1,62 +1,33 @@
-[gd_scene load_steps=10 format=3 uid="uid://cpunpwrpfsrg5"]
+[gd_scene load_steps=3 format=3 uid="uid://cpunpwrpfsrg5"]
 
 [ext_resource type="Script" path="res://scenes/face_preview.gd" id="1_1ykjb"]
-[ext_resource type="Texture2D" uid="uid://hhog17hdqo2j" path="res://sprites/moves.png" id="1_snn36"]
+[ext_resource type="PackedScene" uid="uid://cde36x3nipati" path="res://scenes/pip_preview.tscn" id="2_8ychj"]
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_4tmww"]
-atlas = ExtResource("1_snn36")
-region = Rect2(0, 0, 12, 12)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_pm7fs"]
-atlas = ExtResource("1_snn36")
-region = Rect2(12, 0, 12, 12)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_kwixd"]
-atlas = ExtResource("1_snn36")
-region = Rect2(24, 0, 12, 12)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_wppsu"]
-atlas = ExtResource("1_snn36")
-region = Rect2(36, 0, 12, 12)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_4kmay"]
-atlas = ExtResource("1_snn36")
-region = Rect2(48, 0, 12, 12)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_w0sev"]
-atlas = ExtResource("1_snn36")
-region = Rect2(60, 0, 12, 12)
-
-[sub_resource type="SpriteFrames" id="SpriteFrames_4v4w7"]
-animations = [{
-"frames": [{
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_4tmww")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_pm7fs")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_kwixd")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_wppsu")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_4kmay")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_w0sev")
-}],
-"loop": true,
-"name": &"default",
-"speed": 5.0
-}]
-
-[node name="FacePreview" type="Node2D" node_paths=PackedStringArray("sprite")]
+[node name="FacePreview" type="Node2D"]
 script = ExtResource("1_1ykjb")
-sprite = NodePath("AnimatedSprite2D")
 
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
-sprite_frames = SubResource("SpriteFrames_4v4w7")
-frame = 5
+[node name="LeftUp" parent="." instance=ExtResource("2_8ychj")]
+position = Vector2(-3, -3)
+
+[node name="Left" parent="." instance=ExtResource("2_8ychj")]
+position = Vector2(-3, 0)
+
+[node name="LeftDown" parent="." instance=ExtResource("2_8ychj")]
+position = Vector2(-3, 3)
+
+[node name="Up" parent="." instance=ExtResource("2_8ychj")]
+position = Vector2(0, -3)
+
+[node name="Center" parent="." instance=ExtResource("2_8ychj")]
+
+[node name="Down" parent="." instance=ExtResource("2_8ychj")]
+position = Vector2(0, 3)
+
+[node name="RightUp" parent="." instance=ExtResource("2_8ychj")]
+position = Vector2(3, -3)
+
+[node name="Right" parent="." instance=ExtResource("2_8ychj")]
+position = Vector2(3, 0)
+
+[node name="RightDown" parent="." instance=ExtResource("2_8ychj")]
+position = Vector2(3, 3)

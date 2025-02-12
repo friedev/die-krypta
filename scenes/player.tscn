@@ -1,7 +1,8 @@
-[gd_scene load_steps=30 format=3 uid="uid://ckkml6my1wkk6"]
+[gd_scene load_steps=35 format=3 uid="uid://ckkml6my1wkk6"]
 
 [ext_resource type="Script" path="res://scenes/player.gd" id="1"]
-[ext_resource type="Texture2D" uid="uid://b08y3gsghwd2a" path="res://sprites/dice.png" id="3"]
+[ext_resource type="Script" path="res://scenes/face_data.gd" id="2_6w3wi"]
+[ext_resource type="Resource" uid="uid://8uni3q713fd" path="res://resources/basic_pip.tres" id="3_pkpuf"]
 [ext_resource type="Script" path="res://scenes/shake_camera.gd" id="4"]
 [ext_resource type="PackedScene" uid="uid://cpunpwrpfsrg5" path="res://scenes/face_preview.tscn" id="4_ep6fl"]
 [ext_resource type="Script" path="res://scenes/dice_preview.gd" id="4_p6uqk"]
@@ -10,56 +11,97 @@
 [ext_resource type="PackedScene" uid="uid://dmuy2jxt5lckf" path="res://scenes/default_sound.tscn" id="7_ksdxd"]
 [ext_resource type="Texture2D" uid="uid://cjeyx6xpagtfo" path="res://sprites/attack_orthogonal.png" id="9"]
 [ext_resource type="Texture2D" uid="uid://dj0bowdcup5op" path="res://sprites/attack_diagonal.png" id="10"]
+[ext_resource type="Texture2D" uid="uid://c06qwdre6roql" path="res://sprites/tileset.png" id="11_53a4j"]
+[ext_resource type="PackedScene" uid="uid://xsrg4toqgxsg" path="res://scenes/pip.tscn" id="11_xfk6i"]
+[ext_resource type="Script" path="res://scenes/face.gd" id="11_y7evr"]
 
-[sub_resource type="AtlasTexture" id="18"]
-atlas = ExtResource("3")
-region = Rect2(0, 0, 12, 12)
+[sub_resource type="Resource" id="Resource_m6rpm"]
+script = ExtResource("2_6w3wi")
+pip_types = {
+Vector2i(-1, -1): null,
+Vector2i(-1, 0): null,
+Vector2i(-1, 1): null,
+Vector2i(0, -1): null,
+Vector2i(0, 0): ExtResource("3_pkpuf"),
+Vector2i(0, 1): null,
+Vector2i(1, -1): null,
+Vector2i(1, 0): null,
+Vector2i(1, 1): null
+}
 
-[sub_resource type="AtlasTexture" id="19"]
-atlas = ExtResource("3")
-region = Rect2(12, 0, 12, 12)
+[sub_resource type="Resource" id="Resource_50p6x"]
+script = ExtResource("2_6w3wi")
+pip_types = {
+Vector2i(-1, -1): ExtResource("3_pkpuf"),
+Vector2i(-1, 0): null,
+Vector2i(-1, 1): null,
+Vector2i(0, -1): null,
+Vector2i(0, 0): null,
+Vector2i(0, 1): null,
+Vector2i(1, -1): null,
+Vector2i(1, 0): null,
+Vector2i(1, 1): ExtResource("3_pkpuf")
+}
 
-[sub_resource type="AtlasTexture" id="20"]
-atlas = ExtResource("3")
-region = Rect2(24, 0, 12, 12)
+[sub_resource type="Resource" id="Resource_wl5ky"]
+script = ExtResource("2_6w3wi")
+pip_types = {
+Vector2i(-1, -1): null,
+Vector2i(-1, 0): null,
+Vector2i(-1, 1): ExtResource("3_pkpuf"),
+Vector2i(0, -1): null,
+Vector2i(0, 0): ExtResource("3_pkpuf"),
+Vector2i(0, 1): null,
+Vector2i(1, -1): ExtResource("3_pkpuf"),
+Vector2i(1, 0): null,
+Vector2i(1, 1): null
+}
 
-[sub_resource type="AtlasTexture" id="21"]
-atlas = ExtResource("3")
-region = Rect2(36, 0, 12, 12)
+[sub_resource type="Resource" id="Resource_eeq71"]
+script = ExtResource("2_6w3wi")
+pip_types = {
+Vector2i(-1, -1): ExtResource("3_pkpuf"),
+Vector2i(-1, 0): null,
+Vector2i(-1, 1): ExtResource("3_pkpuf"),
+Vector2i(0, -1): null,
+Vector2i(0, 0): null,
+Vector2i(0, 1): null,
+Vector2i(1, -1): ExtResource("3_pkpuf"),
+Vector2i(1, 0): null,
+Vector2i(1, 1): ExtResource("3_pkpuf")
+}
 
-[sub_resource type="AtlasTexture" id="22"]
-atlas = ExtResource("3")
-region = Rect2(48, 0, 12, 12)
+[sub_resource type="Resource" id="Resource_upjle"]
+script = ExtResource("2_6w3wi")
+pip_types = {
+Vector2i(-1, -1): ExtResource("3_pkpuf"),
+Vector2i(-1, 0): null,
+Vector2i(-1, 1): ExtResource("3_pkpuf"),
+Vector2i(0, -1): null,
+Vector2i(0, 0): ExtResource("3_pkpuf"),
+Vector2i(0, 1): null,
+Vector2i(1, -1): ExtResource("3_pkpuf"),
+Vector2i(1, 0): null,
+Vector2i(1, 1): ExtResource("3_pkpuf")
+}
 
-[sub_resource type="AtlasTexture" id="23"]
-atlas = ExtResource("3")
-region = Rect2(60, 0, 12, 12)
+[sub_resource type="Resource" id="Resource_hl64m"]
+script = ExtResource("2_6w3wi")
+pip_types = {
+Vector2i(-1, -1): ExtResource("3_pkpuf"),
+Vector2i(-1, 0): ExtResource("3_pkpuf"),
+Vector2i(-1, 1): ExtResource("3_pkpuf"),
+Vector2i(0, -1): null,
+Vector2i(0, 0): null,
+Vector2i(0, 1): null,
+Vector2i(1, -1): ExtResource("3_pkpuf"),
+Vector2i(1, 0): ExtResource("3_pkpuf"),
+Vector2i(1, 1): ExtResource("3_pkpuf")
+}
 
-[sub_resource type="SpriteFrames" id="24"]
-animations = [{
-"frames": [{
-"duration": 1.0,
-"texture": SubResource("18")
-}, {
-"duration": 1.0,
-"texture": SubResource("19")
-}, {
-"duration": 1.0,
-"texture": SubResource("20")
-}, {
-"duration": 1.0,
-"texture": SubResource("21")
-}, {
-"duration": 1.0,
-"texture": SubResource("22")
-}, {
-"duration": 1.0,
-"texture": SubResource("23")
-}],
-"loop": true,
-"name": &"default",
-"speed": 5.0
-}]
+[sub_resource type="AtlasTexture" id="AtlasTexture_1ebcg"]
+atlas = ExtResource("11_53a4j")
+region = Rect2(716, 638, 12, 12)
 
 [sub_resource type="AtlasTexture" id="7"]
 atlas = ExtResource("10")
@@ -130,6 +172,10 @@ animations = [{
 "speed": 20.0
 }]
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_bw40j"]
+atlas = ExtResource("11_53a4j")
+region = Rect2(677, 638, 12, 12)
+
 [sub_resource type="Curve" id="25"]
 _data = [Vector2(0, 1), 0.0, -1.0, 0, 1, Vector2(1, 0), -1.0, 0.0, 1, 0]
 point_count = 2
@@ -147,12 +193,14 @@ scale_min = 4.0
 scale_max = 6.0
 scale_curve = SubResource("26")
 
-[node name="Player" type="Node2D" node_paths=PackedStringArray("sprite", "attacks", "dice_preview", "camera", "hurt_particles", "move_sound", "hurt_sound", "move_timer")]
+[node name="Player" type="Node2D" node_paths=PackedStringArray("face", "attacks", "dice_preview", "camera", "hurt_particles", "move_sound", "hurt_sound", "move_timer")]
 script = ExtResource("1")
+faces = Array[ExtResource("2_6w3wi")]([SubResource("Resource_m6rpm"), SubResource("Resource_50p6x"), SubResource("Resource_wl5ky"), SubResource("Resource_eeq71"), SubResource("Resource_upjle"), SubResource("Resource_hl64m")])
 move_speed = 15.0
 hit_stress = 0.5
 hurt_stress = 0.5
-sprite = NodePath("AnimatedSprite2D")
+display_texture = SubResource("AtlasTexture_1ebcg")
+face = NodePath("Face")
 attacks = NodePath("Attacks")
 dice_preview = NodePath("DicePreview")
 camera = NodePath("Camera2D")
@@ -162,9 +210,6 @@ hurt_sound = NodePath("HurtSound")
 move_timer = NodePath("MoveTimer")
 display_name = "Player"
 max_health = 5
-
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
-sprite_frames = SubResource("24")
 
 [node name="Camera2D" type="Camera2D" parent="."]
 offset = Vector2(8, 8)
@@ -195,6 +240,12 @@ position = Vector2(0, 12)
 
 [node name="Attacks" type="Node2D" parent="."]
 
+[node name="LeftUp" type="AnimatedSprite2D" parent="Attacks"]
+position = Vector2(-6, -6)
+sprite_frames = SubResource("6")
+animation = &"diagonal"
+flip_h = true
+
 [node name="Left" type="AnimatedSprite2D" parent="Attacks"]
 position = Vector2(-6, 0)
 sprite_frames = SubResource("6")
@@ -203,10 +254,12 @@ frame = 3
 frame_progress = 1.0
 flip_h = true
 
-[node name="Right" type="AnimatedSprite2D" parent="Attacks"]
-position = Vector2(6, 0)
+[node name="LeftDown" type="AnimatedSprite2D" parent="Attacks"]
+position = Vector2(-6, 6)
 sprite_frames = SubResource("6")
-animation = &"orthogonal"
+animation = &"diagonal"
+flip_h = true
+flip_v = true
 
 [node name="Up" type="AnimatedSprite2D" parent="Attacks"]
 position = Vector2(0, -6)
@@ -222,29 +275,62 @@ rotation = 1.5708
 sprite_frames = SubResource("6")
 animation = &"orthogonal"
 
-[node name="LeftUp" type="AnimatedSprite2D" parent="Attacks"]
-position = Vector2(-6, -6)
-sprite_frames = SubResource("6")
-animation = &"diagonal"
-flip_h = true
-
-[node name="LeftDown" type="AnimatedSprite2D" parent="Attacks"]
-position = Vector2(-6, 6)
-sprite_frames = SubResource("6")
-animation = &"diagonal"
-flip_h = true
-flip_v = true
-
 [node name="RightUp" type="AnimatedSprite2D" parent="Attacks"]
 position = Vector2(6, -6)
 sprite_frames = SubResource("6")
 animation = &"diagonal"
+
+[node name="Right" type="AnimatedSprite2D" parent="Attacks"]
+position = Vector2(6, 0)
+sprite_frames = SubResource("6")
+animation = &"orthogonal"
 
 [node name="RightDown" type="AnimatedSprite2D" parent="Attacks"]
 position = Vector2(6, 6)
 sprite_frames = SubResource("6")
 animation = &"diagonal"
 flip_v = true
+
+[node name="Face" type="Node2D" parent="."]
+script = ExtResource("11_y7evr")
+
+[node name="Sprite2D" type="Sprite2D" parent="Face"]
+texture = SubResource("AtlasTexture_bw40j")
+
+[node name="LeftUp" parent="Face" instance=ExtResource("11_xfk6i")]
+modulate = Color(0, 0, 0, 1)
+position = Vector2(-3, -3)
+
+[node name="Left" parent="Face" instance=ExtResource("11_xfk6i")]
+modulate = Color(0, 0, 0, 1)
+position = Vector2(-3, 0)
+
+[node name="LeftDown" parent="Face" instance=ExtResource("11_xfk6i")]
+modulate = Color(0, 0, 0, 1)
+position = Vector2(-3, 3)
+
+[node name="Up" parent="Face" instance=ExtResource("11_xfk6i")]
+modulate = Color(0, 0, 0, 1)
+position = Vector2(0, -3)
+
+[node name="Center" parent="Face" instance=ExtResource("11_xfk6i")]
+modulate = Color(0, 0, 0, 1)
+
+[node name="Down" parent="Face" instance=ExtResource("11_xfk6i")]
+modulate = Color(0, 0, 0, 1)
+position = Vector2(0, 3)
+
+[node name="RightUp" parent="Face" instance=ExtResource("11_xfk6i")]
+modulate = Color(0, 0, 0, 1)
+position = Vector2(3, -3)
+
+[node name="Right" parent="Face" instance=ExtResource("11_xfk6i")]
+modulate = Color(0, 0, 0, 1)
+position = Vector2(3, 0)
+
+[node name="RightDown" parent="Face" instance=ExtResource("11_xfk6i")]
+modulate = Color(0, 0, 0, 1)
+position = Vector2(3, 3)
 
 [node name="HurtParticles" type="GPUParticles2D" parent="."]
 z_index = -2
@@ -266,12 +352,12 @@ wait_time = 0.25
 one_shot = true
 
 [connection signal="move_requested" from="DicePreview" to="." method="_on_dice_preview_move_requested"]
+[connection signal="animation_finished" from="Attacks/LeftUp" to="." method="_on_animation_finished"]
 [connection signal="animation_finished" from="Attacks/Left" to="." method="_on_animation_finished"]
-[connection signal="animation_finished" from="Attacks/Right" to="." method="_on_animation_finished"]
+[connection signal="animation_finished" from="Attacks/LeftDown" to="." method="_on_animation_finished"]
 [connection signal="animation_finished" from="Attacks/Up" to="." method="_on_animation_finished"]
 [connection signal="animation_finished" from="Attacks/Down" to="." method="_on_animation_finished"]
-[connection signal="animation_finished" from="Attacks/LeftUp" to="." method="_on_animation_finished"]
-[connection signal="animation_finished" from="Attacks/LeftDown" to="." method="_on_animation_finished"]
 [connection signal="animation_finished" from="Attacks/RightUp" to="." method="_on_animation_finished"]
+[connection signal="animation_finished" from="Attacks/Right" to="." method="_on_animation_finished"]
 [connection signal="animation_finished" from="Attacks/RightDown" to="." method="_on_animation_finished"]
 [connection signal="timeout" from="MoveTimer" to="." method="_on_move_timer_timeout"]

@@ -1,0 +1,8 @@
+[gd_resource type="Resource" script_class="PipType" load_steps=2 format=3 uid="uid://8uni3q713fd"]
+
+[ext_resource type="Script" path="res://scenes/pip_type.gd" id="1_hu7fc"]
+
+[resource]
+script = ExtResource("1_hu7fc")
+color = Color(0, 0, 0, 1)
+damage = 1
